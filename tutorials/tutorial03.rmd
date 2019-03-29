@@ -9,13 +9,13 @@ knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 
 # Botando o computador para trabalhar
 
-Se h· um tutorial sobre lÛgica de programaÁ„o, È este. Os tÛpicos deste tutorial s„o os mais importantes para que possamos escrever algoritmos e botar o computador para fazer o que sabe de melhor: repetir instruÁıes e tarefas. Veremos, em primeiro lugar, operadores relacionais e lÛgicos e, a seguir, cl·usulas condicionais, loops e funÁıes.
+Se h√° um tutorial sobre l√≥gica de programa√ß√£o, √© este. Os t√≥picos deste tutorial s√£o os mais importantes para que possamos escrever algoritmos e botar o computador para fazer o que sabe de melhor: repetir instru√ß√µes e tarefas. Veremos, em primeiro lugar, operadores relacionais e l√≥gicos e, a seguir, cl√°usulas condicionais, loops e fun√ß√µes.
 
 ## Operadores relacionais
 
-Uma das especialidades do computador È verificar se proposiÁıes simples s„o verdadeiras ou falsas. __Operadores relacionais__ servem para verificar se objetos s„o iguais, diferentes, maiores ou menores. S„o seis operadores relacionais e a tabela abaixo apresenta os seus sÌmbolos.
+Uma das especialidades do computador √© verificar se proposi√ß√µes simples s√£o verdadeiras ou falsas. __Operadores relacionais__ servem para verificar se objetos s√£o iguais, diferentes, maiores ou menores. S√£o seis operadores relacionais e a tabela abaixo apresenta os seus s√≠mbolos.
 
-| Operador       | SÌmbolo |
+| Operador       | S√≠mbolo |
   | -------------- |:-------:| 
   | Igual          | ==      |
   | Diferente      | !=      |
@@ -24,9 +24,9 @@ Uma das especialidades do computador È verificar se proposiÁıes simples s„o verd
   | Menor          | <       |
   | Menor ou igual | <=      |
   
-  N„o discutiremos todas as regras de comparaÁ„o de objetos, mas passaremos por um conjunto grande de exemplos a partir do qual elas podem ser inferidas.
+  N√£o discutiremos todas as regras de compara√ß√£o de objetos, mas passaremos por um conjunto grande de exemplos a partir do qual elas podem ser inferidas.
 
-Vamos comeÁar com alguns exemplos simples:
+Vamos come√ßar com alguns exemplos simples:
   
 ```{r}
 42 == 41
@@ -41,9 +41,9 @@ Vamos comeÁar com alguns exemplos simples:
 42 <= 41
 ```
 
-Antes de avanÁar, tenha certeza que entendeu os exemplos acima.
+Antes de avan√ßar, tenha certeza que entendeu os exemplos acima.
 
-Operadores relacionais tambÈm vale para textos:
+Operadores relacionais tamb√©m vale para textos:
   
   ```{r}
 "texto" == "texto"
@@ -51,9 +51,9 @@ Operadores relacionais tambÈm vale para textos:
 "texto" != "texto"
 ```
 
-Note no segundo exemplo que o R È "case sensitive", ou seja, diferencia mai˙sculas de min˙sculas ao comparar textos.
+Note no segundo exemplo que o R √© "case sensitive", ou seja, diferencia mai√∫sculas de min√∫sculas ao comparar textos.
 
-Textos tambÈm podem ser ordenados (lexicograficamente, isto È, alfabeticamente):
+Textos tamb√©m podem ser ordenados (lexicograficamente, isto √©, alfabeticamente):
 
 ```{r}
 "a" > "b"
@@ -62,14 +62,14 @@ Textos tambÈm podem ser ordenados (lexicograficamente, isto È, alfabeticamente):
 "A" > "a"
 ```
 
-Inclusive palavras inteiras e sentenÁas:
+Inclusive palavras inteiras e senten√ßas:
   
   ```{r}
 "cachorro" < "cachorro quente"
 "churrasco de gato" >  "cachorro quente"
 ```
 
-E valores lÛgicos? Veja se entende o que acontece nos exemplos abaixo:
+E valores l√≥gicos? Veja se entende o que acontece nos exemplos abaixo:
   
 ```{r}
 TRUE == 1
@@ -77,7 +77,7 @@ FALSE == 0
 TRUE > FALSE
 ```
 
-Podemos comparar valores armazenados em vari·veis da mesma maneira que fizemos nos exemplos atÈ aqui:
+Podemos comparar valores armazenados em vari√°veis da mesma maneira que fizemos nos exemplos at√© aqui:
   
 ```{r}
 x <- 5
@@ -87,31 +87,31 @@ x > y
 
 ## Operadores relacionais e vetores
 
-… possÌvel comparar um vetor com um valor. Neste caso, cada elemento do vetor È comparado individualmente ao valor e o resultado È um vetor lÛgico de tamanho igual ao vetor comparado.
+√â poss√≠vel comparar um vetor com um valor. Neste caso, cada elemento do vetor √© comparado individualmente ao valor e o resultado √© um vetor l√≥gico de tamanho igual ao vetor comparado.
 
 ```{r}
 votos16 <- c(1030, 551, 992, 345, 203, 2037)
 votos16 >= 1000
 ```
 
-Vamos usar o vetor "votos16", que contÈm votos de candidatos fictÌcios em 2016, com os votos dos mesmo candidatos em 2012:
+Vamos usar o vetor "votos16", que cont√©m votos de candidatos fict√≠cios em 2016, com os votos dos mesmo candidatos em 2012:
   
 ```{r}
 votos12 <- c(890, 354, 950, 400, 50, 3416)
 votos16 > votos12
 ```
 
-Veja que, na comparaÁ„o entre dois vetores, os elementos s„o comparados par a par de acordo com a sua posiÁ„o no vetor. O vetor lÛgico resultante tem o mesmo tamanho dos vetores comparados.
+Veja que, na compara√ß√£o entre dois vetores, os elementos s√£o comparados par a par de acordo com a sua posi√ß√£o no vetor. O vetor l√≥gico resultante tem o mesmo tamanho dos vetores comparados.
 
-## Operadores LÛgicos (Booleanos)
+## Operadores L√≥gicos (Booleanos)
 
-… perfeitamente possÌvel combinar proposiÁıes com os __operadores lÛgicos__ "e", "ou" e "n„o":
+√â perfeitamente poss√≠vel combinar proposi√ß√µes com os __operadores l√≥gicos__ "e", "ou" e "n√£o":
   
-  | Operador | SÌmbolo |
+  | Operador | S√≠mbolo |
   | -------- |:-------:| 
   | E        | &       |
   | Ou       | \|      |
-  | N„o      | !       |
+  | N√£o      | !       |
   
   Por exemplo, se queremos verificar todos os candidatos que obtiveram acima de 500 (exclusive) __E__ abaixo de 1500 (inclusive) votos, fazemos:
   
@@ -119,33 +119,33 @@ Veja que, na comparaÁ„o entre dois vetores, os elementos s„o comparados par a pa
 votos16 > 500 & votos16 <= 1500
 ```
 
-Veja a tabela de possibilidades de combinaÁ„o de duas proposiÁıes com a conjunÁ„o "e":
+Veja a tabela de possibilidades de combina√ß√£o de duas proposi√ß√µes com a conjun√ß√£o "e":
   
-  | ProposiÁ„o 1 | ProposiÁ„o 2 | CombinaÁ„o | 
+  | Proposi√ß√£o 1 | Proposi√ß√£o 2 | Combina√ß√£o | 
   | ------------ | ------------ | ---------- |
   | TRUE         | TRUE         | TRUE       |  
   | TRUE         | FALSE        | FALSE      |
   | FALSE        | TRUE         | FALSE      |
   | FALSE        | FALSE        | FALSE      |
   
-  Se o valor atende ‡s duas condiÁıes, ent„o o resultado È TRUE. Se ao menos uma proposiÁ„o È falsa, sob a conjunÁ„o "e", ent„o a combinaÁ„o das proposiÁıes tambÈm È.
+  Se o valor atende √†s duas condi√ß√µes, ent√£o o resultado √© TRUE. Se ao menos uma proposi√ß√£o √© falsa, sob a conjun√ß√£o "e", ent√£o a combina√ß√£o das proposi√ß√µes tamb√©m √©.
 
-Com o operador "Ou", a combinaÁ„o de proposiÁıes È verdadeira se pelo menos uma delas for verdadeira.
+Com o operador "Ou", a combina√ß√£o de proposi√ß√µes √© verdadeira se pelo menos uma delas for verdadeira.
 
 ```{r}
 votos16 < 500 | votos12 > 1500
 ```
 
-Veja a tabela de possibilidades de combinaÁ„o de duas proposiÁıes com a conjunÁ„o "ou":
+Veja a tabela de possibilidades de combina√ß√£o de duas proposi√ß√µes com a conjun√ß√£o "ou":
   
-  | ProposiÁ„o 1 | ProposiÁ„o 2 | CombinaÁ„o | 
+  | Proposi√ß√£o 1 | Proposi√ß√£o 2 | Combina√ß√£o | 
   | ------------ | ------------ | ---------- |
   | TRUE         | TRUE         | TRUE       |  
   | TRUE         | FALSE        | TRUE       |
   | FALSE        | TRUE         | TRUE       |
   | FALSE        | FALSE        | FALSE      |
   
-  Finalmente, o operador lÛgico "n„o" tem a funÁ„o de reverter um proposiÁ„o:
+  Finalmente, o operador l√≥gico "n√£o" tem a fun√ß√£o de reverter um proposi√ß√£o:
   
 ```{r}
 !TRUE
@@ -153,15 +153,15 @@ Veja a tabela de possibilidades de combinaÁ„o de duas proposiÁıes com a conjunÁ„
 !(votos16 > 500 & votos16 <= 1500)
 ```
 
-Lembre-se que, quando trabalhamos com vetores lÛgicos, podemos trat·-los como se fossem zeros e uns, tal qual no exemplo:
+Lembre-se que, quando trabalhamos com vetores l√≥gicos, podemos trat√°-los como se fossem zeros e uns, tal qual no exemplo:
   
 ```{r}
 sum(votos16 > votos12)
 ```
 
-## Cl·usulas condicionais
+## Cl√°usulas condicionais
 
-Um dos usos mais importantes dos operadores relacionais e lÛgicos È na construÁ„o de __cl·usulas condicionais__, "if", "else" e "else if". Elas s„o fundamentais para a construÁ„o de funÁıes e algoritmos. Veja um uso simples do condicional _if_, para o c·lculo do valor absoluto de uma vari·vel:
+Um dos usos mais importantes dos operadores relacionais e l√≥gicos √© na constru√ß√£o de __cl√°usulas condicionais__, "if", "else" e "else if". Elas s√£o fundamentais para a constru√ß√£o de fun√ß√µes e algoritmos. Veja um uso simples do condicional _if_, para o c√°lculo do valor absoluto de uma vari√°vel:
   
 ```{r}
 # exemplo com x negativo
@@ -184,9 +184,9 @@ print(x)
 
 ```
 
-A condiÁ„o que o _if_ deve atender vem entre parÍnteses. A instruÁ„o a ser atendida caso a cl·usula seja verdadeira vem dentro das chaves. Ali·s, È boa pr·tica (na maioria dos casos) abrir as chaves em uma linha, escrever as instruÁıes em outra, e fechar as chaves na linha seguinte ao final das instruÁıes, como no exemplo. TambÈm È boa pr·tica "identar", ou seja, desalinhar as instruÁıes do restante do cÛdigo. Falaremos sobre "estilo" em algum momento do curso. Por enquanto, apenas observe e n„o se assuste. Diferentemente de outras linguagens, R n„o requer identaÁ„o para funcionar.
+A condi√ß√£o que o _if_ deve atender vem entre par√™nteses. A instru√ß√£o a ser atendida caso a cl√°usula seja verdadeira vem dentro das chaves. Ali√°s, √© boa pr√°tica (na maioria dos casos) abrir as chaves em uma linha, escrever as instru√ß√µes em outra, e fechar as chaves na linha seguinte ao final das instru√ß√µes, como no exemplo. Tamb√©m √© boa pr√°tica "identar", ou seja, desalinhar as instru√ß√µes do restante do c√≥digo. Falaremos sobre "estilo" em algum momento do curso. Por enquanto, apenas observe e n√£o se assuste. Diferentemente de outras linguagens, R n√£o requer identa√ß√£o para funcionar.
 
-Vamos supor que um candidato teve determinada quantia de votos. Ele precisava de 700 para ser eleito. Vamos criar uma nova vari·vel, "status", que receber· valor "eleito" se "votos" for maior que 700. Supondo que o candidato recebeu 800 votos, fazemos:
+Vamos supor que um candidato teve determinada quantia de votos. Ele precisava de 700 para ser eleito. Vamos criar uma nova vari√°vel, "status", que receber√° valor "eleito" se "votos" for maior que 700. Supondo que o candidato recebeu 800 votos, fazemos:
   
 ```{r}
 votos <- 800
@@ -199,7 +199,7 @@ print(status)
 
 ```
 
-Mas e se quisermos dar o valor "nao eleito" a "status" caso ele n„o tenha recebido mais de 700 votos? Usamos _else_ para indicar o que fazer em todos os casos em que a condiÁ„o em _if_ n„o foi atendida.
+Mas e se quisermos dar o valor "nao eleito" a "status" caso ele n√£o tenha recebido mais de 700 votos? Usamos _else_ para indicar o que fazer em todos os casos em que a condi√ß√£o em _if_ n√£o foi atendida.
 
 ```{r}
 if (votos > 700){
@@ -211,9 +211,9 @@ if (votos > 700){
 print(status)
 ```
 
-Por fim, vamos imaginar um regra mais complexa. Se o total de "votos" do candidato for maior que 1200, ent„o ele est· eleito. Se a votaÁ„o tiver ficado entre 700 (exclusive) e 1200 (inclusive), ele recebe "status" igual a "suplente". Com 700 votos ou menos, o "status" È n„o eleito.
+Por fim, vamos imaginar um regra mais complexa. Se o total de "votos" do candidato for maior que 1200, ent√£o ele est√° eleito. Se a vota√ß√£o tiver ficado entre 700 (exclusive) e 1200 (inclusive), ele recebe "status" igual a "suplente". Com 700 votos ou menos, o "status" √© n√£o eleito.
 
-Veja como traduzir a regra acima em cÛdigo usando _if_, _else if_ e _else_.
+Veja como traduzir a regra acima em c√≥digo usando _if_, _else if_ e _else_.
 
 ```{r}
 if (votos > 1200){
@@ -227,7 +227,7 @@ if (votos > 1200){
 print(status)
 ```
 
-Outro exemplos simples do uso de condicionais, agora com uma vari·vel de textos
+Outro exemplos simples do uso de condicionais, agora com uma vari√°vel de textos
 
 ```{r}
 partido <- "PMDB"
@@ -235,22 +235,22 @@ partido <- "PMDB"
 if (partido == "PMDB" | partido == "PSD" | partido == "DEM") {
   print("governo")
 } else {
-  print("oposiÁ„o")
+  print("oposi√ß√£o")
 }
 ```
 
-… possÌvel complicar bastante o uso dos condicionais "aninhando" uma cl·usula dentro da outra e criando "labirintos" de condiÁıes. Fazer isso, porÈm, È mais uma quest„o de lÛgica do que de uso da linguagem. N„o h· variaÁıes relevantes do uso em relaÁ„o aos exemplos simples apresentados acima. Se vocÍ consegue fazer os condicionais em papel e caneta e se os exemplos anteriores tiverem ficado claros, ent„o consegue fazÍ-los em R.
+√â poss√≠vel complicar bastante o uso dos condicionais "aninhando" uma cl√°usula dentro da outra e criando "labirintos" de condi√ß√µes. Fazer isso, por√©m, √© mais uma quest√£o de l√≥gica do que de uso da linguagem. N√£o h√° varia√ß√µes relevantes do uso em rela√ß√£o aos exemplos simples apresentados acima. Se voc√™ consegue fazer os condicionais em papel e caneta e se os exemplos anteriores tiverem ficado claros, ent√£o consegue faz√™-los em R.
 
-## ExercÌcio
+## Exerc√≠cio
 
-- Anote quantos cafÈs vocÍ tomou cada dia esta semana. Guarde o valor na variavel 'cafe'.
-- Represente com condicionais a regra: se vocÍ tomou 3 ou mais, imprima "Hummm, cafÈ!". Se vocÍ tomou menos de 3, imprima "zzzzzz". 
+- Anote quantos caf√©s voc√™ tomou cada dia esta semana. Guarde o valor na variavel 'cafe'.
+- Represente com condicionais a regra: se voc√™ tomou 3 ou mais, imprima "Hummm, caf√©!". Se voc√™ tomou menos de 3, imprima "zzzzzz". 
 
 ## Repetindo tarefas - while loop
 
-Uma das vantagens dos computadores em relaÁ„o aos seres humanos È a capacidade de repetir tarefas a um custo baixo. Vamos ver um exemplo simples: contar atÈ 42. Usaremos como recurso um _while_ loop, ou seja, daremos um estado inicial, uma condiÁ„o e uma instruÁ„o para o computador e pediremos para ele repetir a instruÁ„o __enquanto__ a condiÁ„o for atendida.
+Uma das vantagens dos computadores em rela√ß√£o aos seres humanos √© a capacidade de repetir tarefas a um custo baixo. Vamos ver um exemplo simples: contar at√© 42. Usaremos como recurso um _while_ loop, ou seja, daremos um estado inicial, uma condi√ß√£o e uma instru√ß√£o para o computador e pediremos para ele repetir a instru√ß√£o __enquanto__ a condi√ß√£o for atendida.
 
-Em nosso caso, a instruÁ„o ser·: imprima o n˙mero "atual" (vocÍ j· entender· isso), armazenado na vari·vel "contador", e some mais um. A condiÁ„o ser·: enquanto a vari·vel "contador" for menor ou igual a 42. Se vamos comeÁar a contar a partir do 1, nosso estado inicial ser· igualar o "contador" a 1. Veja como fica o cÛdigo:
+Em nosso caso, a instru√ß√£o ser√°: imprima o n√∫mero "atual" (voc√™ j√° entender√° isso), armazenado na vari√°vel "contador", e some mais um. A condi√ß√£o ser√°: enquanto a vari√°vel "contador" for menor ou igual a 42. Se vamos come√ßar a contar a partir do 1, nosso estado inicial ser√° igualar o "contador" a 1. Veja como fica o c√≥digo:
   
 ```{r}
 contador <- 1
@@ -264,13 +264,13 @@ print(contador)
 
 ```
 
-Traduzindo para o portuguÍs: "enquanto o contador for menor ou igual a 42, imprima e some um". A estrutura de um _while_ loop È sempre: "enquanto" (condiÁ„o), "faÁa" (instruÁ„o).
+Traduzindo para o portugu√™s: "enquanto o contador for menor ou igual a 42, imprima e some um". A estrutura de um _while_ loop √© sempre: "enquanto" (condi√ß√£o), "fa√ßa" (instru√ß√£o).
 
-Veja que precisamos planejar muito bem o _while_ loop. Se, por exemplo, esquecermos de pensar como a condiÁ„o inicial ser· alterada a cada __iteraÁ„o__ (sem o "n" mesmo, pois È diferente de "interaÁ„o"), corremos o risco de criar um "loop infinito". O critÈrio de parada (condiÁ„o entre parÍnteses) deve ser atendido em algum ponto do programa para que ele seja interrompido.
+Veja que precisamos planejar muito bem o _while_ loop. Se, por exemplo, esquecermos de pensar como a condi√ß√£o inicial ser√° alterada a cada __itera√ß√£o__ (sem o "n" mesmo, pois √© diferente de "intera√ß√£o"), corremos o risco de criar um "loop infinito". O crit√©rio de parada (condi√ß√£o entre par√™nteses) deve ser atendido em algum ponto do programa para que ele seja interrompido.
 
-Vamos complicar. Seguiremos contando atÈ 42, mas todas as vezes em que o n˙mero for par (ou seja, m˙ltiplo de 2), deixaremos de imprimir o n˙mero. Como fazer isso? Com _if_.
+Vamos complicar. Seguiremos contando at√© 42, mas todas as vezes em que o n√∫mero for par (ou seja, m√∫ltiplo de 2), deixaremos de imprimir o n√∫mero. Como fazer isso? Com _if_.
 
-Dica: para saber se um n˙mero È divisÌvel por outro, basta usar o resto da divis„o (consulte o tutorial anterior %%) e checar se È igual a zero.
+Dica: para saber se um n√∫mero √© divis√≠vel por outro, basta usar o resto da divis√£o (consulte o tutorial anterior %%) e checar se √© igual a zero.
 
 ```{r}
 contador <- 1
@@ -285,11 +285,11 @@ while (contador <= 42) {
 print(contador)
 ```
 
-Veja que temos agora um cÛdigo "aninhado", pois colocamos um condicional dentro de um loop. Novamente, combinar estruturas de cÛdigo È mais um problema de lÛgica do que de linguagem e, se vocÍ consegue fazer no papel, consegue traduzir para o R.
+Veja que temos agora um c√≥digo "aninhado", pois colocamos um condicional dentro de um loop. Novamente, combinar estruturas de c√≥digo √© mais um problema de l√≥gica do que de linguagem e, se voc√™ consegue fazer no papel, consegue traduzir para o R.
 
 ## Repetindo tarefas - for loop
 
-E se em vez de repetir uma tarefa atÈ atingir uma condiÁ„o j· soubermos quantas vezes queremos repetÌ-la? Neste caso, podemos usar o _for_ loop. O loop n„o ser· mais do tipo "enquanto x faÁa y" mas "para todo i 'em' a atÈ b". Veja como o exemplo de contar atÈ 42 ficaria com _for_ loop:
+E se em vez de repetir uma tarefa at√© atingir uma condi√ß√£o j√° soubermos quantas vezes queremos repet√≠-la? Neste caso, podemos usar o _for_ loop. O loop n√£o ser√° mais do tipo "enquanto x fa√ßa y" mas "para todo i 'em' a at√© b". Veja como o exemplo de contar at√© 42 ficaria com _for_ loop:
   
 ```{r}
 for (i in 1:42){
@@ -297,7 +297,7 @@ for (i in 1:42){
 }
 ```
 
-Neste caso, lemos "para cada i 'em' 1 atÈ 42, faÁa". O que o _for_ loop faz È variar o i a cada iteraÁ„o de acordo com a sequÍncia estabelecida. Outro exemplo, agora na ordem reversa:
+Neste caso, lemos "para cada i 'em' 1 at√© 42, fa√ßa". O que o _for_ loop faz √© variar o i a cada itera√ß√£o de acordo com a sequ√™ncia estabelecida. Outro exemplo, agora na ordem reversa:
   
 ```{r}
 for (i in 10:-10){
@@ -305,7 +305,7 @@ for (i in 10:-10){
 }
 ```
 
-Agora com a condiÁ„o de n„o imprimir os pares:
+Agora com a condi√ß√£o de n√£o imprimir os pares:
   
 ```{r}
 for (i in 1:42){
@@ -315,7 +315,7 @@ for (i in 1:42){
 }
 ```
 
-_for_ loops n„o precisam ser apenas com n˙meros. Na verdade, vocÍ pode colocar apÛs o "in" qualquer vetor. Por exemplo, um vetor das regiıes brasileiras (ou UFs, se vocÍ tiver paciÍncia de escrever todas):
+_for_ loops n√£o precisam ser apenas com n√∫meros. Na verdade, voc√™ pode colocar ap√≥s o "in" qualquer vetor. Por exemplo, um vetor das regi√µes brasileiras (ou UFs, se voc√™ tiver paci√™ncia de escrever todas):
   
 ```{r}
 vetor_regioes <- c("norte", "nordeste", "sudeste","sul", "centro-oeste")
@@ -325,13 +325,13 @@ for (regiao in vetor_regioes){
 }
 ```
 
-Se vocÍ j· trabalhou com dados eleitorais brasileiros, vocÍ certamente teve de abrir diversos arquivos semelhantes, cada um contendo informaÁıes de um estado brasileiro. Ou ainda, se vocÍ j· obteve informaÁıes na internet talvez tenha precisado "passar" por diversas p·ginas semelhantes. Loops resolvem problemas desse tipo: eles repetem procedimentos variando apenas um Ìndice. Aprender a usar loops economiza um tempo enorme, pois conseguimos automatizar tarefas ou, pelo menos, escrever um cÛdigo mais curto para aplicar o mesmo comando in˙meras vezes.
+Se voc√™ j√° trabalhou com dados eleitorais brasileiros, voc√™ certamente teve de abrir diversos arquivos semelhantes, cada um contendo informa√ß√µes de um estado brasileiro. Ou ainda, se voc√™ j√° obteve informa√ß√µes na internet talvez tenha precisado "passar" por diversas p√°ginas semelhantes. Loops resolvem problemas desse tipo: eles repetem procedimentos variando apenas um √≠ndice. Aprender a usar loops economiza um tempo enorme, pois conseguimos automatizar tarefas ou, pelo menos, escrever um c√≥digo mais curto para aplicar o mesmo comando in√∫meras vezes.
 
-Vamos parar por aqui com _loops_ e voltaremos a eles para fazermos exercÌcios.
+Vamos parar por aqui com _loops_ e voltaremos a eles para fazermos exerc√≠cios.
 
-## Escrevendo funÁıes
+## Escrevendo fun√ß√µes
 
-Ao longo dos trÍs tutorais que fizemos usamos diversas funÁıes e j· estamos acostumados com elas. Vamos agora aprender a construir funÁıes simples. Vamos do exemplo ‡ aplicaÁ„o. E nosso exemplo ser·, novamente, um conversor de farenheit para celsius:
+Ao longo dos tr√™s tutorais que fizemos usamos diversas fun√ß√µes e j√° estamos acostumados com elas. Vamos agora aprender a construir fun√ß√µes simples. Vamos do exemplo √† aplica√ß√£o. E nosso exemplo ser√°, novamente, um conversor de farenheit para celsius:
   
 ```{r}
 conversor <- function(farenheit){
@@ -343,13 +343,13 @@ conversor(212)
 conversor(32)
 ```
 
-Temos v·rios elementos no "construtor" de funÁıes. Em primeiro lugar, criamos a funÁ„o como criamos um objeto. Quer dizer, escolhemos um nome para ela e atribuÌmos a funÁ„o criada a esse nome.
+Temos v√°rios elementos no "construtor" de fun√ß√µes. Em primeiro lugar, criamos a fun√ß√£o como criamos um objeto. Quer dizer, escolhemos um nome para ela e atribu√≠mos a fun√ß√£o criada a esse nome.
 
-Para criar uma funÁ„o, usamos _function_. Basicamente, o "construtor" tem duas partes: os argumentos da funÁ„o, que inserimos no parÍnteses apÛs _function_; e o corpo da funÁ„o em chaves, que utiliza os argumentos para realizar uma tarefa e retorna um resultado, indicado pela funÁ„o _return_.
+Para criar uma fun√ß√£o, usamos _function_. Basicamente, o "construtor" tem duas partes: os argumentos da fun√ß√£o, que inserimos no par√™nteses ap√≥s _function_; e o corpo da fun√ß√£o em chaves, que utiliza os argumentos para realizar uma tarefa e retorna um resultado, indicado pela fun√ß√£o _return_.
 
-## ExercÌcio
+## Exerc√≠cio
 
-Crie uma funÁ„o chamada "quadrado" que recebe um n˙mero "x" e retorna o quadrado de x.
+Crie uma fun√ß√£o chamada "quadrado" que recebe um n√∫mero "x" e retorna o quadrado de x.
 
 ## Reposta
 
@@ -363,10 +363,10 @@ quadrado(4)
 quadrado(17)
 ```
 
-## ExercÌcio
+## Exerc√≠cio
 
-- Crie uma funÁ„o que recebe um valor em reais e retorna o valor em dÛlares (use a 3.9 como cotaÁ„o do dÛlar)
-- Crie uma funÁ„o que recebe um valor em reais e uma cotaÁ„o do dÛlar e retorna o valor em dÛlares (ou seja, que contÈm 2 par‚metros).
+- Crie uma fun√ß√£o que recebe um valor em reais e retorna o valor em d√≥lares (use a 3.9 como cota√ß√£o do d√≥lar)
+- Crie uma fun√ß√£o que recebe um valor em reais e uma cota√ß√£o do d√≥lar e retorna o valor em d√≥lares (ou seja, que cont√©m 2 par√¢metros).
 
 ## Paramos por aqui
 
