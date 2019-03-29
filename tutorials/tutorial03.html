@@ -69,9 +69,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -102,8 +100,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -178,6 +174,15 @@ $(document).ready(function () {
 
 
 
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
 
 <div class="fluid-row" id="header">
 
@@ -242,9 +247,7 @@ $(document).ready(function () {
 42 &lt;= 41</code></pre>
 <p>Antes de avançar, tenha certeza que entendeu os exemplos acima.</p>
 <p>Operadores relacionais também vale para textos:</p>
-<pre class="r"><code>&quot;texto&quot; == &quot;texto&quot;
-&quot;texto&quot; == &quot;texTo&quot;
-&quot;texto&quot; != &quot;texto&quot;</code></pre>
+<p><code>r   &quot;texto&quot; == &quot;texto&quot;   &quot;texto&quot; == &quot;texTo&quot;   &quot;texto&quot; != &quot;texto&quot;</code></p>
 <p>Note no segundo exemplo que o R é “case sensitive”, ou seja, diferencia maiúsculas de minúsculas ao comparar textos.</p>
 <p>Textos também podem ser ordenados (lexicograficamente, isto é, alfabeticamente):</p>
 <pre class="r"><code>&quot;a&quot; &gt; &quot;b&quot;
@@ -252,8 +255,7 @@ $(document).ready(function () {
 &quot;A&quot; &lt; &quot;b&quot;
 &quot;A&quot; &gt; &quot;a&quot;</code></pre>
 <p>Inclusive palavras inteiras e sentenças:</p>
-<pre class="r"><code>&quot;cachorro&quot; &lt; &quot;cachorro quente&quot;
-&quot;churrasco de gato&quot; &gt;  &quot;cachorro quente&quot;</code></pre>
+<p><code>r   &quot;cachorro&quot; &lt; &quot;cachorro quente&quot;   &quot;churrasco de gato&quot; &gt;  &quot;cachorro quente&quot;</code></p>
 <p>E valores lógicos? Veja se entende o que acontece nos exemplos abaixo:</p>
 <pre class="r"><code>TRUE == 1
 FALSE == 0
@@ -298,7 +300,7 @@ votos16 &gt; votos12</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Por exemplo, se queremos verificar todos os candidatos que obtivaram acima de 500 (exclusive) <strong>E</strong> abaixo de 1500 (inclusive) votos, fazemos:</p>
+<p>Por exemplo, se queremos verificar todos os candidatos que obtiveram acima de 500 (exclusive) <strong>E</strong> abaixo de 1500 (inclusive) votos, fazemos:</p>
 <pre class="r"><code>votos16 &gt; 500 &amp; votos16 &lt;= 1500</code></pre>
 <p>Veja a tabela de possibilidades de combinação de duas proposições com a conjunção “e”:</p>
 <table>
@@ -332,7 +334,7 @@ votos16 &gt; votos12</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Se o valor atende às duas condições, então o resultado é TRUE. Se ao menos uma proposição é falsa, sob a conjunção é, então a combinação das proposições também é.</p>
+<p>Se o valor atende às duas condições, então o resultado é TRUE. Se ao menos uma proposição é falsa, sob a conjunção “e”, então a combinação das proposições também é.</p>
 <p>Com o operador “Ou”, a combinação de proposições é verdadeira se pelo menos uma delas for verdadeira.</p>
 <pre class="r"><code>votos16 &lt; 500 | votos12 &gt; 1500</code></pre>
 <p>Veja a tabela de possibilidades de combinação de duas proposições com a conjunção “ou”:</p>
@@ -367,7 +369,7 @@ votos16 &gt; votos12</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Finalmente, o operador lógico “não” tem a única função de reverter um proposição:</p>
+<p>Finalmente, o operador lógico “não” tem a função de reverter um proposição:</p>
 <pre class="r"><code>!TRUE
 !(5 &gt; 3)
 !(votos16 &gt; 500 &amp; votos16 &lt;= 1500)</code></pre>
@@ -394,7 +396,7 @@ if (x &lt; 0){
 }
 
 print(x)</code></pre>
-<p>A condição que o <em>if</em> deve atender vem entre parênteses. A instrução a ser atendida caso a cláusula seja verdadeira, vem dentro das chaves. Aliás, é boa prática (na maioria dos casos) abrir as chaves em uma linha, escrever as instruções em outra, e fechar as chaves na linha seguinte ao fim das instruções, como no exemplo. Também é boa prática “identar”, ou seja, desalinhar as instruções do restante do código. Falaremos sobre “estilo” em algum momento do curso, Por enquanto, apenas observe e não se assuste. Diferentemente de outras linguagens, R não requer identação para funcionar.</p>
+<p>A condição que o <em>if</em> deve atender vem entre parênteses. A instrução a ser atendida caso a cláusula seja verdadeira vem dentro das chaves. Aliás, é boa prática (na maioria dos casos) abrir as chaves em uma linha, escrever as instruções em outra, e fechar as chaves na linha seguinte ao final das instruções, como no exemplo. Também é boa prática “identar”, ou seja, desalinhar as instruções do restante do código. Falaremos sobre “estilo” em algum momento do curso. Por enquanto, apenas observe e não se assuste. Diferentemente de outras linguagens, R não requer identação para funcionar.</p>
 <p>Vamos supor que um candidato teve determinada quantia de votos. Ele precisava de 700 para ser eleito. Vamos criar uma nova variável, “status”, que receberá valor “eleito” se “votos” for maior que 700. Supondo que o candidato recebeu 800 votos, fazemos:</p>
 <pre class="r"><code>votos &lt;- 800
 
@@ -430,7 +432,7 @@ if (partido == &quot;PMDB&quot; | partido == &quot;PSD&quot; | partido == &quot;
 } else {
   print(&quot;oposição&quot;)
 }</code></pre>
-<p>É possível complicar bastante o uso dos condicionais “aninhando” uma cláusula dentro da outra e criando “labirintos” de condições. Fazer isso, porém, é mais uma questão de lógica do que de uso da linguagem. Não há variações relevantes do uso em relação aos exemplos simples apresentados acima. Se você consegue fazer os condicionais em papel e caneta, então consegue fazê-los em R se os exemplos anteriores tiverem ficado claro.</p>
+<p>É possível complicar bastante o uso dos condicionais “aninhando” uma cláusula dentro da outra e criando “labirintos” de condições. Fazer isso, porém, é mais uma questão de lógica do que de uso da linguagem. Não há variações relevantes do uso em relação aos exemplos simples apresentados acima. Se você consegue fazer os condicionais em papel e caneta e se os exemplos anteriores tiverem ficado claros, então consegue fazê-los em R.</p>
 </div>
 <div id="exercicio" class="section level2">
 <h2>Exercício</h2>
@@ -451,7 +453,7 @@ while (contador &lt;= 42) {
 }
 
 print(contador)</code></pre>
-<p>Traduzindo para o português: “enquanto o contador for menor ou igual a 42, imprima e some um”. A estrutura de um <em>while</em> loop é sempre: “enquanto” (condição), “faça”.</p>
+<p>Traduzindo para o português: “enquanto o contador for menor ou igual a 42, imprima e some um”. A estrutura de um <em>while</em> loop é sempre: “enquanto” (condição), “faça” (instrução).</p>
 <p>Veja que precisamos planejar muito bem o <em>while</em> loop. Se, por exemplo, esquecermos de pensar como a condição inicial será alterada a cada <strong>iteração</strong> (sem o “n” mesmo, pois é diferente de “interação”), corremos o risco de criar um “loop infinito”. O critério de parada (condição entre parênteses) deve ser atendido em algum ponto do programa para que ele seja interrompido.</p>
 <p>Vamos complicar. Seguiremos contando até 42, mas todas as vezes em que o número for par (ou seja, múltiplo de 2), deixaremos de imprimir o número. Como fazer isso? Com <em>if</em>.</p>
 <p>Dica: para saber se um número é divisível por outro, basta usar o resto da divisão (consulte o tutorial anterior %%) e checar se é igual a zero.</p>
@@ -465,15 +467,15 @@ while (contador &lt;= 42) {
 }
 
 print(contador)</code></pre>
-<p>Veja que temos agora um código “aninhado”, pois colocamos um condicional dentro de um loop. Novamente, combinar estruturas de código são mais um problema de lógica do que de linguagem e, se você consegue fazer no papel, consegue traduzir para o R.</p>
+<p>Veja que temos agora um código “aninhado”, pois colocamos um condicional dentro de um loop. Novamente, combinar estruturas de código é mais um problema de lógica do que de linguagem e, se você consegue fazer no papel, consegue traduzir para o R.</p>
 </div>
 <div id="repetindo-tarefas---for-loop" class="section level2">
 <h2>Repetindo tarefas - for loop</h2>
-<p>E se em vez de repetir uma tarefa até atingir uma condição já soubermos quantas vezes queremos repetí-la? Neste caso, podemos usar o <em>for</em> loop. O loop não será mais do tipo “enquanto x faça y” mas “para todo i em a até b”. Veja como o exemplo de contar até 42 ficaria com <em>for</em> loop:</p>
+<p>E se em vez de repetir uma tarefa até atingir uma condição já soubermos quantas vezes queremos repetí-la? Neste caso, podemos usar o <em>for</em> loop. O loop não será mais do tipo “enquanto x faça y” mas “para todo i ‘em’ a até b”. Veja como o exemplo de contar até 42 ficaria com <em>for</em> loop:</p>
 <pre class="r"><code>for (i in 1:42){
   print(i)
 }</code></pre>
-<p>Neste caso, lemos “para cada i em 1 até 42, faça”. O que o <em>for</em> loop faz é variar o i a cada iteração de acordo com a sequência estabelecida. Outro exemplo, agora na ordem reversa:</p>
+<p>Neste caso, lemos “para cada i ‘em’ 1 até 42, faça”. O que o <em>for</em> loop faz é variar o i a cada iteração de acordo com a sequência estabelecida. Outro exemplo, agora na ordem reversa:</p>
 <pre class="r"><code>for (i in 10:-10){
   print(i)
 }</code></pre>
@@ -489,12 +491,12 @@ print(contador)</code></pre>
 for (regiao in vetor_regioes){
   print(regiao)
 }</code></pre>
-<p>Se você já trabalhou com dados eleitorais brasileiros, você certamente teve de abrir diversos arquivos semelhantes, cada um contendo informações de um estado brasileiro. Ou ainda, se você já obteve informações na internet, talvez tenha precisado “passar” por diversas páginas semelhantes. Loops resolvem problemas desse tipo: eles repetem procedimentos variando apenas um índice. Aprender a usar loops economiza um tempo enorme, pois conseguimos automatizar tarefas ou, pelo menos, escrever um código mais curto para aplicar o mesmo comando inúmeras vezes.</p>
-<p>Vamos para por aqui com <em>loops</em> e voltaremos a eles para fazermos exercícios.</p>
+<p>Se você já trabalhou com dados eleitorais brasileiros, você certamente teve de abrir diversos arquivos semelhantes, cada um contendo informações de um estado brasileiro. Ou ainda, se você já obteve informações na internet talvez tenha precisado “passar” por diversas páginas semelhantes. Loops resolvem problemas desse tipo: eles repetem procedimentos variando apenas um índice. Aprender a usar loops economiza um tempo enorme, pois conseguimos automatizar tarefas ou, pelo menos, escrever um código mais curto para aplicar o mesmo comando inúmeras vezes.</p>
+<p>Vamos parar por aqui com <em>loops</em> e voltaremos a eles para fazermos exercícios.</p>
 </div>
 <div id="escrevendo-funcoes" class="section level2">
 <h2>Escrevendo funções</h2>
-<p>Ao longo dos três tutorais que fizemos, usamos diversas funções e já estamos acostumados com elas. Vamos agora aprender a construir funções simples. Vamos do exemplo à aplicação e nosso exemplo será um conversor de farenheit para celsius:</p>
+<p>Ao longo dos três tutorais que fizemos usamos diversas funções e já estamos acostumados com elas. Vamos agora aprender a construir funções simples. Vamos do exemplo à aplicação. E nosso exemplo será, novamente, um conversor de farenheit para celsius:</p>
 <pre class="r"><code>conversor &lt;- function(farenheit){
   celsius &lt;- ((farenheit - 32) / 9) * 5
   return(celsius)
@@ -523,7 +525,7 @@ quadrado(17)</code></pre>
 <h2>Exercício</h2>
 <ul>
 <li>Crie uma função que recebe um valor em reais e retorna o valor em dólares (use a 3.9 como cotação do dólar)</li>
-<li>Crie uma função que recebe um valor em reais e uma cotação do dólar e retorna o valor em dólares.</li>
+<li>Crie uma função que recebe um valor em reais e uma cotação do dólar e retorna o valor em dólares (ou seja, que contém 2 parâmetros).</li>
 </ul>
 </div>
 <div id="paramos-por-aqui" class="section level2">
