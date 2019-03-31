@@ -69,9 +69,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -102,8 +100,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -178,6 +174,15 @@ $(document).ready(function () {
 
 
 
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
 
 <div class="fluid-row" id="header">
 
@@ -210,8 +215,8 @@ $(document).ready(function () {
 <pre class="r"><code>42 %% 5</code></pre>
 <p>Nos exemplos acima realizamos operações bastante simples sem usar objetos, ou, como costumamos chamar, variáveis. Note que há dois usos para a palavra “variável”. O primeiro deles, que vimos no tutorial anterior, é o sinônimo de coluna em um <em>data frame</em>, e registra uma característica específica para todas as observações (por exemplo, a coluna com idade em um <em>data frame</em> com indivíduos).</p>
 <p>O outro uso é sinônimo de objeto no R. Nos referimos à “variável x”, quando atribuímos algo – um número ou um texto, por exemplo – a “x”.</p>
-<p>Nos tutoriais, vamos fazer uso de variável com ambos significados. Fique atent@, mas com o tempo você se acostumará.</p>
-<p>Voltando às operações matemáticas, vamos criar uma variável “x” com o valor 42. Ao criar uma variável que armazena apenas um número, estamos criando um vetor atômico (pois vetores atômicos são os vetores de tamanho 1).</p>
+<p>Nos tutoriais, vamos fazer uso de variável com ambos significados. Fique atenta, mas com o tempo você se acostumará.</p>
+<p>Voltando às operações matemáticas, vamos criar uma variável “x” com o valor 42. Ao criar uma variável que armazena apenas um número, estamos criando um escalar ou vetor atômico (pois vetores atômicos são os vetores de tamanho 1).</p>
 <pre class="r"><code>x &lt;- 42</code></pre>
 <p>Lembre-se: podemos usar o “&lt;-” ou “=” para fazermos uma atribuição:</p>
 <pre class="r"><code>x = 42</code></pre>
@@ -220,10 +225,9 @@ $(document).ready(function () {
 <pre class="r"><code>x</code></pre>
 <p>Em várias outras linguagens, e em R inclusive, usa-se a função <em>print</em> para imprimir os valores de uma variável:</p>
 <pre class="r"><code>print(x)</code></pre>
-<p>Quando usar print? Veremos no futuro que, dependendo da situação (por exemplo, dentro de funções), é preciso explicitar que queremos “imprimir” algo, e, nestes casos, usamos a função <em>print</em>.</p>
+<p>Quando usar print? Veremos no futuro que, dependendo da situação (por exemplo, dentro de funções), é preciso explicitar que queremos “imprimir” algo no console, e, nestes casos, usamos a função <em>print</em>.</p>
 <p>Vamos criar mais uma variável, y, e fazer operações com variáveis:</p>
 <pre class="r"><code>y &lt;- 5
-
 x + y
 x - y
 x / y
@@ -282,7 +286,7 @@ print(sequencia)</code></pre>
 <p>A sequência pode ter ordem reversa:</p>
 <pre class="r"><code>sequencia_reversa &lt;- 10:1
 print(sequencia_reversa)</code></pre>
-<p>Podemos combinar sequências que contém um intervalo, ou mesmo sequências que se sobrepõe, em um único vetor:</p>
+<p>Podemos combinar sequências que contêm um intervalo, ou mesmo sequências que se sobrepõem, em um único vetor:</p>
 <pre class="r"><code>sequencia_intervalo &lt;- c(1:10, 20:30)
 print(sequencia_intervalo)
 sequencia_sobreposicao &lt;- c(10:20, 15:25)
@@ -291,7 +295,7 @@ print(sequencia_sobreposicao)</code></pre>
 <div id="operacoes-matematicas-com-vetores" class="section level2">
 <h2>Operações matemáticas com vetores</h2>
 <p>Ei, você advinhou a fórmula de conversão de temperatura de celsius para farenheit um pouco acima no tutorial? Bem, vamos usá-la num exemplo.</p>
-<p>Comecemos com um vetor de temperaturas médias dos meses de dezembro a abril em um lugar qualquer do hemisfério Norte:</p>
+<p>Comecemos com um vetor de temperaturas médias dos meses de dezembro a abril em um lugar qualquer do hemisfério Norte (para podermos trabalhar com o final do ano e temperaturas negativas):</p>
 <pre class="r"><code>temperatura_celsius &lt;- c(-7, -10, 5, 12, 21)</code></pre>
 <p>Da mesma maneira que com vetores atômicos, podemos aplicar as operações matemáticas a vetores maiores. Por exemplo, vamos converter os valores do vetor “temperatura_celsius” para farenheit:</p>
 <pre class="r"><code>temperatura_farenheit &lt;- ((temperatura_celsius / 5) * 9) + 32</code></pre>
@@ -299,11 +303,11 @@ print(sequencia_sobreposicao)</code></pre>
 </div>
 <div id="nomes-do-vetor" class="section level2">
 <h2>Nomes do vetor</h2>
-<p>Aproveitando o exemplo, os elementos de um vetor podem ser nomeados. O vetor “temperatura_celsius”, por enquanto, não tem nome:</p>
+<p>Aproveitando o exemplo, os elementos de um vetor podem ser nomeados. O vetor “temperatura_celsius”, por enquanto, não tem nomes:</p>
 <pre class="r"><code>names(temperatura_celsius)</code></pre>
 <p>(Ei, já usamos a função <em>names</em> no passado para ver o nome das colunas de um <em>data frame</em>).</p>
 <p>Se quiseremos atribuir os nomes aos elementos de “temperatura_celsius”, atribuimos um vetor a “names(temperatura_celsius)”. Esse uso da linguagem é um pouco estranho, pois estamos atribuindo algo a uma função de um objeto, não a um objeto.</p>
-<p>Uma maneira de pensar esse uso menos confusa, é imaginar que um objeto tem várias partes e que estamos atribuindo algo a uma parte específica – os nomes dos elementos, no caso – deste objeto. Veja:</p>
+<p>Uma maneira menos confusa de pensar esse uso é imaginar que um objeto tem várias partes e que estamos atribuindo algo a uma parte específica – os nomes dos elementos, no caso – deste objeto. Veja:</p>
 <pre class="r"><code>names(temperatura_celsius) &lt;- c(&quot;dezembro&quot;, &quot;janeiro&quot;, &quot;fevereiro&quot;, &quot;março&quot;, &quot;abril&quot;)</code></pre>
 <p>Outra forma, mais elegante, de nomear os elementos de um vetor é criar um novo vetor com os nomes, tal como abaixo…</p>
 <pre class="r"><code>meses_experimento &lt;- c(&quot;dezembro&quot;, &quot;janeiro&quot;, &quot;fevereiro&quot;, &quot;março&quot;, &quot;abril&quot;)</code></pre>
@@ -313,7 +317,7 @@ print(sequencia_sobreposicao)</code></pre>
 </div>
 <div id="operacoes-entre-vetores" class="section level2">
 <h2>Operações entre vetores</h2>
-<p>Criemos dois vetores, cada um registrando os gastos com sorvete e café de um pessoa em cada dia da semana, sábado e domingo, inclusive:</p>
+<p>Criemos dois vetores, cada um registrando os gastos com sorvete e café de um pessoa em cada dia da semana, sábado e domingo inclusive:</p>
 <pre class="r"><code>semana_1 &lt;- c(32, 20, 15, 20, 18, 19, 40)
 semana_2 &lt;- c(32, 21, 12, 12, 24, 21, 50)</code></pre>
 <p>Antes de seguir com as operações entre os vetores, vamos nomear seus elementos. Vale a penas criar um único vetor, “dias_da_semana”, e atribuir aos nomes dos elementos dos vetores de dados de gasto com sorvete e café:</p>
@@ -331,7 +335,7 @@ print(soma_semanas)</code></pre>
 <h2>Subconjunto de um vetor - parte 1</h2>
 <p>E se quisermos extrair elementos em apenas uma ou algumas posições de um vetor?</p>
 <p>(Ei, esta é uma parte bem importante da linguagem R! Faça com calma, por mais boba que pareça).</p>
-<p>Quando queremos selecionar elementos de um vetor (ou, no futuro, de uma matriz ou de um <em>data frame</em>) usamos colchetes [, ] ao final do objeto. Vetores são objetos com uma única dimensão, então tudo que precisamos fazer é colocar o número da posição que queremos dentro dos colchetes. Chamamos esse procedimento em inglês de “subset” (no português, “selecionar um subconjunto”).</p>
+<p>Quando queremos selecionar elementos de um vetor (ou, no futuro, de uma matriz ou de um <em>data frame</em>) usamos colchetes [] ao final do objeto. Vetores são objetos com uma única dimensão, então tudo que precisamos fazer é colocar o número da posição que queremos dentro dos colchetes. Chamamos esse procedimento em inglês de “subset” (no português, “selecionar um subconjunto”).</p>
 <p>Para extrair o primeiro dia do vetor com dados da semana 1 (domingo):</p>
 <pre class="r"><code>semana_1[1]</code></pre>
 <p>Ou, para extrair o final de semana (domingo na posição 1 e sábado na posição 7):</p>
@@ -357,7 +361,7 @@ semana_1[dias_uteis]</code></pre>
 </div>
 <div id="soma-media-e-estatisticas-descritivas-dos-elementos-de-um-vetor" class="section level2">
 <h2>Soma, média e estatísticas descritivas dos elementos de um vetor</h2>
-<p>Ao longo do tempo, nosso repertório de funções de R aumentará rapidamente. Há um conjunto de funções fáceis de lembrar que são muito úteis para calcular estatísticas descritivas de um vetor (ou de uma variável em um <em>data frame</em>). Exemplo: meu consumo de litros de café por mês em 2016.</p>
+<p>Ao longo do tempo, nosso repertório de funções de R aumentará rapidamente. Há um conjunto de funções fáceis de lembrar que são muito úteis para calcular estatísticas descritivas de um vetor (ou de uma variável em um <em>data frame</em>). Exemplo: seu consumo de litros de café por mês em 2018.</p>
 <pre class="r"><code>litros_cafe &lt;- c(4.3, 3.1, 5.3, 5.5, 6.9, 8.3, 9.7, 9.9, 9.1, 7.0, 6.2, 5.6)</code></pre>
 <p>Observe as funções de soma, media, desvio padrão, variância, mediana, máximo, mínimo e quantil, na respectiva ordem:</p>
 <pre class="r"><code>sum(litros_cafe)
@@ -369,6 +373,7 @@ max(litros_cafe)
 min(litros_cafe)
 quantile(litros_cafe, probs = c(0, 0.25, 0.5, 0.75, 1))</code></pre>
 <p>Veja que, com a exceção de <em>quantile</em>, todas as funções retornam vetores atômicos. <em>quantile</em> retorna um vetor do tamanho do vetor de probabilidades, que é o segundo argumento da função, e que indica os quantis correspondentes a cada valor.</p>
+<p>Note também que o vetor utilizado nas operações não contém nenhum valor faltante, <em>NA</em> (<em>missing value</em>). Caso houvesse, precisariamos utilizar o argumento <em>na.rm = TRUE</em>, que removeria todos os <em>NAs</em> do vetor antes de produzir a operação.</p>
 </div>
 <div id="exercicio-1" class="section level2">
 <h2>Exercício</h2>
@@ -376,7 +381,7 @@ quantile(litros_cafe, probs = c(0, 0.25, 0.5, 0.75, 1))</code></pre>
 </div>
 <div id="subconjunto-de-um-vetor---parte-2" class="section level2">
 <h2>Subconjunto de um vetor - parte 2</h2>
-<p>Finalmente, vamos usar operadores relacionais (ao qual voltaremos no início do próximo tutorial) para produzir um exemplo de subconjunto mais interessante. A “Organização Mundial de Bebedores de Café”, OMBC, recomenda que o consumo de café não ultrapasse o limite de até 7 litros por mês (inclusive). Vamos observar em quais meses de 2016 eu tomei mais café do que deveria.</p>
+<p>Finalmente, vamos usar operadores relacionais (ao qual voltaremos no início do próximo tutorial) para produzir um exemplo de subconjunto mais interessante. A “Organização Mundial de Bebedores de Café”, OMBC, recomenda que o consumo de café não ultrapasse o limite de até 7 litros por mês (ou seja, 7 inclusive). Vamos observar em quais meses de 2016 você tomou mais café do que deveria.</p>
 <p>Nomeando o vetor:</p>
 <pre class="r"><code>meses &lt;- c(&quot;Janeiro&quot;, &quot;Fevereiro&quot;, &quot;Marco&quot;, &quot;Abril&quot;, &quot;Maio&quot;, &quot;Junho&quot;, 
            &quot;Julho&quot;, &quot;Agosto&quot;, &quot;Setembro&quot;, &quot;Outubro&quot;, &quot;Novembro&quot;, &quot;Dezembro&quot;)
@@ -428,7 +433,7 @@ print(f_tamanho)</code></pre>
 f_tamanho[2]
 f_tamanho[1] &gt; f_tamanho[2]
 f_tamanho &gt; &quot;medio&quot;</code></pre>
-<p>Voltaremos aos “factors” em momento adequado. O importante agora é saber que eles existem e que é uma classe de vetores em R. Ao importarmos bases de dados para o “Environment”, verifique se sua variável fosse importada como uma variável de caractere ou fator. Como avisei no início deste tópico, “factors” é um dos aspectos mais confusos em R (em conjunto com “missing values”, que vamos adiar até um momento adequado).</p>
+<p>Voltaremos aos “factors” em momento adequado. O importante agora é saber que eles existem e que é uma classe de vetores em R. Ao importar bases de dados para o “Environment”, verifique se sua variável foi importada como uma variável de caractere ou fator. Como avisei no início deste tópico, “factors” é um dos aspectos mais confusos em R (em conjunto com “missing values”, que vamos adiar até um momento adequado).</p>
 </div>
 <div id="exercicio-2" class="section level2">
 <h2>Exercício</h2>
@@ -443,8 +448,8 @@ f_tamanho &gt; &quot;medio&quot;</code></pre>
 </div>
 <div id="matrizes-em-r" class="section level2">
 <h2>Matrizes em R</h2>
-<p>Durante o curso, utilizaremos poucas ou nenhuma vez matrizes. Há uma razão para isso: estamos <a href="mailto:interessad@s">interessad@s</a> sorbetudo em dados no formato de <em>data frame</em>, que é um caso mais flexível de uma matriz. Ainda assim, convém rapidamente aprender sobre matrizes para, advinhe, entender um pouco mais sobre <em>data frames</em>.</p>
-<p>Para matemáticos, matrizes são objetos com uma álgebra própria e parte de uma área denominada Álgebra Linear. Por exemplo, a multiplicação de matrizes, se você lembra dela de seu período de escola ou graduação, segue regras e tem propriedades diferentes da multiplicação de números. Apesar do R ter uma “gramática” para Álgebra Linear (que lembra o MATLAB e Octave), ela não nos interessa agora e a deixaremos de lado.</p>
+<p>Durante o curso, utilizaremos poucas ou nenhuma vez matrizes. Há uma razão para isso: estamos interessadas sorbetudo em dados no formato de <em>data frame</em>, que é um caso mais flexível de uma matriz. Ainda assim, convém rapidamente aprender sobre matrizes para, advinhe, entender um pouco mais sobre <em>data frames</em>.</p>
+<p>Para matemáticos, matrizes são objetos com uma álgebra própria e parte de uma área denominada Álgebra Linear. Por exemplo, a multiplicação de matrizes, se você se lembra dela de seu período de escola ou graduação, segue regras e tem propriedades diferentes da multiplicação de números. Apesar do R ter uma “gramática” para Álgebra Linear (que lembra o MATLAB e Octave), ela não nos interessa agora e a deixaremos de lado.</p>
 <p>Para criarmos uma matriz, precisamos de um vetor que contenha o número de elementos a serem inseridos em uma matriz. Para uma matriz de 3 linhas e 3 colunas, precisamos de um vetor de 9 elementos, a exemplo do vetor gerado pelo comando “1:9”.</p>
 <p>Há duas maneiras de “preencher” a matriz: pelas linhas (“byrow = T”) ou pelas colunas (“byrow = F”). Veja os exemplos abaixo e tente compreender o funcionamento de <em>matrix</em>:</p>
 <pre class="r"><code>matrix(1:9, byrow = TRUE, nrow = 3)
@@ -461,10 +466,8 @@ print(cafe)</code></pre>
 <p>Veja que as margens da matriz não tem nomes. Vamos proceder como fizemos com vetores. Entretanto, não vamos nomear cada elemento, mas as linhas e colunas, e utilizaremos as funções <em>rownames</em> e <em>colnames</em> para a tarefa:</p>
 <pre class="r"><code>fregueses &lt;- c(&quot;Beatriz&quot;, &quot;Pedro&quot;, &quot;Mateus&quot;)
 dias_uteis &lt;- c(&quot;Segunda&quot;, &quot;Terca&quot;, &quot;Quarta&quot;, &quot;Quinta&quot;, &quot;Sexta&quot;)
-
 rownames(cafe) &lt;- dias_uteis
 colnames(cafe) &lt;- fregueses
-
 print(cafe)</code></pre>
 <p>O processo de nomear as linhas e colunas poderia ser realizado no momento em que a matriz foi gerada com o uso do argumento <em>dimnames</em>, como no exemplo:</p>
 <pre class="r"><code>cafe &lt;- matrix(vetor_cafe, byrow = FALSE, nrow = 5,
@@ -481,13 +484,12 @@ colSums(cafe)</code></pre>
 <p>Combinando as funções de soma com as de combinação (sic), podemos gerar os totais nas margens da matriz:</p>
 <pre class="r"><code>Total_Coluna &lt;- colSums(cafe)
 cafe2 &lt;- rbind(cafe, Total_Coluna)
-
 Total_Linha &lt;- rowSums(cafe2)
 cafe2 &lt;- cbind(cafe2, Total_Linha)
 print(cafe2)</code></pre>
-<p>Como com vetores, podemos fazer operações aritméticas (veja que não estamos falando de Álgebra Linear) com matrizes. Por exemplo, para transformar os gastos com café em doláres (cotação = 3.2):</p>
-<pre class="r"><code>cafe / 3.2</code></pre>
-<p>Podemos também relizar operações entre matrizes de mesmas dimensões que considerem os elementos de forma pareada, tal como com vetores. Usando as duas matrizes do começo deste tópico:</p>
+<p>Como com vetores, podemos fazer operações aritméticas (veja que não estamos falando de Álgebra Linear) com matrizes. Por exemplo, para transformar os gastos com café em doláres (cotação = 3.9):</p>
+<pre class="r"><code>cafe / 3.9</code></pre>
+<p>Podemos também realizar operações entre matrizes de mesmas dimensões que considerem os elementos de forma pareada, tal como com vetores. Usando as duas matrizes do começo deste tópico:</p>
 <pre class="r"><code>matrix(1:9, byrow = TRUE, nrow = 3) + matrix(1:9, byrow = FALSE, nrow = 3)</code></pre>
 <p>Tanto sobre matriz para chegarmos ao que realmente importa: subconjuntos de matrizes. Com vetores, usamos colchetes para produzirmos subconjuntos. As regras que aprendemos para vetores valem para matrizes. A diferença é que matrizes – e também <em>data frames</em> – são objetos com duas dimensões (linhas e colunas). Portanto, ao extrairmos um subconjunto, precisamos informar as duas dimensões nos colchetes, primeiro linha, depois coluna, separadas por vírgula. Se deixamos uma das dimensões em branco, estamos selecionando todos os elementos daquela dimensão.</p>
 <p>Vamos a uma série de exemplos para compreender as regras de subconjunto de matrizes.</p>
