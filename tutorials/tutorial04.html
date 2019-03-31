@@ -190,143 +190,85 @@ $(document).ready(function () {
 
 <div id="abrindo-dados-no-r" class="section level1">
 <h1>Abrindo dados no R</h1>
-<p>Neste tutorial vamos cobrir uma série de métodos disponíveis para abrirmos arquivos de texto, editores de planiljas e de outros softwares de análise de dadoss no R. Vamos dar atenção aos argumentos das funções de forma a solucionar dificuldades de abertura de dados com diferentes características ou em sistemas operacionais variados.</p>
+<p>Neste tutorial vamos cobrir uma série de métodos disponíveis para abrirmos arquivos de texto, editores de planilhas e de outros softwares de análise de dadoss no R. Vamos dar atenção aos argumentos das funções de forma a solucionar dificuldades de abertura de dados com diferentes características ou em sistemas operacionais variados.</p>
 <div id="pacotes-no-r" class="section level2">
 <h2>Pacotes no R</h2>
 <p>Antes de avançarmos à tarefa principal, vamos aprender um pouco mais sobre pacotes. Já foi destacado diversas vezes que uma das vantagens do R é a existência de uma comunidade produtiva e que desenvolve continuamente novas funcionalidades, tudo em código aberto.</p>
 <p>Para instalarmos um novo pacote de R que esteja disponível no CRAN – “The Comprehensive R Archive Network” – utilizamos a função <em>install.packages</em>. Veja o exemplo com o pacote <em>beepr</em>:</p>
 <pre class="r"><code>install.packages(&quot;beepr&quot;)</code></pre>
-<p>Note que o nome do pacote deve estar em parêntese. Além disso, é possível que você tenha sido perguntad@ sobre de qual servidor do CRAN você quer baixar o pacote. A escolha em nada muda o resultado, exceto o tempo de duração do download.</p>
-<p>Uma vez que um pacote foi instalado, ele está disponível em seu computador, mas não ainda para uso. Apenas depois de executarmos a função <em>library</em> é que teremos o pacote em nossa “biblioteca” de funções.</p>
+<p>Note que o nome do pacote deve estar em parêntese e aspas. Além disso, é possível que você tenha sido perguntada sobre de qual servidor do CRAN você quer baixar o pacote. A escolha em nada muda o resultado, exceto o tempo de duração do download.</p>
+<p>Uma vez que um pacote foi instalado, ele está disponível em seu computador, mas não ainda para uso neste script e sessão R. Apenas depois de executarmos a função <em>library</em> é que teremos o pacote em nossa “biblioteca” de funções.</p>
 <pre class="r"><code>library(beepr)</code></pre>
-<p>Você pode dispensar as aspas ao usar a função <em>library</em>, pois é opcional. A função <em>require</em> é semelhante a <em>library</em> e a ignoraremos.</p>
-</div>
-<div id="abrindo-dados-com-da-funcoes-do-pacote-utils" class="section level2">
-<h2>Abrindo dados com da funções do pacote utils</h2>
-<p>Quando você inicia uma nova sessão de R, alguns pacotes já estão automaticamente carregados. <em>utils</em> é um deles, e ele contém as funções mais conhecidas de abertura de dados em arquivos de texto.</p>
-<p>A principal função é <em>read.table</em>. Use a função <em>args</em> para explorar seus argumentos:</p>
-<pre class="r"><code>args(read.table)</code></pre>
-<p>É imprescindível que a função <em>read.table</em> receba como primeiro argumento um arquivo de dados. Note que o caminho para o arquivo deve estar completo (ex: “C:\\User\\Documents\\file.txt”) ou ele deve estar no seu <strong>working directory</strong> (wd). Mas como eu descubro meu wd?</p>
+<p>Você pode dispensar as aspas ao usar a função <em>library</em>, pois é opcional.</p>
 </div>
 <div id="caminhos-no-r" class="section level2">
 <h2>Caminhos no R</h2>
+<p>Cada opção para importar dados para R depende de informar a R onde procurar no seu disco pelo arquivo. R sempre começa a procurar no ‘diretório de trabalho’ que você pode verificar executando o seguinte comando:</p>
 <pre class="r"><code>getwd()</code></pre>
 <p>E como eu altero meu wd?</p>
 <pre class="r"><code>setwd(&quot;C:\\User\\Documents&quot;)</code></pre>
-<p>Simples e muito útil para evitar escrever “labirintos de pastas” ao importar dados.</p>
+<p>Simples e muito útil para evitar escrever “labirintos de pastas” cada vez que queremos importar dados. Agora só precisamos nos referir ao nome do arquivo (e não a sua pasta) para abri-lo. É uma boa prática manter todos os arquivos, scripts e saídas importados em uma pasta de projeto bem organizada.</p>
 <p>Um detalhe fundamental para quem usa Windows: os caminhos devem ser escritos com duas barras no lugar de uma, como no exemplo acima. É uma chatice e a melhor solução é mudar definitivamente para Linux e nunca mais pagar por software proprietário.</p>
-<p>Vamos supor que você queira abrir diversos arquivos (“file1.txt” e “file2.txt”, por exemplo) que estão em uma pasta diferente do seu wd, por exemplo “C:\\User\\Downloads\\”. Mudar o wd pode não ser conviente, mas escrever o caminho todo é menos ainda. Uma solução é criar usar <em>file.path</em> para cadar arquivo armazenando a pasta e o caminho dos arquivos em algum objeto.</p>
-<pre class="r"><code>pasta &lt;- &quot;C:\\User\\Downloads\\&quot;
-path_file1 &lt;- file.path(pasta, &quot;file1.txt&quot;)
-path_file2 &lt;- file.path(pasta, &quot;file2.txt&quot;)</code></pre>
-<p>O código acima pode parecer pouco inteligente neste momento, mas tente pensar a combinação dele com loops para abrir diversos arquivos.</p>
-<p>Use as funções que acabamos de ver para gerenciar caminhos de pastas no R. Vale a pena.</p>
 </div>
-<div id="read.table" class="section level2">
-<h2>read.table</h2>
-<p>Voltando à função <em>read.table</em>, vamos examinar os argumentos seguintes a <em>file</em> usando um exemplo de dados retirado do Portal da Transparência. Extraí dos pagamentos do programa uma amostra de tamanho 50 e salvei em diversos arquivos com caracteristicas distintas.</p>
-<p>Para facilitar nossa vida, vamos usar como argumento “file” o endereço dos dados no repositório do curso. O primeiro arquivo está no enderço que guardaremos em “file1”.</p>
-<pre class="r"><code>file1 &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_hv.csv&quot;</code></pre>
-<p>Esse arquivo contém cabeçalho, ou seja, a primeira linha traz o nome das colunas. Por esta razão, informaremos “header = T”. Ignore por hora o argumento “sep”.</p>
-<pre class="r"><code>dados &lt;- read.table(file1, header = T, sep = &quot;,&quot;)
-head(dados)</code></pre>
-<p>O que aconteceria se escolhessemos “header = F”?</p>
-<pre class="r"><code>dados &lt;- read.table(file1, header = F, sep = &quot;,&quot;)
-head(dados)</code></pre>
-<p>Em primeiro lugar, o nome das variáveis é inserido automaticamente e na sequência V1, V2, …, Vn, onde n é o número de colunas. Além disso, os nomes das variáveis é lido como se fossem uma observação. A consequência é que todas as variáveis serão lidas com um texto na primeira coluna, resultando em “character” ou “factor” a depender das características dos dados.</p>
-<pre class="r"><code>str(dados)</code></pre>
-<p>Vamos observar agora uma versão dos dados que não contém a primeira linha como nome das variáveis. Os dados estão no url armazenado em file2:</p>
-<pre class="r"><code>file2 &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_nv.csv&quot;</code></pre>
-<p>Como já havíamos visto, quando não há cabeçalho na primeira linha, os nomes são inseridos automaticamente:</p>
-<pre class="r"><code>dados &lt;- read.table(file2, header = F, sep = &quot;,&quot;)
-head(dados)</code></pre>
-<p>E se cometermos o erro de indicar que há cabeçalho quando não há?</p>
-<pre class="r"><code>dados &lt;- read.table(file2, header = T, sep = &quot;,&quot;)
-head(dados)</code></pre>
-<p>A primeira linha de dados se torna o nome das variáveis (inclusive os números, que aparecem antecedidos por um “X”).</p>
-<p>Ambos arquivos têm o mesmo separador: vírgula. O argumento “sep” permite indicar qual é o separador.</p>
-<p>Não há muita graça em observar os exemplos com separadores diferente, mas vejamos como abrí-los. Os mais comuns, além da vírgula, são o ponto e vírgula e o tab, este último representado pelo símbolo “”</p>
-<pre class="r"><code># Ponto e virgula
-file3 &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_hp.csv&quot;
-dados &lt;- read.table(file3, header = T, sep = &quot;;&quot;)
-
-file4 &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_ht.csv&quot;
-dados &lt;- read.table(file4, header = T, sep = &quot;\t&quot;)</code></pre>
-<p>Há outras funções da mesma família de <em>read.table</em> no pacote <em>utils</em>. A diferença entre elas é o separador de colunas – vírgula para <em>read.csv</em>, ponto e vírgula para <em>read.csv2</em>, tab para <em>read.delim</em> e <em>read.delim2</em> – e o separador de decimal.</p>
-<p>Por default, <em>read.table</em> considera que os campos em cada coluna estão envolvidas por aspas duplas (quote = “\”“. Para indicar que não há nada, use quote =”“.</p>
-<p>“dec” é o argumento para o separador decimais. Como o padrão brasileiro é a vírgula, e não o ponto, este argumento costuma ser importante.</p>
-<p>Por vezes é conveniente importar apenas um subconjunto das linhas. “skip” permite que pulemos algumas linhas e “nrows” indica o máximo de linhas a serem abertas. Se o banco de dados for desconhecido e muito grande, abrir uma fração permite conhecer (tentando e errando) os demais argumentos (“header”, “sep”, etc) adequados para abrir os dados com um baixo custo de tempo e paciência.</p>
-<p>Por exemplo, para pular as 3 primeiras linhas:</p>
-<pre class="r"><code>dados &lt;- read.table(file2, header = T, sep = &quot;,&quot;, skip = 3)
-head(dados)</code></pre>
-<p>Para abrir apenas 20 linhas:</p>
-<pre class="r"><code>dados &lt;- read.table(file2, header = T, sep = &quot;,&quot;, nrows = 20)
-head(dados)</code></pre>
-<p>Combinando, para abrir da linha 11 à linha 30:</p>
-<pre class="r"><code>dados &lt;- read.table(file1, header = T, sep = &quot;,&quot;, skip = 10, nrows = 30)
-head(dados)</code></pre>
-<p>Por vezes, é interessante definir as classes das variáveis a serem importadas. O argumento deve ser um vetor com uma classe para cada coluna. Por exemplo:</p>
-<pre class="r"><code>dados &lt;- read.table(file1, header = T, sep = &quot;,&quot;, 
-  colClasses = c(&quot;character&quot;, &quot;numeric&quot;,&quot;character&quot;, &quot;numeric&quot;, &quot;numeric&quot;))
-str(dados)</code></pre>
-<p>Perceba que quando abrimos os dados sem especificar o tipo da coluna, a função <em>read.table</em> tenta identificá-los. Uma das grandes chatices das funções de abertura de dados pacote <em>utils</em> é que colunas de texto são normalmente identificadas como “factors”, mesmo quando claramente não são. Veja os exemplos anteriores</p>
-<p>Para evitar que textos sejam lidos como “factors” é importante informar o parâmetro “stringsAsFactors = F”, pois o padrão é “T”. Este argumento incomoda tanto que diversas pessoas chegam a alterar a configuração básica da função para não ter de informá-lo diversas vezes.</p>
-<pre class="r"><code>dados &lt;- read.table(file1, header = T, sep = &quot;,&quot;, stringsAsFactors = F)
-str(dados)</code></pre>
-<p>Note que, agora, “uf” e “munic” são importadas como “character”.</p>
-<p>Finalmente, é comum termos problemas para abrir arquivos que contenham caracteres especiais, pois há diferentes formas do computador transformar 0 e 1 em vogais acentuadas, cecedilha, etc. O “encoding” de cada arquivo varia de acordo com o sistema operacional e aplicativo no qual foi gerado.</p>
-<p>Para resolver este problema, informamos ao R o parâmetro “fileEncoding”, que indica qual é o “encoding” esperado do arquivo. Infelizmente não há formas automáticas infalíveis de descobrir o “encoding” de um arquivo e é preciso conhecer como foi gerado – seja por que você produziu o arquivo ou por que você teve acesso à documentação – ou partir para tentativa e erro. Alguns “encodings” comuns são “latin1”, “latin2” e “utf8”, mas há diversos outros. Como arquivo com o qual estamos trabalhando não contém caracteres especiais, não é preciso fazer nada.</p>
-</div>
-<div id="tibbles-e-tidyverse" class="section level2">
-<h2>Tibbles e tidyverse</h2>
-<p>O desenvolvimento de pacotes em R levou à criação de um tipo específico de <em>data frame</em>, chamado <em>tibble</em>. A estrura é idêntica à de um <em>data frame</em> regular e suas diferenças se resumem à forma que os dados aparecem no console ao “imprimirmos” o objeto, ao “subsetting”, ou seja, à seleção de linhas e à adoção de “stringsAsFactors = F” como padrão. Você pode ler mais sobre <em>tibbles</em> <a href="https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html">aqui</a>.</p>
-<p>O pacote <em>readr</em>, parte do <em>tidyverse</em> (conjunto de pacotes com o qual vamos trabalhar), contém funções para abertura de dados em .txt semelhantes às do pacote <em>utils</em>, mas que trazem algums vantagens: velocidade de abertura, simplicação de argumentos e a produção de <em>tibbles</em> como resultado da importação.</p>
-<pre class="r"><code>library(readr)</code></pre>
-<p>A função análoga à <em>read.table</em> em <em>readr</em> chama-se <em>read_delim</em>. Veja:</p>
-<pre class="r"><code>dados &lt;- read_delim(file1, delim = &quot;,&quot;)
-dados</code></pre>
-<p>Observe que não utilizamos <em>head</em> para imprimir as primeiras linhas. Essa é uma característica de <em>tibbles</em>: o output contém uma fração do banco, a informação sobre número de linhas e colunas, e os tipos de cada variável abaixo dos nomes das colunas. “delim” é o argumento que entra no lugar de “sep” ao utilizarmos as funções do <em>readr</em>.</p>
-<p>O padrão de <em>read_delim</em> é importar a primeira coluna como nome das variáveis. No lugar de <em>header</em>, temos agora o argumento “col_names”, que deve ser igual a “FALSE” para os dados armezenados em “file2”, por exemplo:</p>
-<pre class="r"><code>dados &lt;- read_delim(file2, col_names = F, delim = &quot;,&quot;)
-dados</code></pre>
-<p>X1, X2, …, Xn, com “n” igual ao número de colunas, passam a ser os nomes das variáveis neste caso.</p>
-<p>Além dos valores lógicos, “col_names” também aceita um vetor com novos nomes para as colunas como argumento:</p>
-<pre class="r"><code>dados &lt;- read_delim(file2, col_names = c(&quot;estado&quot;, &quot;municipio_cod&quot;, &quot;municipio_nome&quot;,
-                                         &quot;NIS&quot;, &quot;transferido&quot;),
+<div id="readr" class="section level2">
+<h2>Readr</h2>
+<p>Existem muitas funções para abrir arquivos de dados, mas para simplificar neste curso, vamos nos concentrar em um conjunto de funções do pacote <em>Readr</em>. O pacote <em>readr</em>, parte do <em>tidyverse</em> (conjunto de pacotes com o qual vamos trabalhar), contém funções para abertura de dados ‘retangulares’ (.csv, .tsv, .txt).</p>
+<p>A maneira mais fácil de acessar as funções do <em>Readr</em> é abrir a biblioteca do <em>tidyverse</em> (instale-a primeira, se necessário).</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<p>Provavelmente a função mais usada no <em>Readr</em> é <em>read_csv</em>, que abre arquivos .csv. Em vez de abrir arquivos do nosso computador, também podemos abrir links e, para simplificar, disponibilizamos vários arquivos em nosso repositório do github.</p>
+<pre class="r"><code>file1 &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_hv.csv&quot;
+dados &lt;- read_csv(file1)</code></pre>
+<p><em>dados</em> deve aperecer como um objeto em seu ‘Environment’. A função <em>read_delim</em> nos dá mais flexibilidade para lidar com tipos incomuns de arquivos. Por exemplo, podemos especificar o caractere usado para separar as colunas (por padrão, esta é a vírgula em read_csv):</p>
+<pre class="r"><code>dados &lt;- read_delim(file1, 
                     delim = &quot;,&quot;)
-dados</code></pre>
-<p>“skip” e “n_max” são os argumentos de <em>read_delim</em> correspondentes a “skip” e “nrows”.</p>
-<p>Finalmente, “col_types” cumpre a função de “colClasses”, com uma vantagem: não é preciso usar um vetor com os tipos de dados para cada variável. Basta escrever uma sequência de caracteres onde “c” = “character”, “d” = “double”, “l” = “logical” e “i” = “integer”:</p>
-<pre class="r"><code>dados &lt;- read_delim(file1, delim = &quot;,&quot;, col_types = &quot;cicid&quot;)
-dados</code></pre>
-<p>Mais econômico, não?</p>
-<p><em>read_csv</em> e <em>read_tsv</em> são as versões de <em>read_delim</em> para arquivos separados por vírgula e arquivos separado por tabulações.</p>
-<p>Do ponto de vista formal, as três funções de importação de dados de texto do pacote <em>readr</em> geram objetos que pertecem à classe de <em>data frames</em> e também às classes <em>tbl</em> e <em>tbl_df</em>, que são as classes de <em>tibbles</em> (um objeto pode ser de mais de uma clase).</p>
-<p>Ainda no pacote <em>readr</em>, duas funções são bastante úteis</p>
+
+file_semi_colon &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_hp.csv&quot;
+dados &lt;- read_delim(file_semi_colon, 
+                    delim = &quot;;&quot;)
+
+file_tab &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_ht.csv&quot;
+dados &lt;- read_delim(file_tab, 
+                    delim = &quot;\t&quot;)</code></pre>
+<p>O padrão de <em>read_delim</em> (e <em>read_csv</em>) é importar a primeira linha como nome das variáveis. Se nossos dados não tiverem um header, a primeira linha de dados se torna o nome das variáveis (inclusive os números, que aparecem antecedidos por um “X”). Temos o argumento “col_names”, que deve ser igual a “FALSE” para os dados armezenados sem nomes de colunas, por exemplo:</p>
+<pre class="r"><code>file_sem_header &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/bf_amostra_nv.csv&quot;
+dados &lt;- read_delim(file_sem_header, 
+                    col_names = F, 
+                    delim = &quot;,&quot;)</code></pre>
+<p>Além dos valores lógicos, “col_names” também aceita um vetor com novos nomes para as colunas como argumento:</p>
+<pre class="r"><code>dados &lt;- read_delim(file_sem_header, 
+                    col_names = c(&quot;estado&quot;, &quot;municipio_cod&quot;, &quot;municipio_nome&quot;,
+                                  &quot;NIS&quot;, &quot;transferido&quot;),
+                    delim = &quot;,&quot;)</code></pre>
+<p>Por vezes, é interessante definir as classes das variáveis a serem importadas, para evitar novas transformações quando os dados forem importados. O argumento <em>col_types</em> deve ser uma sequência de caracteres onde “c” = “character”, “d” = “double”, “l” = “logical” e “i” = “integer”. Por exemplo:</p>
+<pre class="r"><code>dados &lt;- read_delim(file1, 
+                    delim = &quot;,&quot;, 
+                    col_types = &quot;cicid&quot;)</code></pre>
+<p>Perceba que quando abrimos os dados sem especificar o tipo da coluna, a função <em>read_csv</em> tenta identificá-los.</p>
+<p>Uma complexidade de abertura de dados brasileiros é o uso da vírgula como separador decimal e o ponto para indicar milhares. Temos que especificar no argumento <em>locale</em> essas diferenças.</p>
+<pre class="r"><code>dados &lt;- read_delim(file1, 
+                    delim = &quot;,&quot;, 
+                    locale = locale(decimal_mark=&quot;,&quot;,grouping_mark=&quot;.&quot;))</code></pre>
+<p>Também podemos usar <em>locale</em> para especificar o formato da hora, o formato da data e o encoding do arquivo que estamos lendo.</p>
+<p>Finalmente, é comum termos problemas para abrir arquivos que contenham caracteres especiais, pois há diferentes formas do computador transformar 0 e 1 em vogais acentuadas, cecedilha, etc. O “encoding” de cada arquivo varia de acordo com o sistema operacional e aplicativo no qual foi gerado.</p>
+<pre class="r"><code>dados &lt;- read_delim(file1, 
+                    delim = &quot;,&quot;, 
+                    locale = locale(encoding='latin1'))</code></pre>
+<p>Para resolver este problema, informamos ao R o parâmetro <em>encoding</em> dentro do <em>locale</em>, que indica qual é o “encoding” esperado do arquivo. Infelizmente não há formas automáticas infalíveis de descobrir o “encoding” de um arquivo e é preciso conhecer como foi gerado – seja por que você produziu o arquivo ou por que você teve acesso à documentação – ou partir para tentativa e erro. Alguns “encodings” comuns são “latin1”, “latin2” e “utf8”, mas há diversos outros. Como arquivo com o qual estamos trabalhando não contém caracteres especiais, não é preciso fazer nada.</p>
 </div>
-<div id="outra-gramatica-para-dados-em-r-data.table" class="section level2">
-<h2>Outra gramática para dados em R: data.table</h2>
-<p>No curso vamos trabalhar com duas “gramáticas” para dados em R: a dos pacotes básicos e a fornecida pelos pacotes do <em>tidyverse</em>. O pacote <em>data.table</em> oferece uma terceira alternativa, que não trabalharemos no curso. Esta “gramática” guarda semelhanças (poucas, ao meu ver) com a linguagem SQL.</p>
-<pre class="r"><code>library(data.table)</code></pre>
-<p>Há, porém, duas funções excepcionalmente boas neste pacote: <em>fread</em> e <em>fwrite</em>, que servem, respectivamente, para importar e exportar dados de texto.</p>
-<pre class="r"><code>class(dados)</code></pre>
-<p>As duas grandes vantagens de utilizar <em>fread</em> são: a função detecta os automaticamente as características do arquivo de texto para definir delimitador, cabeçalho, tipos de dados das colunas, etc; e é extremamente rápida em comparação às demais. “f” vem de “Fast and friendly file finagler”.</p>
-<pre class="r"><code>dados &lt;- fread(file1)
-head(dados)</code></pre>
-<p>Além de ser um <em>data.frame</em>, os objeto criado com <em>fread</em> também é da classe <em>data.table</em> e aceita a “gramática” do pacote de mesmo nome.</p>
-<p>Obviamente, se você precisar especificar os argumentos para <em>fread</em> ler um arquivo, não há problemas. Eles são muito parecidos aos de <em>read.table</em>.</p>
+<div id="tibbles" class="section level2">
+<h2>Tibbles</h2>
+<p>Se inspecionarmos o objeto criado por qualquer uma das operações acima, <em>dados</em> parecem um pouco diferentes do que vimos antes. <em>dados</em> é um data.frame, mas também tem alguns característicos adicionais que facilitam o nosso trabalho. Ele se chama um <em>tibble</em> (um objeto pode ser de mais de uma clase). Observe que não utilizamos <em>head</em> para imprimir as primeiras linhas. Essa é uma característica de <em>tibbles</em>: o output contém uma fração do banco, a informação sobre número de linhas e colunas, e os tipos de cada variável abaixo dos nomes das colunas. Você pode ler mais sobre <em>tibbles</em> <a href="https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html">aqui</a>.</p>
 </div>
 <div id="dados-em-arquivos-editores-de-planilhas" class="section level2">
 <h2>Dados em arquivos editores de planilhas</h2>
 <p>Editores de planilha são, em geral, a primeira ferramenta de análise de dados que aprendemos. Diversas organizações disponibilizam (infelizmente) seus dados em formato .xls ou .xlsx e muitos pesquisadores utilizam editores de planilha para construir bases de dados.</p>
 <p>Vamos ver como obter dados em formato .xls ou .xlsx diretamente, sem precisar abrir os arquivos e exportá-los para um formato de texto.</p>
-<p>Há dois bons pacotes com funções para dados em editores de planilha: <em>readxl</em> e <em>gdata</em>. Vamos trabalhar apenas com o primeiro, mas convém conhecer o segundo se você for trabalhar constantemente com planilhas e quiser editá-las, e não só salvá-las. <em>readxl</em> também é parte do <em>tidyverse</em>. Importe o pacote:</p>
+<p>Há dois bons pacotes com funções para dados em editores de planilha: <em>readxl</em> e <em>gdata</em>. Vamos trabalhar apenas com o primeiro, mas convém conhecer o segundo se você for trabalhar constantemente com planilhas e quiser editá-las, e não só salvá-las. <em>readxl</em> também é parte do <em>tidyverse</em> mas temos que abri a biblioteca direitamente. Importe o pacote:</p>
 <pre class="r"><code>library(readxl)</code></pre>
-</div>
-<div id="um-pouco-sobre-donwload-e-manipulacao-de-arquivos" class="section level2">
-<h2>Um pouco sobre donwload e manipulação de arquivos</h2>
+<div id="um-pouco-sobre-donwload-e-manipulacao-de-arquivos" class="section level3">
+<h3>Um pouco sobre donwload e manipulação de arquivos</h3>
 <p>Nosso exemplo será a Pesquisa Perfil dos Municípios Brasileiros de 2005, produzida pelo IBGE e apelidade de MUNIC. Diferentemente das demais funções deste tutorial, precisamos baixar o arquivo para o computador e acessá-lo localmente. Faça o download diretamente do <a href="ftp://ftp.ibge.gov.br/Perfil_Municipios/2005/base_MUNIC_2005.zip">site do IBGE</a> e descompacte. Ou, mais interessante ainda, vamos automatizar o download e descompactação do arquivo (aviso: pode dar erro no Windows e tentaremos corrigir na hora – use Linux!).</p>
-<p>Em primeiro lugar, vamos guardar o endereço url do arquivo em um objeto e fazer o download. Note que na função <em>download.file</em> o primeiro argumento é o url e o segundo é o nome do arquivo que será salvo (nota: você pode colocá-lo em qualquer pasta utilizando <em>file.path</em> para construir o caminho completo para o arquivo a ser gerado).</p>
+<p>Em primeiro lugar, vamos guardar o endereço url do arquivo em um objeto e fazer o download. Note que na função <em>download.file</em> o primeiro argumento é o url e o segundo é o nome do arquivo que será salvo.</p>
 <pre class="r"><code>url_arquivo &lt;- &quot;ftp://ftp.ibge.gov.br/Perfil_Municipios/2005/base_MUNIC_2005.zip&quot;
 download.file(url_arquivo, &quot;temp.zip&quot;, quiet = F)</code></pre>
 <p>O argumento “quiet = F” serve para não imprimirmos no console “os números” do download (pois o tutorial ficaria poluído), mas você pode retirá-lo ou alterá-lo caso queira ver o que acontece.</p>
@@ -337,56 +279,50 @@ download.file(url_arquivo, &quot;temp.zip&quot;, quiet = F)</code></pre>
 <p>Vamos aproveitar e excluir nosso arquivo .zip temporário:</p>
 <pre class="r"><code>file.remove(&quot;temp.zip&quot;)</code></pre>
 </div>
+</div>
 <div id="voltando-as-planilhas" class="section level2">
 <h2>Voltando às planilhas</h2>
 <p>Para não repetir o nome do arquivo diversas vezes, vamos criar o objeto “arquivo” que contém o endereço do arquivo no seu computador (ou só o nome do arquivo entre aspas se você tivê-lo no seu wd):</p>
 <pre class="r"><code>arquivo &lt;- &quot;Base 2005.xls&quot;</code></pre>
-<p>Com <em>excel_sheets</em> examinamos quais são as planilhas existentes do no arquivo:</p>
+<p>Com <em>excel_sheets</em> examinamos quais são as planilhas existentes do arquivo:</p>
+<pre class="r"><code>excel_sheets(arquivo)</code></pre>
 <p>No caso, temos 11 planilhas diferentes (e um bocado de mensagens de erro estranhas). O dicionário, para quem já trabalhou alguma vez com a MUNIC, não é uma base de dados, apenas textos espalhados entre células. As demais, no entanto, têm formato adequado para <em>data frame</em>.</p>
 <p>Vamos importar os dados da planilha “Variáveis externas”. As duas maneiras abaixo se equivalem:</p>
-<p>A função <em>read_excel</em> aceita os argumentos “col_names”, “col_types” e “skip” tal como as funções de importação do pacote <em>readr</em>.</p>
+<pre class="r"><code># 1
+transporte &lt;- read_excel(arquivo, &quot;Variáveis externas&quot;)
+
+# 2
+transporte &lt;- read_excel(arquivo, 11)</code></pre>
+<p>A função <em>read_excel</em> aceita os argumentos “col_names” e “col_types” tal como as funções de importação do pacote <em>readr</em>.</p>
 </div>
 <div id="dados-de-spss-stata-e-sas" class="section level2">
 <h2>Dados de SPSS, Stata e SAS</h2>
-<p>R é bastante flexível quanto à importação de dados de outros softwares estatísticos. Para este fim também há dois pacotes, <em>foreign</em>, mais antigo e conhecido, e <em>haven</em>, que é, advinhe só, parte do <em>tidyverse</em>. São parecidos entre si e recomendo o uso do segundo, que examinaremos abaixo.</p>
+<p>R é bastante flexível quanto à importação de dados de outros softwares estatísticos. Para este fim também há um pacote <em>haven</em>, que é, advinhe só, parte do <em>tidyverse</em>.</p>
 <pre class="r"><code>library(haven)</code></pre>
 <p>Basicamente, há cinco funções de importação de dados em <em>haven</em>: <em>read_sas</em>, para dados em SAS; <em>read_stata</em> e <em>read_dta</em>, idênticas, para dados em formato .dta gerados em Stata; e <em>read_sav</em> e <em>read_por</em>, uma para cada formato de dados em SPSS. O uso, como era de se esperar, é bastante similar ao que vimos no tutorial todo.</p>
-<p>Vamos usar como exemplo o <a href="http://www.latinobarometro.org/latContents.jsp">Latinobarômetro 2015</a>, que está disponível para SAS, Stata, SPSS e R. Como os arquivos são grandes demais e o portal do Latinobarômetro é “cheio de javascript” (dá mais trabalho pegar dados de um portal com funcionalidades construídas nesta linguagem), vamos fazer o processo manual de baixar os dados, descompactá-los e abrí-los. Vamos ignorar SAS por razões que não interessam agora e por não ser uma linguagem popular nas ciências se sociais, mas se você tiver interesse em saber mais, me procure.</p>
-<p>Deixo abaixo uma breve descrição do Latinobarômetro que “roubei” de outro curso que ministrei (em inglês). O Latinobarômetro dado que é um banco de dados com muitas (muitas mesmo) variáveis categóricas, posto que é survey.</p>
-<div id="latinobarometer" class="section level4">
-<h4>2015 Latinobarometer</h4>
-<p>“The second dataset is the 2015 Latinobarometer. This is a very popular survey on democracy and elections in Latin America and the original can be found <a href="http://www.latinobarometro.org/latContents.jsp">here</a>. Latinobarometer contains data on several Latin American Countries. We are going to use the data on Brazil only.”Barometers&quot; are very good source of public opinion data regarding issues of political regime, civil liberties, economic performance of governments and etc. I am sure this dataset can be source of lots of dissertations of students in political economy and comparative politics.&quot;</p>
-</div>
+<p>Vamos usar como exemplo o <a href="http://www.latinobarometro.org/latContents.jsp">Latinobarômetro 2015</a>, que está disponível para SAS, Stata, SPSS e R. Como os arquivos são grandes demais e o portal do Latinobarômetro é “cheio de javascript” (dá mais trabalho pegar dados de um portal com funcionalidades construídas nesta linguagem), vamos fazer o processo manual de baixar os dados da página ‘data bank’, descompactar os arquivos de 2015 e abrí-los. Vamos ignorar SAS por razões que não interessam agora e por não ser uma linguagem popular nas ciências sociais, mas se você tiver interesse em saber mais, me procure.</p>
 </div>
 <div id="abrindo-os-dados-com-haven" class="section level2">
 <h2>Abrindo os dados com haven</h2>
 <p>Vejamos o uso das funções em arquivos de diferentes formatos:</p>
 <pre class="r"><code># SPSS
-latino_barometro &lt;- read_spss(&quot;/home/acsa/FLS/Latinobarometro_2015_Eng.sav&quot;)
-head(lat)
+latino_barometro_spss &lt;- read_spss(&quot;Latinobarometro_2015_Eng.sav&quot;)
+latino_barometro_spss
 
 # Stata
-latino_barometro &lt;- read_stata(&quot;/home/acsa/FLS/Latinobarometro_2015_Eng.dta&quot;)
-head(lat)</code></pre>
+latino_barometro_stata &lt;- read_stata(&quot;Latinobarometro_2015_Eng.dta&quot;)
+latino_barometro_stata</code></pre>
 <p>Simples assim.</p>
-<p>Há critérios de conversão de variáveis categóricas, rótulos e etc, adotados pelo R ao importar arquivos de outras linguagens, mas você pode descobrí-los testando sozinh@.</p>
+<p>Há critérios de conversão de variáveis categóricas, rótulos e etc, adotados pelo R ao importar arquivos de outras linguagens, mas você pode descobrí-los testando sozinha.</p>
 </div>
 <div id="arquivos-.rdata" class="section level2">
 <h2>Arquivos .RData</h2>
 <p>Faça download do arquivo do Latinobarômetro 2015 para formato R. Você verá que o arquivo tem a extensão .RData. Este é o formato de dados do R? Sim e não.</p>
-<p>Começando pelo “não”: um arquivo .RData não é um arquivo de base de dados em R, ou seja, não contém um <em>data frame</em>. Ele contém um workspace inteiro! Ou seja, se você salvar o seu workspace agora usando o “botão de disquete” do RStudio que está na aba “Enviroment” (provavelmente no canto superior à direita), você salvará todos os objetos que ali estão – <em>data frames</em>, vetores, funções, gráficos, etc – e não apenas um único <em>data frame</em>.</p>
-<p>Não há um arquivo de dados do R que se pareça com os arquivos de SPSS e Stata. Em um tutorial futuro veremos como exportar arquivos de texto com as famílias de funções “write”, primas das funções “read”, dos mesmos pacotes que usamos neste tutorial.</p>
-<p>Para salvar um arquivo .RData sem usar o “botão do disquete”, use a função <em>save.image</em>:</p>
-<pre class="r"><code>save.image(&quot;myWorkspace.RData&quot;)</code></pre>
+<p>Começando pelo “não”: um arquivo .RData não é um arquivo de base de dados em R, ou seja, não contém um <em>data frame</em>. Ele contém um workspace (‘Environment’) inteiro! Ou seja, se você salvar o seu workspace agora usando o “botão de disquete” do RStudio que está na aba “Enviroment” (provavelmente no canto superior à direita), você salvará todos os objetos que ali estão – <em>data frames</em>, vetores, funções, gráficos, etc – e não apenas um único <em>data frame</em>.</p>
+<p>Em um tutorial futuro veremos como exportar arquivos de texto com as famílias de funções “write”, primas das funções “read”, dos mesmos pacotes que usamos neste tutorial.</p>
 <p>Para abrir um arquivo .RData, por exemplo, o do Latinobarômetro ou o que você acabou de salvar, use a função <em>load</em>:</p>
 <pre class="r"><code># Latinobarometro
-load(&quot;/home/acsa/FLS/Latinobarometro_2015_Eng.rdata&quot;)
-
-# Workspace do tutorial
-load(&quot;myWorkspace.RData&quot;)</code></pre>
-</div>
-<div id="fim" class="section level2">
-<h2>Fim</h2>
+load(&quot;Latinobarometro_2015_Eng.rdata&quot;)</code></pre>
 </div>
 </div>
 
