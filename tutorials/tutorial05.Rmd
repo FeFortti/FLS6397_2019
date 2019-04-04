@@ -17,7 +17,7 @@ A "gramática" básica do R é pouco elegante e essa é uma das barreiras ao apr
 
 ## Variáveis e data frames
 
-Para esta atividade, vamos trabalhar com um banco de dados falso que criei.
+Para esta atividade, vamos trabalhar com um banco de dados falso criado para a atividade.
 
 Abra o banco de dados usando _read\_delim_:
 
@@ -62,7 +62,7 @@ idade <- fake$age
 print(idade)
 ```
 
-Porque não podemos simplesmente usar "age" e precisamos colocar o nome do _data frame_ seguido de "$" para indicar o vetor do conjunto de dados? Por que podemos ter mais de um _data frame_ no mesmo __Environment__ com uma variável de nome "age". Pense no _data frame_ + nome da variável como um endereço composto da variável no seu Environment que evita ambiguidade. Para quem está aconstumada a trabalhar com SPSS, Stata ou SAS, ter que indicar qual é o _data frame_ ao qual a variável pertence parece estranho, mas faz todo sentido para o R.
+Porque não podemos simplesmente usar "age" e precisamos colocar o nome do _data frame_ seguido de "$" para indicar o vetor do conjunto de dados? Por que podemos ter mais de um _data frame_ no mesmo __Environment__ com uma variável de nome "age". Pense no _data frame_ + nome da variável como um endereço composto da variável no seu Environment, que evita ambiguidade. Para quem está aconstumada a trabalhar com SPSS, Stata ou SAS, ter que indicar qual é o _data frame_ ao qual a variável pertence parece estranho, mas faz todo sentido para o R.
 
 Outros exemplos simples de como usar variáveis de um _data frame_ em outras funções (algumas das quais veremos no futuro, mas você já pode ir se acostumando à linguagem).
 
@@ -95,7 +95,7 @@ No começo pode parecer um pouco irritante usar o "endereço" completo da variá
 
 ## Dimensões em um data frame
 
-Tal como uma matriz, um _data frame_ tem duas dimensões: linha e coluna. Se queremos selecionar elementos de um _data frame_, podemos usar colchetes separados por uma vírgula e inserir antes da vírgula uma seleção de linhas e depois da vírgula uma seleção de colunas -- [linhas, colunas]. Vejamos alguns exemplos de seleção de linhas:
+Tal como uma matriz, um _data frame_ tem duas dimensões: linha e coluna. Se queremos selecionar elementos de um _data frame_, podemos usar colchetes separados por uma vírgula, e inserir antes da vírgula uma seleção de linhas e depois da vírgula uma seleção de colunas -- [linhas, colunas]. Vejamos alguns exemplos de seleção de linhas:
 
 Quinta linha fazemos:
 
@@ -178,7 +178,7 @@ new_fake2 <- fake[,selecao_colunas]
 
 No item acima fizemos uma seleção de colunas nos dados usando os nomes das colunas. Bancos de dados com muitas colunas, como os Censos Populacional e Escolar, ou o Latinobarômetro, não são tão comuns e raramente o número de colunas ultrapassa as poucas centenas.
 
-O que fazer, então, com linhas, que são normalmente muito mais numerosas, as vezes na casa dos milhões? Precisamos utilizar operadores relacionais. Vamos fazer isso dando passos curtos para entendermos todo o processo.
+O que fazer, então, com as linhas, que são normalmente muito mais numerosas, as vezes na casa dos milhões? Precisamos utilizar operadores relacionais. Vamos fazer isso dando passos curtos para entendermos todo o processo.
 
 Vamos supor que queremos selecionar apenas os indivíduos que pretendem votar na próxima eleição (variável "turnout"). Podemos gerar um vetor lógico que represente essa seleção:
 
@@ -269,7 +269,7 @@ Agora, observe o resultado do código abaixo:
 fake$party[fake$party == "Independent"]
 ```
 
-Fizemos um subconjunto de apenas uma variável do _data frame_, e não do _data frame_ todo. Note a ausência da vírgula dentro do colchetes. Se atribuirmos algo a essa selação, por exemplo, o texto "Independente", substituiremos os valores da seleção:
+Fizemos um subconjunto de apenas uma variável do _data frame_, e não do _data frame_ todo. Note a ausência da vírgula dentro dos colchetes. Se atribuirmos algo a essa selação, por exemplo, o texto "Independente", substituiremos os valores da seleção:
 
 ```{r}
 fake$party[fake$party == "Independent"] <- "Independente"
@@ -325,15 +325,15 @@ fake$rich2 <- cut(fake$income,
 table(fake$rich2)
 ```
 
-Algumas observações importantes: se a nova variável tiver 2 categorias, precisamos de 3 "break points"; "-Inf" e "Inf" são os símbolos do R para menos e mais infinito, respectivamente; por padrão, o R nao inclui o primeiro "break point" na primeira categoria, exceto se o argumento "include.lowest" for alterado para TRUE; também por padrão, os intervalos são fechados à direita, e abertos à esquerda (ou seja, incluem o valor superior que delimita o intervalor, mas não o inferior), exceto se o argumento "right" for alterado para FALSE.
+Algumas observações importantes: (1) se a nova variável tiver 2 categorias, precisamos de 3 "break points"; (2) "-Inf" e "Inf" são os símbolos do R para menos e mais infinito, respectivamente; por padrão, o R não inclui o primeiro "break point" na primeira categoria, exceto se o argumento "include.lowest" for alterado para TRUE; (3) também por padrão, os intervalos são fechados à direita, e abertos à esquerda (ou seja, incluem o valor superior que delimita o intervalor, mas não o inferior), exceto se o argumento "right" for alterado para FALSE.
 
 ## Exercício
 
-Crie a variável "poupador", gerada a partir de savings\_year (que criamos anteriormente), e separa os indivíduos que poupam muito (mais de FM/$ 1000 por ano) dos que poupam pouco. Use a função _cut_.
+Crie a variável "poupador", gerada a partir de savings\_year (que criamos anteriormente), e que separa os indivíduos que poupam muito (mais de FM/$ 1000 por ano) dos que poupam pouco. Use a função _cut_.
 
 ## Recodificando uma variável contínua com a função recode
 
-O equivalente da função _cut_ para variáveis categóricas, estejam elas como texto ou como fatores é a função _recode_ (do pacote _dplyr_ no tidyverse). Seu uso é simples e intuitivo. Vamos recodificar como exemplo a variável "educ":
+O equivalente da função _cut_ para variáveis categóricas, estejam elas como texto ou como fatores, é a função _recode_ (do pacote _dplyr_ no tidyverse). Seu uso é simples e intuitivo. Vamos recodificar como exemplo a variável "educ":
 
 ```{r}
 fake$college <- recode(fake$educ, 
@@ -364,7 +364,7 @@ ordem <- order(fake$income)
 print(ordem)
 ```
 
-Se aplicarmos um vetor numérico com um novo ordenaemnto à parte destinada às linhas no colchetes, receberemos o _data frame_ ordenado:
+Se aplicarmos um vetor numérico com um novo ordenamento à parte destinada às linhas no colchetes, receberemos o _data frame_ ordenado:
 
 ```{r}
 fake_ordenado <- fake[ordem, ]
