@@ -37,15 +37,15 @@ navbar:
     - text: "Desafios"
       menu:
       - text: "Desafio 1"
-        href: datachallenge1.html
+        href: activities/datachallenge1.html
       - text: "Desafio 2"
-        href: datachallenge2.html
+        href: activities/datachallenge2.html
       - text: "Desafio 3"
-        href: datachallenge3.html
+        href: activities/datachallenge3.html
       - text: "Desafio 4"
-        href: datachallenge4.html
+        href: activities/datachallenge4.html
       - text: "Desafio 5"
-        href: datachallenge5.html
+        href: activities/datachallenge5.html
 
 output:
   html_document:
