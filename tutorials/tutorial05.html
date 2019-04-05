@@ -195,7 +195,7 @@ $(document).ready(function () {
 <p>A “gramática” básica do R é pouco elegante e essa é uma das barreiras ao aprendizado da linguagem. Ela é bem mais confusa e “verbosa” (ou seja, tem que escrever muito para realizar pouco) do que as dos demais softwares de análise de dados e do <em>tidyverse</em> que vamos explorar no próximo tutorial. Mas sem conhecer como funciona a “gramática” básica da linguagem R, nossa capacidade de aprender mais no futuro ficaria bastante limitada. Lembre-se que aprenderemos num futuro breve formas equivalentes de fazermos as mesmas coisas.</p>
 <div id="variaveis-e-data-frames" class="section level2">
 <h2>Variáveis e data frames</h2>
-<p>Para esta atividade, vamos trabalhar com um banco de dados falso que criei.</p>
+<p>Para esta atividade, vamos trabalhar com um banco de dados falso criado para a atividade.</p>
 <p>Abra o banco de dados usando <em>read_delim</em>:</p>
 <pre class="r"><code>library(tidyverse)
 url_fake_data &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/fake_data.csv&quot;
@@ -228,7 +228,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <p>Podemos fazer uma cópia do vetor “age” que não seja variável do “fake”? Sim:</p>
 <pre class="r"><code>idade &lt;- fake$age
 print(idade)</code></pre>
-<p>Porque não podemos simplesmente usar “age” e precisamos colocar o nome do <em>data frame</em> seguido de “$” para indicar o vetor do conjunto de dados? Por que podemos ter mais de um <em>data frame</em> no mesmo <strong>Environment</strong> com uma variável de nome “age”. Pense no <em>data frame</em> + nome da variável como um endereço composto da variável no seu Environment que evita ambiguidade. Para quem está aconstumada a trabalhar com SPSS, Stata ou SAS, ter que indicar qual é o <em>data frame</em> ao qual a variável pertence parece estranho, mas faz todo sentido para o R.</p>
+<p>Porque não podemos simplesmente usar “age” e precisamos colocar o nome do <em>data frame</em> seguido de “$” para indicar o vetor do conjunto de dados? Por que podemos ter mais de um <em>data frame</em> no mesmo <strong>Environment</strong> com uma variável de nome “age”. Pense no <em>data frame</em> + nome da variável como um endereço composto da variável no seu Environment, que evita ambiguidade. Para quem está aconstumada a trabalhar com SPSS, Stata ou SAS, ter que indicar qual é o <em>data frame</em> ao qual a variável pertence parece estranho, mas faz todo sentido para o R.</p>
 <p>Outros exemplos simples de como usar variáveis de um <em>data frame</em> em outras funções (algumas das quais veremos no futuro, mas você já pode ir se acostumando à linguagem).</p>
 <p>Gráfico de distribuição de uma variável contínua:</p>
 <pre class="r"><code>plot(density(fake$age), main = &quot;Distribuição de Idade&quot;, xlab = &quot;Idade&quot;)</code></pre>
@@ -242,7 +242,7 @@ print(idade)</code></pre>
 </div>
 <div id="dimensoes-em-um-data-frame" class="section level2">
 <h2>Dimensões em um data frame</h2>
-<p>Tal como uma matriz, um <em>data frame</em> tem duas dimensões: linha e coluna. Se queremos selecionar elementos de um <em>data frame</em>, podemos usar colchetes separados por uma vírgula e inserir antes da vírgula uma seleção de linhas e depois da vírgula uma seleção de colunas – [linhas, colunas]. Vejamos alguns exemplos de seleção de linhas:</p>
+<p>Tal como uma matriz, um <em>data frame</em> tem duas dimensões: linha e coluna. Se queremos selecionar elementos de um <em>data frame</em>, podemos usar colchetes separados por uma vírgula, e inserir antes da vírgula uma seleção de linhas e depois da vírgula uma seleção de colunas – [linhas, colunas]. Vejamos alguns exemplos de seleção de linhas:</p>
 <p>Quinta linha fazemos:</p>
 <pre class="r"><code>fake[5, ]</code></pre>
 <p>Quinta e a oitava linhas:</p>
@@ -279,7 +279,7 @@ new_fake2 &lt;- fake[,selecao_colunas]</code></pre>
 <div id="selecionando-linhas-com-operadores-relacionais" class="section level2">
 <h2>Selecionando linhas com operadores relacionais</h2>
 <p>No item acima fizemos uma seleção de colunas nos dados usando os nomes das colunas. Bancos de dados com muitas colunas, como os Censos Populacional e Escolar, ou o Latinobarômetro, não são tão comuns e raramente o número de colunas ultrapassa as poucas centenas.</p>
-<p>O que fazer, então, com linhas, que são normalmente muito mais numerosas, as vezes na casa dos milhões? Precisamos utilizar operadores relacionais. Vamos fazer isso dando passos curtos para entendermos todo o processo.</p>
+<p>O que fazer, então, com as linhas, que são normalmente muito mais numerosas, as vezes na casa dos milhões? Precisamos utilizar operadores relacionais. Vamos fazer isso dando passos curtos para entendermos todo o processo.</p>
 <p>Vamos supor que queremos selecionar apenas os indivíduos que pretendem votar na próxima eleição (variável “turnout”). Podemos gerar um vetor lógico que represente essa seleção:</p>
 <pre class="r"><code>fake$turnout == &quot;Yes&quot;</code></pre>
 <p>Vamos guardar esse vetor lógico em um objeto denominado “selecao_linhas”</p>
@@ -323,7 +323,7 @@ fake$savings_year &lt;- fake$savings / (fake$age - 18)</code></pre>
 <pre class="r"><code>table(fake$party)</code></pre>
 <p>Agora, observe o resultado do código abaixo:</p>
 <pre class="r"><code>fake$party[fake$party == &quot;Independent&quot;]</code></pre>
-<p>Fizemos um subconjunto de apenas uma variável do <em>data frame</em>, e não do <em>data frame</em> todo. Note a ausência da vírgula dentro do colchetes. Se atribuirmos algo a essa selação, por exemplo, o texto “Independente”, substituiremos os valores da seleção:</p>
+<p>Fizemos um subconjunto de apenas uma variável do <em>data frame</em>, e não do <em>data frame</em> todo. Note a ausência da vírgula dentro dos colchetes. Se atribuirmos algo a essa selação, por exemplo, o texto “Independente”, substituiremos os valores da seleção:</p>
 <pre class="r"><code>fake$party[fake$party == &quot;Independent&quot;] &lt;- &quot;Independente&quot;</code></pre>
 <p>Observe o resultado na tabela:</p>
 <pre class="r"><code>table(fake$party)</code></pre>
@@ -362,15 +362,15 @@ table(fake$rich)</code></pre>
                   breaks = c(-Inf, 3000, Inf), 
                   labels = c(&quot;não rico&quot;, &quot;rico&quot;))
 table(fake$rich2)</code></pre>
-<p>Algumas observações importantes: se a nova variável tiver 2 categorias, precisamos de 3 “break points”; “-Inf” e “Inf” são os símbolos do R para menos e mais infinito, respectivamente; por padrão, o R nao inclui o primeiro “break point” na primeira categoria, exceto se o argumento “include.lowest” for alterado para TRUE; também por padrão, os intervalos são fechados à direita, e abertos à esquerda (ou seja, incluem o valor superior que delimita o intervalor, mas não o inferior), exceto se o argumento “right” for alterado para FALSE.</p>
+<p>Algumas observações importantes: (1) se a nova variável tiver 2 categorias, precisamos de 3 “break points”; (2) “-Inf” e “Inf” são os símbolos do R para menos e mais infinito, respectivamente; por padrão, o R não inclui o primeiro “break point” na primeira categoria, exceto se o argumento “include.lowest” for alterado para TRUE; (3) também por padrão, os intervalos são fechados à direita, e abertos à esquerda (ou seja, incluem o valor superior que delimita o intervalor, mas não o inferior), exceto se o argumento “right” for alterado para FALSE.</p>
 </div>
 <div id="exercicio-5" class="section level2">
 <h2>Exercício</h2>
-<p>Crie a variável “poupador”, gerada a partir de savings_year (que criamos anteriormente), e separa os indivíduos que poupam muito (mais de FM/$ 1000 por ano) dos que poupam pouco. Use a função <em>cut</em>.</p>
+<p>Crie a variável “poupador”, gerada a partir de savings_year (que criamos anteriormente), e que separa os indivíduos que poupam muito (mais de FM/$ 1000 por ano) dos que poupam pouco. Use a função <em>cut</em>.</p>
 </div>
 <div id="recodificando-uma-variavel-continua-com-a-funcao-recode" class="section level2">
 <h2>Recodificando uma variável contínua com a função recode</h2>
-<p>O equivalente da função <em>cut</em> para variáveis categóricas, estejam elas como texto ou como fatores é a função <em>recode</em> (do pacote <em>dplyr</em> no tidyverse). Seu uso é simples e intuitivo. Vamos recodificar como exemplo a variável “educ”:</p>
+<p>O equivalente da função <em>cut</em> para variáveis categóricas, estejam elas como texto ou como fatores, é a função <em>recode</em> (do pacote <em>dplyr</em> no tidyverse). Seu uso é simples e intuitivo. Vamos recodificar como exemplo a variável “educ”:</p>
 <pre class="r"><code>fake$college &lt;- recode(fake$educ, 
                        &quot;No High School Degree&quot; = &quot;No College&quot;,
                        &quot;High School Degree&quot; = &quot;No College&quot;,
@@ -390,7 +390,7 @@ table(fake$college)</code></pre>
 <p>Finalmente, vamos ordenar linhas em um banco de dados e aprender a remover duplicidades. Com a função <em>order</em>, podemos gerar um vetor que indica qual a posição que cada linha deveria receber no ordenamento desejado. Vamos ordernar “fake” por renda.</p>
 <pre class="r"><code>ordem &lt;- order(fake$income)
 print(ordem)</code></pre>
-<p>Se aplicarmos um vetor numérico com um novo ordenaemnto à parte destinada às linhas no colchetes, receberemos o <em>data frame</em> ordenado:</p>
+<p>Se aplicarmos um vetor numérico com um novo ordenamento à parte destinada às linhas no colchetes, receberemos o <em>data frame</em> ordenado:</p>
 <pre class="r"><code>fake_ordenado &lt;- fake[ordem, ]
 head(fake_ordenado)</code></pre>
 <p>Poderíamos ter aplicado a função order diretamente dentro dos colchetes:</p>
