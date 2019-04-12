@@ -168,8 +168,8 @@ Vamos ver um novo exemplo. Faremos agora duas operações separadas, cada uma re
 
 ```{r}
 saques_amostra_201701 <- saques_amostra_201701 %>% 
-  mutate(valor_dolar = valor_num / 3.8, 
-         valor10 = valor_num + 10)
+  mutate(valor_dolar = valor / 3.8, 
+         valor10 = valor + 10)
 ```
 
 Use o comando _View_ para ver as novas variáveis no banco de dados.
@@ -180,7 +180,7 @@ Nem todas as transformações de variáveis, porém, são operações matemátic
 
 ```{r}
 saques_amostra_201701 <- saques_amostra_201701 %>% 
-  mutate(valor_categorico = cut(valor_num, 
+  mutate(valor_categorico = cut(valor, 
                                 c(0, 300, Inf), 
                                 c("Baixo", "Alto")))
 ```
