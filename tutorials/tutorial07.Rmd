@@ -101,7 +101,7 @@ comb_right <- comb_right %>% rename(valor11 = valor.x, nome11 = nome.x,
 
 Veja que agora há "missing values" nos valores e nomes de 2011. O "right join" preserva todas as observações de 2017, mesmo sem correspondência em 2011, e não inclui nenhum de 2011 que não encontre correspondência.
 
-Note que "left" e "right" são exatamente a mesma operação, mas com as tabelas em posição (x e y, 1a e 2a, etc) invertidas.
+Note que "left" e "right" são exatamente a mesma operação, mas com as tabelas em posições (x e y, 1a e 2a, etc) invertidas.
 
 ## Inner e Full Join
 
@@ -135,7 +135,7 @@ Se quisermos trabalhar apenas em uma única base de dados, por exemplo, pagament
 comb_semi <- pagamentos11 %>% semi_join(pagamentos17, by = "nis")
 ```
 
-Quantas linhas resultaram? Comparar com o número de observações que aparecem para os dois anos nos resultados de _left\_join_.
+Quantas linhas resultaram? Compare com o número de observações que aparecem para os dois anos nos resultados de _left\_join_.
 
 Por fim, _anti\_join_, tem comportamento semelhante a _semi\_join_, mas, em vez de retornar as observações de 2011 que têm correspondência em 2017, retorna as que nâo têm par em 2017:
 
