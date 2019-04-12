@@ -276,13 +276,13 @@ saques_amostra_201701 &lt;- read_delim(&quot;https://raw.githubusercontent.com/l
          valor = as.numeric(valor))</code></pre>
 <p>Vamos ver um novo exemplo. Faremos agora duas operações separadas, cada uma resultando em uma nova variável: dividiremos o valor por 3.8 para transformar o valor em dólares; e somaremos R$ 10 ao valor, pelo simples exercício de ver a transformação.</p>
 <pre class="r"><code>saques_amostra_201701 &lt;- saques_amostra_201701 %&gt;% 
-  mutate(valor_dolar = valor_num / 3.8, 
-         valor10 = valor_num + 10)</code></pre>
+  mutate(valor_dolar = valor / 3.8, 
+         valor10 = valor + 10)</code></pre>
 <p>Use o comando <em>View</em> para ver as novas variáveis no banco de dados.</p>
 <p>As operações de soma, subtração, divisão, multiplicação, módulo entre mais de uma variável ou entre variáveis e valores são válidas e facilmente executadas como acima mostramos.</p>
 <p>Nem todas as transformações de variáveis, porém, são operações matemáticas. Vamos transformar a variável valor em uma nova variável que indique se o valor sacado é “Alto” (acima de R$ 300) ou “Baixo” (abaixo de R$ 500) com o comando <em>cut</em>:</p>
 <pre class="r"><code>saques_amostra_201701 &lt;- saques_amostra_201701 %&gt;% 
-  mutate(valor_categorico = cut(valor_num, 
+  mutate(valor_categorico = cut(valor, 
                                 c(0, 300, Inf), 
                                 c(&quot;Baixo&quot;, &quot;Alto&quot;)))</code></pre>
 <p>E se quisermos recodificar uma variável de texto? Por exemplo, vamos examinar a variável “mes”. Ela contém o “Mês de Competência” do saque. Usemos a função <em>table</em> para examiná-la:</p>
