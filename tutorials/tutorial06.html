@@ -69,9 +69,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -102,8 +100,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -178,6 +174,15 @@ $(document).ready(function () {
 
 
 
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
 
 <div class="fluid-row" id="header">
 
@@ -190,8 +195,8 @@ $(document).ready(function () {
 
 <div id="manipulacao-de-dados-com-a-gramatica-do-tidyverse" class="section level1">
 <h1>Manipulação de dados com a gramática do Tidyverse</h1>
-<div id="um-primeiro-exemplo" class="section level2">
-<h2>Um primeiro exemplo</h2>
+<div id="tibbles-e-data-frames" class="section level2">
+<h2>Tibbles e data frames</h2>
 <p>Nosso primeiro exemplo será a base de dados dos saques efetuados pelos beneficiários do Bolsa Família em janeiro de 2017. O arquivo de janeiro 2017 é um arquivo grande, com mais de 12 milhões de linhas, então pegamos uma amostra aleatória de apenas 10000 linhas.</p>
 <p>O primeiro elemento útil do tidyverse já vimos - as funções do <em>readr</em> que nos permitem abrir arquivos:</p>
 <pre class="r"><code>library(tidyverse)
@@ -211,6 +216,7 @@ saques_amostra_201701 &lt;- read_delim(&quot;https://raw.githubusercontent.com/l
 <pre class="r"><code>names(saques_amostra_201701)</code></pre>
 <p>O primeiro argumento da função <em>rename</em> deve ser a base de dados cujos nomes das variáveis serão renomeados. Depois da primeir vírgula, inserimos todos as modificações de nomes, novamente separadas por vírgulas, e da seguinte maneira. Exemplo: nome_novo = nome_velho. Caso os nomes tenha espaço, como no nosso exemplo, é preciso usar o acento agudo antes e depois do nome antigo para que o R entenda onde ele começa e termina. Exemplo: nome_novo = `Nome Velho`. Veja o exemplo, em que damos novos nomes às variáveis “UF” e “Nome Município”</p>
 <pre class="r"><code>saques_amostra_201701 &lt;- rename(saques_amostra_201701, uf = UF, munic = `Nome Município`)</code></pre>
+<p>O ‘verbo’ rename, da gramática do <em>dplyr</em> é bastante mais simples do que usar do que o método anterior para renomear variáveis em um <em>data frame</em>.</p>
 </div>
 <div id="uma-gramatica-duas-formas" class="section level2">
 <h2>Uma gramática, duas formas</h2>
@@ -226,7 +232,7 @@ saques_amostra_201701 &lt;- read_delim(&quot;https://raw.githubusercontent.com/l
 </div>
 <div id="selecionando-colunas" class="section level2">
 <h2>Selecionando colunas</h2>
-<p>Algumas colunas são claramente dispensáveis em nosso banco de dados. Por exemplo, já sabemos que “Código Função”, “Código Subfunção”, “Código Programa” e “Código Ação” não variam entre as linhas, pois todas se referem ao Programa Bolsa Família. Vamos ficar apenas com as variáveis que já havíamos renomeado.</p>
+<p>Algumas colunas são claramente dispensáveis em nosso banco de dados. Por exemplo, já sabemos que “Código Função”, “Código Subfunção”, “Código Programa” e “Código Ação” não variam entre as linhas, pois todas se referem ao Programa Bolsa Família. Vamos ficar apenas com as variáveis que já havíamos renomeado. Para tanto, utilizaremos o segundo verbo do <em>dplyr</em> que aprenderemos: <em>select</em></p>
 <pre class="r"><code>saques_amostra_201701 &lt;- select(saques_amostra_201701, uf, munic, cod_munic, nome, valor, mes, data_saque)</code></pre>
 <p>ou usando o operador %&gt;%, chamado <strong>pipe</strong>,</p>
 <pre class="r"><code>saques_amostra_201701 &lt;- saques_amostra_201701 %&gt;% select(uf, munic, cod_munic, nome, valor, mes, data_saque)</code></pre>
@@ -256,7 +262,7 @@ saques_amostra_201701 &lt;- read_delim(&quot;https://raw.githubusercontent.com/l
 <pre class="r"><code>saques_amostra_201701 &lt;- saques_amostra_201701 %&gt;% mutate(nome_min = tolower(nome))</code></pre>
 <p>ou, em uma forma alternativa,</p>
 <pre class="r"><code>saques_amostra_201701 &lt;-mutate(saques_amostra_201701, nome_min = tolower(nome))</code></pre>
-<p>Use o comando View para visualizar o resultado da coluna criada à direita do banco de dados. Simples, não? Basta inserimos dentro do comando <em>mutate</em> a expressão da transformação que queremos.</p>
+<p>Use o comando View para visualizar o resultado da coluna criada à direita do banco de dados. Simples, não? Basta inserimos dentro do ‘verbo’ <em>mutate</em> a expressão da transformação que queremos.</p>
 <p>Vamos a um exemplo um pouco mais difícil: A variável ‘valor’, apesar de conter números, foi lida como texto. Isso ocorre por que o R não entende o uso da vírgula como separador de milhar. Como resolver um problema desses? Precisamos substituir vírgula por vazio em um texto e, a seguir, indicar que o texto é, na verdade, um número. Em vez de criar uma nova variável “valor”, vamos apenas alterar a variável já existente duas vezes. Com a função <em>gsub</em>, faremos a substituição da vírgula por vazio e com a função <em>as.numeric</em> faremos a transformação texto-número.</p>
 <pre class="r"><code>saques_amostra_201701 &lt;- saques_amostra_201701 %&gt;% 
   mutate(valor = gsub(&quot;,&quot;, &quot;&quot;, valor)) %&gt;% 
@@ -305,7 +311,7 @@ saques_amostra_201701 &lt;- read_delim(&quot;https://raw.githubusercontent.com/l
 <pre class="r"><code>saques_amostra_ES &lt;- saques_amostra_201701 %&gt;% filter(uf == &quot;ES&quot;)</code></pre>
 <p>ou</p>
 <pre class="r"><code>saques_amostra_ES &lt;-filter(saques_amostra_201701, uf == &quot;ES&quot;)</code></pre>
-<p>Exceto o uso da palavra <em>filter</em>, não há nada de novo para nós. Nós já vimos condições tipo uf == “ES”, que indica que apenas as linhas cuja variável <em>uf</em> assumo valor igual a ES devem ser consideradas. Além da igualdade, poderíamos usar outros símbolos: maior (&gt;). maior ou igual (&gt;=), menor (&lt;), menor ou igual (&lt;=) e diferente (!=).</p>
+<p>Exceto pelo uso do ‘verbo’ <em>filter</em>, não há nada de novo para nós. Nós já vimos condições como uf == “ES”, que indica que apenas as linhas cuja variável <em>uf</em> assumo valor igual a ES devem ser consideradas. Além da igualdade, poderíamos usar outros símbolos: maior (&gt;). maior ou igual (&gt;=), menor (&lt;), menor ou igual (&lt;=) e diferente (!=). Para casos de <em>NA</em>, podemos usar a função is.na(), pois a igualdade ‘== NA’ é inválida em R.</p>
 <p>Também utilizamos aspas em “ES”. Como estamos comparando os valores para cada linha a um texto, devemos usar as aspas.</p>
 <p>Vamos supor agora que apenas os estados do Centro-Oeste nos interessam. Vamos criar um novo <em>data frame</em>, chamado saques_amostra_CO, que atenda a este critério:</p>
 <pre class="r"><code>saques_amostra_CO &lt;- saques_amostra_201701 %&gt;% 
