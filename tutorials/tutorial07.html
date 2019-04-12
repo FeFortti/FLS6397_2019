@@ -69,9 +69,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -102,8 +100,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -178,6 +174,15 @@ $(document).ready(function () {
 
 
 
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
 
 <div class="fluid-row" id="header">
 
@@ -246,7 +251,7 @@ pagamentos17 &lt;- pagamentos17 %&gt;%
 <pre class="r"><code>comb_right &lt;- comb_right %&gt;% rename(valor11 = valor.x, nome11 = nome.x, 
                                     valor17 = valor.y, nome17 = nome.y)</code></pre>
 <p>Veja que agora há “missing values” nos valores e nomes de 2011. O “right join” preserva todas as observações de 2017, mesmo sem correspondência em 2011, e não inclui nenhum de 2011 que não encontre correspondência.</p>
-<p>Note que “left” e “right” são exatamente a mesma operação, mas com as tabelas em posição (x e y, 1a e 2a, etc) invertidas.</p>
+<p>Note que “left” e “right” são exatamente a mesma operação, mas com as tabelas em posições (x e y, 1a e 2a, etc) invertidas.</p>
 </div>
 <div id="inner-e-full-join" class="section level2">
 <h2>Inner e Full Join</h2>
@@ -266,7 +271,7 @@ pagamentos17 &lt;- pagamentos17 %&gt;%
 <p>Há, porém, dois outros tipos de “joins” disponíveis no R bastante úteis.</p>
 <p>Se quisermos trabalhar apenas em uma única base de dados, por exemplo, pagamentos11, mas queremos saber quais das observações de 2011 também estão na tabela de 2017, então utilizamos a função <em>semi_join</em>. O resultado será semelhante ao da aplicação de <em>inner_join</em>, mas sem que novas colunas com os dados de 2017 tenham sido criadas:</p>
 <pre class="r"><code>comb_semi &lt;- pagamentos11 %&gt;% semi_join(pagamentos17, by = &quot;nis&quot;)</code></pre>
-<p>Quantas linhas resultaram? Comparar com o número de observações que aparecem para os dois anos nos resultados de <em>left_join</em>.</p>
+<p>Quantas linhas resultaram? Compare com o número de observações que aparecem para os dois anos nos resultados de <em>left_join</em>.</p>
 <p>Por fim, <em>anti_join</em>, tem comportamento semelhante a <em>semi_join</em>, mas, em vez de retornar as observações de 2011 que têm correspondência em 2017, retorna as que nâo têm par em 2017:</p>
 <pre class="r"><code>comb_anti &lt;- pagamentos11 %&gt;% anti_join(pagamentos17, by = &quot;nis&quot;)</code></pre>
 <p>Respire fundo e gaste um tempo refletindo sobre os “joins”. Você acabou de aprender como operar bancos de dados relacionais e pode parecer bastante difícil num primeiro momento.</p>
