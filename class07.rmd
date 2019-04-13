@@ -1,15 +1,33 @@
 ###  FLS 6397 - Introdução à Programação e Ferramentas Computacionais para as Ciências Sociais
 
-- Data: 03/05/2019
+- Data: 10/05/2019
 
-## Aula 7 - Mapas e GIS
+## Aula 7 -  RMarkdown, e Integração R e Databases
 
 ### Objetivos Gerais
 
-Faremos hoje a aula de mapas no R, que havia sido cancelada anteriormente em virtude da greve de caminhoneiros, e discutiremos as propostas de trabalho final.
+Antes de avançarmos para novos tópicos relativos ao uso da linguagem, vamos aprender sobre algumas ferramentas e funcionalidades diretamente relacionadas ao uso de R.
+
+O primeiro deles será a integração de R com Sistemas de Gerenciamente de Bancos de Dados que operam em SQL (Structured Query Language), facilitada pelo pacote _dplyr_. A combinação R + SQL é uma solução particularmente boa para a manutenção de grandes bases de dados ("out of memory data") e para o armazenamento de dados utilizados por equipes de trabalho e pesquisa.
+
+A seguir, aprenderemos um pouco sobre Markdown, uma linguagem para a produção de documentos de texto, e de sua versão para R, RMarkdown. É possível, com esta linguagem, combinar texto, código e outputs em um único documento que pode ser exportado como uma página html, um documento pdf ou um arquivo em formato .docx.
+
+Finalmente, veremos como organizar nossa produção em projetos com controle de versão dos documentos utilizando git, que é um software de gerenciamento de versão, github, que é um repositório online que opera com git, e a integração de ambos com Rstudio.
+
+Importante: esta será uma aula com mais momentos de exposição. Fique atenta(o) aos horários.
 
 ### Roteiro para a aula
 
-1 - Faça o [Tutorial 14](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial14.html), que apresenta o recém publicado pacote 'sf' para lidar com mapas no R.
+LEIA COM CUIDADO E ATÉ O FINAL O ROTEIRO DE HOJE ANTES DE COMEÇAR.
 
-2 - Se houver tempo e interesse, você pode examinar outras formas de trabalhar com mapas no R fazendo o tutorial [Tutorial 22](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial22.html). A primeira parte do tutorial apresenta como utilizar APIs de mapas (ex: Google Maps) para obter 'camadas' de mapas para suas visualizações.
+1- Comece o [Tutorial 11](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial11.html) assim que chegar em sala de aula, sobre a integração entre R e SQL.
+
+2- Havendo sobra de tempo em sala de aula, leia, caso não tenha lido, o capítulo 8 do livro _R for Data Science_, [aqui](http://r4ds.had.co.nz/workflow-projects.html), sobre RProjects.
+
+4- Se tiver terminado o Tutorial 8, vá para o [Tutorial 12](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial12.html), sobre RMarkdown.
+
+5- Se houver tempo em sala, leia os capítulos 26 a 30 so livro _R for Data Science_. Esta é a seção do livro sobre Comunicação Científica e a maioria deles trata de RMarkdown.
+
+### Roteiro pós-aula
+
+Finalizar a leitura dos capítulos 1 (_Introduction_) a 18 (_Pipes_, no início da parte III) e 26 a 30 (parte V) do livro do livro _R for Data Science_, [aqui](http://r4ds.had.co.nz/).

@@ -188,30 +188,199 @@ $(document).ready(function () {
 </div>
 
 
-<div id="git-github-e-rstudio" class="section level1">
-<h1>Git, Github e RStudio</h1>
-<p>1- Comece criando uma conta no github: <a href="https://github.com/" class="uri">https://github.com/</a>. Github é um serviço web-based de controle de versão, que utiliza o software de código aberto <em>git</em>.</p>
-<p>2- A seguir, instale git no seu computador. Para Windowns, use o url: <a href="https://git-scm.com/download/win" class="uri">https://git-scm.com/download/win</a></p>
-<p>3- Opcionalmente, você pode instalar o Github Desktop em seu computador. Não utilizaremos em sala de aula, mas é uma ferramenta interessante: <a href="https://desktop.github.com/" class="uri">https://desktop.github.com/</a></p>
-<div id="tarefa-1---fork-e-clone" class="section level2">
-<h2>Tarefa 1 - Fork e clone</h2>
-<p>4- Vá para sua conta no github e faça login. Famos “forkar” o repositório: <a href="https://github.com/leobarone/repositorio_clone" class="uri">https://github.com/leobarone/repositorio_clone</a></p>
-<p>5- Clonar o repositório (alterar “SEULOGIN” para o seu nome de usuário no github):<a href="https://github.com/SEULOGIN/repositorio_clone" class="uri">https://github.com/SEULOGIN/repositorio_clone</a></p>
-<p>6- Criar um novo script que abra os dados e produza uma regressão e um gráfico, como no código abaixo:</p>
-<pre class="r"><code>dados &lt;- read.csv(&quot;~/repositorio_clone/dados.csv&quot;)
-lm(idade ~ sexo + reprovacoes, data = dados)
-plot(density(idade))</code></pre>
-<p>7- Salvar com nome de “analise.R”</p>
-<p>8- Produzir um arquivo “.Rmd” de sua autoria, comentando (muito brevemente) a regressão e o gráfico. Salvar como “analise.Rmd”</p>
-<p>9- Add, commit e push usando a interface do RStudio.</p>
+<div id="mapas-em-r" class="section level1">
+<h1>Mapas em R</h1>
 </div>
-<div id="tarefa-2---criando-um-novo-projeto" class="section level2">
-<h2>Tarefa 2 - Criando um novo projeto</h2>
-<p>10- Criar um repositório novo diretamente no github.</p>
-<p>11- Clonar.</p>
-<p>12- Editar o README.</p>
-<p>13- Adicionar 2 novos arquivos de sua escolha.</p>
-<p>14- Add, commit e push.</p>
+<div id="antes-de-comecar" class="section level1">
+<h1>Antes de começar</h1>
+<p>Antes de iniciar o tutorial, certifique-se de que os pacotes <em>sf</em>, <em>devtools</em>, a versão de desenvolvedor <em>ggplot2</em>, <em>mapview</em> e <em>ggmap</em>.</p>
+</div>
+<div id="inicio" class="section level1">
+<h1>Início</h1>
+<p>Dados espaciais são dados organizados por localização e permitem novos tipos de análise e visualização. Explorar mapas em R nos permite praticar e estender muitas das ferramentas que aprendemos nas últimas semanas - análises de dados com dplyr, joins e gráficos com ggplot2.</p>
+</div>
+<div id="mapeando-pontos-geograficos" class="section level1">
+<h1>Mapeando Pontos Geográficos</h1>
+<p>Vamos começar a trabalhar com mapas a partir de um exemplo que, veremos, utilizará as ferramentas que aprendemos até então para produzir nossos primeiros mapas. Para tanto, vamos utilizar o cadastro de escolas que a Prefeitura Municipal de São Paulo disponibiliza <a href="http://dados.prefeitura.sp.gov.br/">aqui</a>.</p>
+<p>Nossa primeira tarefa é baixar os dados e faremos isso de forma inteligente e sem “cliques”. A partir do url do arquivo do cadastro, que guardaremos no objeto “url_cadatros_escolas”, faremos o download do arquivo e guardaremos o arquivo .csv baixado como o nome “temp.csv”:</p>
+<pre class="r"><code>url_cadatros_escolas &lt;- &quot;http://dados.prefeitura.sp.gov.br/dataset/8da55b0e-b385-4b54-9296-d0000014ddd5/resource/39db5031-7238-4139-bcaa-e620a3180188/download/escolasr34fev2017.csv&quot;
+download.file(url_cadatros_escolas, &quot;temp.csv&quot;)</code></pre>
+<p>Vamos abrir o arquivo:</p>
+<pre class="r"><code>library(readr)
+escolas &lt;- read_delim(&quot;temp.csv&quot;, delim = &quot;;&quot;)</code></pre>
+<p>Explore o arquivo com o comando <em>glimpse</em>:</p>
+<pre class="r"><code>library(dplyr)
+glimpse(escolas)</code></pre>
+<p>Não há nada de extraordinário no arquivo, que se assemelha aos que vimos até então. Há, porém, uma dupla de variáveis que nos permite trabalhar “geograficamente” com os dados: LATITUDE e LONGITUDE. “Lat e Long” são a informação fundamental de um dos sistemas de coordenadas (coordinate reference system, CRS) mais utilizados para localização de objetos na superfície da terra.</p>
+<p>Por uma razão desconhecida, a informação fornecida pela PMSP está em formato diferente do convencional. Latitudes são representadas por números entre -90 e 90, com 8 casas decimais, e Longitudes por números entre -180 e 180, também com 8 casas decimais. Em nosso par de variáveis, o separador de decimal está omitido e por esta razão faremos um pequena modificação na variável. Aproveitaremos também para renomear algumas variáveis de nosso interesse – como tipo da escola (CEI, EMEI, EMEF, CEU, etc) e o ano de início do funcionamento::</p>
+<pre class="r"><code>escolas &lt;- escolas  %&gt;%
+  rename(lat = LATITUDE, lon = LONGITUDE, tipo = TIPOESC) %&gt;% 
+  mutate(lat = lat / 1000000, 
+         lon = lon / 1000000,
+         ano = as.numeric(substr(DT_INI_FUNC, 7, 10))) %&gt;%
+  filter(is.na(lat)==FALSE &amp; is.na(lon)==FALSE)</code></pre>
+<p>Pronto! Temos agora uma informação geográfica das EMEFs e uma variável de interesse – ano – que utilizaremos para investigar a expansão da rede.</p>
+<p>Para analisar estes dados como dados espaciais precisamos dizer a R quais são as variáveis de localização e transformá-lo em um objeto ‘simple features’ usando o biblioteca <em>sf</em> e a função <em>st_as_sf</em> para criar um objeto tipo “simple features”. Lembre-se de instalar o pacote antes de carregá-lo.</p>
+<pre class="r"><code>library(sf)
+escolas &lt;- escolas %&gt;% st_as_sf(coords=c(&quot;lon&quot;,&quot;lat&quot;), crs=4326)</code></pre>
+<p>O parâmetro ‘coords’ indica os colunas de latitude e longitude, e o ‘crs’ indica o sistema de coordenadas (a “projeção”) que queremos usar. Na verdade, o sistema de coordenadas não é uma opção nossa - precisamos especificar o mesmo sistema de coordenadas com o qual os dados foram salvos. Às vezes isso é difícil de saber. Aqui, como o longitude e latitude parece que eles estão em graus (entre -180 e 180) é provável que devemos usar o sistema “WGS84” (um sistema de coordenadas geográficas (não projetadas)). Um ‘shortcut’ para especificar o WGS84 é usar o numero <em>4326</em> no argumento ‘crs’. Para outros shortcuts para sistemas de coordenados que pode usar com dados salvados em outros sistemas de coordenados, pode aproveitar do site <a href="http://epsg.io/" class="uri">http://epsg.io/</a>. Não se preocupe muito com sistemas de coordenadas - vamos discuti-los mais em aula.</p>
+<p>Qual tipo de objeto é <code>emef</code> agora?</p>
+<pre class="r"><code>class(escolas)</code></pre>
+<p>Temos vários resultados aqui - é um objeto ‘simple features’, mas também um <em>tbl</em> (tibble) e <em>data.frame</em>! Isso significa que podemos aplicar todas as funções do dplyr com dados espaciais também. Por exemplo, selecionaremos apenas as linhas referentes a EMEF (Escolas Municipal de Ensino Fundamental) usando <em>filter</em> e as variáveis NOMESC e SITUACAO:</p>
+<pre class="r"><code>emef &lt;- escolas  %&gt;%
+  filter(tipo == &quot;EMEF&quot;) %&gt;%
+  select(NOMESC,SITUACAO)</code></pre>
+<p>Vamos olhar em detalhe o conteúdo de nosso objeto:</p>
+<pre class="r"><code>emef</code></pre>
+<p>Quando olhamos num objeto simple features, tem vários coisas importantes a observar:<br />
+1. Na descrição imprimido em Rstudio, podemos ver ‘geometry type: POINT’ - isso significa que cada elemento espacial é um ponto único (também pode ser um polígono ou linha);<br />
+2. O CRS (e o código epsg);<br />
+3. O número de ‘features’ (unidades espaciais) e ‘fields’ (variáveis/colunas);<br />
+4. No data.frame mesmo, temos duas colunas de NOMESC e SITUACAO, e uma terceira de ‘geometry’ - isso é uma coluna especial que contém as informações de localização para cada unidade. Aqui são as coordenadas dos nossos pontos.</p>
+<div id="visualisando-mapas" class="section level2">
+<h2>Visualisando mapas</h2>
+<p>Lembra que nossos gráficos em ggplot foram conectados diretamente com um data.frame? Como um objeto de ‘simple features’ <strong>é</strong> um data.frame, podemos usar ggplot para criar mapas! Para fazer isso, precisamos instalar a versão de desenvolvimento do ggplot2 (se não tem o pacote <em>devtools</em>, pode precisa instalar):</p>
+<pre class="r"><code>devtools::install_github(&quot;tidyverse/ggplot2&quot;)
+library(ggplot2)</code></pre>
+<p>Para visualizar o nosso mapa, vamos usar uma camada de geometria especial (e espacial) se chama <em>geom_sf</em>, e o formato dos parâmetros são os mais simples possíveis: branco!</p>
+<pre class="r"><code>emef %&gt;% ggplot() +
+  geom_sf()</code></pre>
+<p>Já criou o seu primeiro mapa! O eixo <em>x</em> é o longitude e o eixo <em>y</em> é o latitude. Debaixo, vamos ver como a representar outros aspectos de nosso data.frame em mapas. Agora, tem um outro abordagem para criar um mapa interativo, com um mapa de terra no fundo. Usamos o pacote ‘mapview’ e, de novo, não precisamos especificar nenhum parâmetro.</p>
+<pre class="r"><code>library(mapview)
+emef %&gt;% mapview()</code></pre>
+<div id="exercicio" class="section level3">
+<h3>Exercício</h3>
+<p>Criar um mapa de escolas de tipo “EMEBS” (Escolas Municipais de Educação Bilíngue para Surdos).</p>
+</div>
+</div>
+<div id="georeferencing" class="section level2">
+<h2>Georeferencing</h2>
+<p>Um outro fonte de dados espaciais é georeferenciar um endereço usando uma ferramenta de busca como o google maps, por exemplo com o pacote <em>ggmap</em>.</p>
+<p>Vamos agora criar um novo data frame a partir dos dados do cadastro da PMSP que contém apenas os CEUs. Vamos juntar todas as informações de endereço e agregar a elas o texto “, Sao Paulo, Brazil”</p>
+<pre class="r"><code>ceu &lt;- escolas  %&gt;%
+  filter(tipo == &quot;CEU&quot;) %&gt;%
+  mutate(endereco = paste(ENDERECO, NUMERO, BAIRRO, CEP, &quot;, Sao Paulo, Brazil&quot;))</code></pre>
+<p>Com a função <em>geocode</em>, procuraremos a latitude e longitude dos 46 CEUs. Vamos ver o exemplo do primeiro CEU, criando um objeto tipo ‘sf’ com o sistema de referência de coordenadas usado pelo google maps (WGS84 = epsg 4326):</p>
+<pre class="r"><code>library(ggmap)
+ceu1 &lt;- geocode(ceu$endereco[1]) %&gt;% 
+  st_as_sf(coords=c(&quot;lon&quot;,&quot;lat&quot;),crs=4326)</code></pre>
+<p>Podemos mapear os resultados:</p>
+<pre class="r"><code>ceu1 %&gt;% mapview()</code></pre>
+<p>Usando o que já havíamos visto, obtivemos um mapa com um único ponto. De fato, se procurarmos a informação original deste CEU (CEU Alvarenga), veremos que obtivemos a latitude e longitude bem pertos.</p>
+<pre class="r"><code>rbind(ceu1 %&gt;% st_coordinates(),
+      ceu[1,] %&gt;% st_coordinates())</code></pre>
+<p>Para georeferenciar todos os endereços de CEUs é a mesma lógica. Só precisamos resolver um problema de encoding irritante primeiro. Procuraremos a latitude e longitude dos 46 endereços, e tiramos aqueles que falharem (aqueles que tem <em>NA</em>):</p>
+<pre class="r"><code>ceu$endereco &lt;- iconv(ceu$endereco, to = &quot;ASCII//TRANSLIT&quot;)
+ceu_all &lt;- geocode(ceu$endereco) %&gt;% 
+  filter(is.na(lat)==F &amp; is.na(lon)==FALSE) %&gt;%
+  st_as_sf(coords=c(&quot;lon&quot;,&quot;lat&quot;),crs=4326)
+
+ceu_all %&gt;% mapview()</code></pre>
+<p>Simples, não! O principal problema da função <em>geocode</em> - e por que você pode ver menos de 46 pontos em seu mapa - é que há um limite de consultas por conta dos termos da Google Maps API. A alternativa é usar como argumento de <em>geocode</em> “source = ‘dsk’” <a href="http://www.datasciencetoolkit.org/about">Data Science Toolkit</a>, que reune uma série de fontes de dados e utiliza outra API para a consulta de latitude e longitude de logradouros.</p>
+<div id="exercicio-1" class="section level3">
+<h3>Exercício</h3>
+<p>Use a função <em>geocode</em> para geolocalizar três endereços com os quais você está familiarizado em São Paulo e criar um mapa com <em>ggplot</em> e um mapa interativa com <em>mapview</em>.</p>
+</div>
+</div>
+<div id="trabalhando-com-poligonos" class="section level2">
+<h2>Trabalhando com Polígonos</h2>
+<p>Áreas administrativas são geralmente representadas como polígonos em mapas. Em geral, obtemos esses polígonos como ‘shapefiles’ produzidos por uma agência oficial. Podemos abrir qualquer tipo de shapefile (pontos, linhas ou polígonos) com a função <em>read_sf</em>. Vamos abrir um shapefile (simplificado) de IBGE dos municipios do Brasil.</p>
+<pre class="r"><code>download.file(&quot;https://github.com/JonnyPhillips/Curso_R/raw/master/Brazil_s.zip&quot;,destfile=&quot;Brazil_s.zip&quot;)
+unzip(&quot;Brazil_s.zip&quot;)
+municipios &lt;- read_sf(&quot;Brazil_s.shp&quot;)</code></pre>
+<p>Como podemos visualizar este mapa? Exatamente o mesmo que antes:</p>
+<pre class="r"><code>municipios %&gt;% ggplot() +
+  geom_sf()</code></pre>
+<p>Enquanto trabalhando com dados espaciais de diversas fontes (ex. as escolas e os municipios), <strong>é essencial ter certeza que estamos trabalhando com a mesma projeção para todos os objetos</strong> - caso contrário nossos mapas podem não aparecer corretamente e nossas medidas espaciais serão imprecisas. Dar uma olhada na CRS/projeção de ‘municipios’ - está escrito “+proj=longlat +ellps=GRS80 +no_defs” - em contraste de CRS/projeção de ‘escolas’ - “+proj=longlat +datum=WGS84 +no_defs”. O parte ‘WGS84’ é o mais comum então vamos transformar os dados dos municipios para a mesma projeção usando a função <em>st_transform</em> e o shortcut 4326 para WGS84. Agora estamos tudo pronto para fazer analises ou mapas incorporando as duas camadas espaciais.</p>
+<pre class="r"><code>municipios &lt;- municipios %&gt;% st_transform(4326)</code></pre>
+</div>
+<div id="joins-nao-espaciais" class="section level2">
+<h2>Joins Não-Espaciais</h2>
+<p>Se abre o objeto <em>municipios</em> vai ver os detalhes de CRS/projeção e o data.frame dele mesmo, incluindo a coluna de ‘geometry’ e também todas as colunas normais, incluindo o código municipal (CD_GEOCODM). Isso é uma oportunidade para nós - se tivermos dados em todos os municípios, podemos simplesmente ‘join’ estes dados no shapefile e, em seguida, podemos visualizar mapas dessas variáveis.</p>
+<p>Por exemplo, vamos baixar os dados eleitorais de 2010 para cada município e calcular o percentagem de voto da Dilma no segundo turno.</p>
+<pre class="r"><code>library(cepespR)
+dados_eletorais &lt;- get_elections(year=2010, position=&quot;President&quot;, regional_aggregation=&quot;Municipality&quot;, political_aggregation=&quot;Candidate&quot;)
+
+dados_eletorais &lt;- dados_eletorais %&gt;% filter(NUM_TURNO==2) %&gt;% 
+  group_by(COD_MUN_IBGE) %&gt;%
+  mutate(pct_voto=100*(QTDE_VOTOS/sum(QTDE_VOTOS))) %&gt;%
+  filter(NOME_URNA_CANDIDATO==&quot;DILMA&quot;)</code></pre>
+<p>Agora, se quisermos tornar esses dados eleitorais espaciais podemos fazer um <em>left_join</em> com o nosso shapefile, contanto que, como normal, os nomes e tipo de colunas chaves - o código do IBGE - nos dois bancos de dados são os mesmos.</p>
+<pre class="r"><code>municipios &lt;- municipios %&gt;% rename(&quot;COD_MUN_IBGE&quot;=&quot;CD_GEOCODM&quot;) %&gt;% 
+  mutate(COD_MUN_IBGE=as.numeric(COD_MUN_IBGE)) %&gt;%
+  left_join(dados_eletorais,by=&quot;COD_MUN_IBGE&quot;)</code></pre>
+<p>Quantas colunas o nosso objeto <em>municipios</em> tem agora? Muitos - todos os dados eletorais também.</p>
+<pre class="r"><code>municipios</code></pre>
+<p>Para visualizar a coluna ‘pct_voto’ num mapa, podemos trabalhar em ggplot como normal. Para polígonos, colocamos o nome de coluna para o parâmetro <em>fill</em> ( <em>color</em> com pontos e linhas). Um mapa de todo o Brasil pode ser esmagador, então vamos nos concentrar em São Paulo com um <em>filter</em>.</p>
+<pre class="r"><code>municipios %&gt;% filter(SIGLA_UE==&quot;SP&quot;) %&gt;% 
+  ggplot() +
+  geom_sf(aes(fill=pct_voto))</code></pre>
+<p>Vamos destacar as fronteiras em branco, aplicar um tema e tirar as linhas de longitude/latitude.</p>
+<pre class="r"><code>municipios %&gt;% filter(SIGLA_UE==&quot;SP&quot;) %&gt;% 
+  ggplot() +
+  geom_sf(aes(fill=pct_voto),color=&quot;white&quot;) +
+  theme_classic() +
+  coord_sf(datum=NA)</code></pre>
+<p>Além disso, podemos alterar as escalas de cores como normal em ggplot.</p>
+<pre class="r"><code>municipios %&gt;% filter(SIGLA_UE==&quot;SP&quot;) %&gt;% 
+  ggplot() +
+  geom_sf(aes(fill=pct_voto),color=&quot;white&quot;) +
+  theme_classic() +
+  coord_sf(datum=NA) +
+  scale_fill_gradient(low=&quot;white&quot;,high=&quot;red&quot;)</code></pre>
+<p>Podemos colocar os pontos no mesmo mapa? Sim - apenas especificamos o parâmetro de dados para uma nova camada dentro de <em>geom_sf</em>. (Isto assume que nós confirmamos que ambas as camadas têm a mesma projeção, como confirmamos acima).</p>
+<pre class="r"><code>municipios %&gt;% filter(SIGLA_UE==&quot;SP&quot;) %&gt;% 
+  ggplot() +
+  geom_sf(aes(fill=pct_voto),color=&quot;white&quot;) +
+  theme_classic() +
+  scale_fill_gradient(low=&quot;white&quot;,high=&quot;red&quot;) +
+  geom_sf(data=ceu,color=&quot;dark green&quot;) +
+  coord_sf(datum=NA)</code></pre>
+<div id="exercicio-2" class="section level3">
+<h3>Exercício</h3>
+<p>Crie um mapa do percentagem de voto de Serra nos municipios de Tocantins no segundo turno da eleição presidencial de 2010.</p>
+</div>
+</div>
+<div id="joins-espaciais" class="section level2">
+<h2>Joins Espaciais</h2>
+<p>O mundo espacial abre um novo tipo de join entre diversas bancos de dados - joins espaciais que são definido pela localização semelhante e não por uma chave comum nas tabelas de dados. Existe diversas tipos de joins espaciais mas vamos focar sobre um join entre uma camada de polígonos e uma camada de pontos. Queremos pegar os dados de polígono (município) em que fica cada ponto (escola). Vamos usar <em>st_join</em> para fazer um join espacial e usar o tipo de comparação de <em>st_intersects</em> (que simplesmente significa que um join existe quando um ponto é dentro de um polígono). (Lembra-se que é importante confirmar que ambas as camadas têm a mesma projeção, como confirmamos acima).</p>
+<pre class="r"><code>joined &lt;- ceu %&gt;% st_join(municipios,st_intersects)</code></pre>
+<p>Agora, o objeto ‘joined’ contém os dados de escolas e colunas adicionais com dados dos polígonos em que cada escola existe. Isso facilita comparações entre cada escola e os dados eleitorais da sua região, mas também podemos simplesmente contar o número de escolas em cada polígono (município). Claro que neste caso, a maioria das escolas estão localizadas na PMSP.</p>
+<pre class="r"><code>joined %&gt;% group_by(NM_MUNICIP) %&gt;% count()</code></pre>
+</div>
+<div id="outras-operacoes-espaciais" class="section level2">
+<h2>Outras operações espaciais</h2>
+<p>O pacote simple features inclui muitas metodologias espaciais. Como exemplo, podemos calcular a distancia entre cada um das escolas CEU (em metros) com <em>st_distance</em>. O resultado é um matriz (simétrico) com distancias entre escolas.</p>
+<pre class="r"><code>ceu %&gt;% st_distance()</code></pre>
+</div>
+<div id="rasters" class="section level2">
+<h2>Rasters</h2>
+<p>Existe um outro formato para dados espaciais que não é baseado em formas geométricas (polígonos, pontos e linhas), mas em uma grade regular com valores específicos em cada célula x, y - isto é um ‘raster’ e para trabalhar com ele usamos o pacote ‘raster’. Vamos usar o código debaixo para abrir um arquivo raster de densidade populacional no Camboja, que é simplesmente um imagem com extensão <em>.tif</em>.</p>
+<pre class="r"><code>library(raster)
+download.file(&quot;https://github.com/JonnyPhillips/Curso_R/raw/master/khm_popdenr_landscan_2011.zip&quot;,destfile=&quot;khm_popdenr_landscan_2011.zip&quot;)
+unzip(&quot;khm_popdenr_landscan_2011.zip&quot;)
+cambodia &lt;- raster(&quot;khm_popdenr_landscan_2011.tif&quot;)</code></pre>
+<p>Para visualizar o nosso raster, precisamos transformar ele em um data.frame simples e usar o ggplot com <em>geom_tile</em>.</p>
+<pre class="r"><code>cambodia %&gt;% as(&quot;SpatialPixelsDataFrame&quot;) %&gt;% 
+  as.data.frame() %&gt;% 
+  ggplot() + 
+  geom_tile(aes(x=x,y=y,fill=khm_popdenr_landscan_2011))</code></pre>
+<p>Este mapa parece bem chato porque os dados são altamente skewed, com grandes outliers apenas na capital. Frequentemente com rasters é útil transformá-los em uma escala de log antes de visualizar. Vamos também limpar o fundo e adicionar uma escala de cores.</p>
+<pre class="r"><code>cambodia %&gt;% as(&quot;SpatialPixelsDataFrame&quot;) %&gt;% 
+  as.data.frame() %&gt;% 
+  ggplot() + 
+  geom_tile(aes(x=x,y=y,fill=log(khm_popdenr_landscan_2011))) +
+  coord_equal() +
+  theme_void() +
+  scale_fill_gradient(low=&quot;white&quot;,high=&quot;red&quot;,na.value=&quot;white&quot;)</code></pre>
+<p>Também podemos criar mapas de raster interativos com mapview. (Adicionamos uma pequena quantidade ao log para evitar valores infinitos e erros).</p>
+<pre class="r"><code>log(cambodia+0.00001) %&gt;% 
+  brick() %&gt;% 
+  mapview(layer.name=&quot;khm_popdenr_landscan_2011&quot;)</code></pre>
+<div id="exercicio-3" class="section level4">
+<h4>Exercício:</h4>
+<p>Vá a uma das duas fontes de mapas indicadas – <a href="http://www.prefeitura.sp.gov.br/cidade/secretarias/urbanismo/dados_estatisticos/index.php?p=160798">Prefeitura de São Paulo</a> ou <a href="http://www.fflch.usp.br/centrodametropole/">Centro de Estudos da Metrópole (CEM)</a> – importe os dados e produza um mapa. Dependendo do tema que você escolher, você produzirá mapas com polígonos (por exemplo, mapas de divisões políticas ou administrativas), linhas (ruas, ciclovias, etc), pontos (unidades de saúde, escolas, etc) ou rasters.</p>
+</div>
 </div>
 </div>
 

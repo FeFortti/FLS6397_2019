@@ -271,8 +271,8 @@ pagamentos17 &lt;- pagamentos17 %&gt;%
 <pre class="r"><code>comb_anti &lt;- pagamentos11 %&gt;% anti_join(pagamentos17, by = &quot;nis&quot;)</code></pre>
 <p>Respire fundo e gaste um tempo refletindo sobre os “joins”. Você acabou de aprender como operar bancos de dados relacionais e pode parecer bastante difícil num primeiro momento.</p>
 </div>
-<div id="exercicio-combinacao-de-tabela-e-agregacoes-cumulativas" class="section level2">
-<h2>Exercício: Combinação de tabela e agregações cumulativas</h2>
+<div id="combinacao-de-tabela-e-agregacoes-cumulativas" class="section level2">
+<h2>Combinação de tabela e agregações cumulativas</h2>
 <p>Vamos supor que queremos calcular os valores total, médio, máximo, etc, por município e, a seguir, apresentar esses valores como colunas para cada observação. Uma maneira eficiente de fazer isso é usando a combinação de tabelas. Vamos ver como voltando ao exemplo da amostra de saques do Programa Bolsa Família em 2017.</p>
 <p>Abra a base de dados e faça as transformações necessárias (renomear variáveis e transformar a variável valor em numérica) antes de prosseguir. Tente fazê-lo sem olhar a resposta abaixo.</p>
 <pre class="r"><code>saques_amostra_201701 &lt;- read_delim(&quot;https://raw.githubusercontent.com/leobarone/FLS6397/master/data/saques_amostra_201701.csv&quot;, delim = &quot;;&quot;, col_names = T)

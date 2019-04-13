@@ -7,399 +7,208 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 ```
 
+# MySQL e dplyr
 
-Para este tutorial vamos usar novamente dados de Fakeland, como fizemos no tutorial 5. Em vez de apenas 30 observações, agora trabalharemos com um conjunto maior de cidadãos (200) e menos variáveis, para facilitar nosso trabalho.
+Uma das soluções mais simples para trabalharmos com bases de dados grandes em R é, em vez de carregar os dados na memória, conectar o R a uma fonte remota de dados e usar a gramática que aprendemos nos tutoriais anteriores para manipularmos os dados. Veremos a seguir um exemplo para dados em um servidor MySQL, mas ele vale para outros sistemas de gerenciamento de dados como PostgreSQL, MariaDB ou BigQuery. 
 
-Antes de abrir os dados, vamos começar carregando as duas bibliotecas que utilizaremos no tutorial: _readr_, para ler os dados; e _ggplot2_, para a produção de gráficos:
+O MySQL não armazena os dados na memória RAM, mas no disco rígido. Isso expande bastante o limite do tamanho dos dados que conseguiremos gerenciar, sem, no entanto, precisar de outra "gramática" para manipulação de dados.
 
-```{r}
-library(readr)
-library(ggplot2)
-```
-
-A seguir, carregue os dados, que estão no repositório do curso:
+Antes de prosseguir, faça a instalação do pacote _RMySQL_. Carregue tal pacote e o _dplyr_ antes de começar.
 
 ```{r}
-url_fake_data <- "https://raw.githubusercontent.com/leobarone/cebrap_lab_programacao_r/master/data/fake_data_2.csv"
-fake <- read_delim(url_fake_data, delim = ";", col_names = T)
+library(dplyr)
+library(RMySQL)
 ```
 
-## ggplot2: uma gramática de dados
-
-Em conjunto com a gramática de manipulação de dados do _dplyr_, a gramática de gráficos _ggplot2_ é um dos destaques da linguagem R. Além de flexível e aplicável a diversas classes de objetos (data frames, objetos de mapa e redes, por exemplo), a qualidade dos gráficos é excepcionalmente boa.
-
-Existe uma forte ligação entre a gramática de _dplyr_ e a gramática de _ggplot2_: toda a informação para o nosso gráfico vem de um data.frame; cada linha em nosso data.frame é uma 'unidade' a ser exibida no gráfico, e cada coluna em nosso data.frame é uma variável que determina um aspeto visual específico do gráfico, incluindo posição, cor, tamanho e forma.
-
-Neste tutorial vamos priorizar a compreensão da estrutura do código para produzir gráficos com _ggplot2_ a partir de alguns exemplos simples e propositalmente não cobriremos todas as (inúmeras) possibilidades de visualização.
-
-Você verá, depois de um punhado de gráficos, que a estrutura pouco muda de um tipo de gráfico a outro. Quando precisar de um "tipo" novo de gráfico, ou, como denominaremos a partir de agora, de uma nova "geometria", bastará aprender mais uma linha de código a ser adicionada ao final de um código já conhecido.
-
-Vamos logo a um primeiro exemplo para clarificar o assunto.
-
-## Um primeiro exemplo de gráficos com uma variável discreta
-
-Queremos conhecer a distribuição de preferências de candidato à presidência na amostra de cidadãos de Fakeland. Veja como apresentar essa informação com o pacote _ggplot2_:
+O primeiro passo importante para trabalhar com dados em um servidor MySQL é fazer a conexão com uma base de dados. Vamos supor que temos um banco de dados (que, para o MySQL, significa um conjunto de tabelas, e não apenas uma tabela) chamado "PBF" em um servidor local, ou seja, no próprio computador, e que dentro desse banco de dados existe a tabela "transferencias201701". O usuário e senha fictícias são, respectivamente, "root" e "pass". Usamos, então, a função _src\_mysql_ para criar um objeto de "conexão", que chamaremos de "bd_mysql". Obviamente, o código abaixo não funcionará no seu computador, pois tal servidor não existe.
 
 ```{r}
-ggplot(data = fake) +
-  geom_bar(aes(x = candidato))
+conexao <- src_mysql(dbname = "PBF", 
+                   user = "root",
+                   password = "pass")
 ```
 
-Bastante estranho, não? Vamos olhar cada uma de suas partes.
-
-Comecemos pela primeira linha. A principal função do código é, como era de se esperar, _ggplot_ (sem o 2 mesmo). Note que não estamos fazendo uma atribuição, por enquanto, pois queremos apenas "imprimir" o gráfico, e não guardá-lo como objeto (algo perfeitamente possível!).
-
-O argumento da função _ggplot_ é "data", ou seja, o objeto que contém os dados a serem visualizados. No nosso caso, o data frame _fake_. 
-
-Até aqui, nada de novo. Agora, para adicionar uma geometria, colocamos um símbolo de "+" após fechar o parêntesis da função _ggplot_ e, convencionalmente na linha seguinte, utilizarmos a função da geometria correspondente. Cada "+" nos permite adicionar mais uma camada em nosso gráfico. Mas qual camada? Nós definimos uma camada principalmente por sua _geometria_ - o tipo de representação visual dos nossos dados que queremos. _geom\_bar_ indica que queremos uma geometria de barras, como um 'bar chart' em excel. 
-
-Crucialmente, a escolha da geometria depende do tipo de dados que você deseja visualizar de seu dados.frame. Aqui, analisamos a distribuição de preferências de candidato à presidência, que é uma variável discreta (caráter ou fator), então usamos uma geometria que corresponda com dados discretos. A lógica de um gráfico de barras é representar a contagem de frequência de cada categoria discreta, então faz sentido usar _geom\_bar_ como a nossa geometria. Vamos ver exemplos de outras geometrias que corespondam com outros dados debaixo.
-
-Dentro da camada de geometria, a mais estranhesa vem com as 3 letrinhas "aes" que são a abreviação de "aesthetics". Aqui definiremos quais variáveis de nosso data.frame farão parte do gráfico. Estamos trabalhando por enquanto com apenas uma variável, representada no eixo horizontal, ou eixo "x". Por esta razão preenchemos o parâmetro "x" da "aesthetics" e nada mais.
-
-## Gráficos com uma variável contínua - Gráficos de histogramas
-
-Vamos trocar rapidamente para uma variável contínua, renda, alterando o valor de "x" dentro de "aesthetics".
+A seguir, criamos um objeto "tabela", que mantém a conexão direto com a tabela "transferencias201701" que está no banco de dados "PBF".
 
 ```{r}
-ggplot(data = fake) + 
-  geom_bar(aes(x = renda))
+tabela <- tbl(conexao, "pagamentos201701")
 ```
 
-Este gráfico está em branco, por quê? Tentamos representar uma variável contínua com uma geometria construído para variáveis discretas. Como cada valor de renda é único, existe uma barra (minúscula) para cada indivíduo e o gráfico não faz sentido. Precisamos mudar o geometria - o equivalente de um gráfico de barras para variáveis contínuas é um histogram, então usamos _geom\_histogram_.
+Simples, não? A partir deste ponto, basta trabalhar com objeto "tabela" da mesma maneira que trabalhamos _data frames_ até agora. A diferença é que o objeto "tabela" não contém dados, mas representa a conexão a uma tabela em um servidor que contém os dados. A gramática oferecida pelo pacote _dplyr_ funciona normalmente e, quando quisermos, podemos exportar os dados com os métodos acima.
+
+## Fake data
+
+Vamos ao exemplo simples com o data frame "fake data". Os códigos abaixo funcionarão normalmente no seu computador.
+
+Acessaremos servidor remoto de MySQL que contém um banco de dados denominada "mysql\_leobarone". Esta, por sua vez, contém uma tabela também chamada "fake\_data" com informações sobre eleitores fictícios em "Fakeland".
+
+Comecemos estabelecendo a conexão com o servidor e o banco de dados, tal como fizemos anteriormente. A diferença, agora, é que estamos lidando com um servidor remoto e por isso precisamos informar seu "endereço". Fazemos isso preenchendo os argumentos "host" e "port", cujos valores foram fornecidos pelos criadores do servidor, além, obviamente, do nome do banco de dados, usuário e senha ("leobarone" e "usp3697560", respectivamente). Para esta atividade, utilizei o serviço de hospedagem gratuito "db4free.net".
 
 ```{r}
-ggplot(data = fake) + 
-  geom_histogram(aes(x = renda))
+conexao <- src_mysql(dbname = "mysql_leobarone", 
+                   host = "db4free.net", 
+                   port = 3306, 
+                   user = "leobarone",
+                   password = "usp3697560")
 ```
 
-Faz mais sentido? Espero que sim. Compare os dois códigos dos gráficos acima com calma e compreenda as diferenças. Note que o tipo de variável que demanda uma(s) geometria(s) específica(s), e não contrário.
-
-### Exercício
-Use o banco de dados de Fakeland para criar um gráfico que mostra o nível de apoio para cada partido, e um gráfico que mostra a distribuição da idade (trata idade como uma variável contínua). 
-
-### Parâmetros fixos 
-
-As geometrias, cada uma com sua função, também têm parâmetros que podem ser alterados. Por exemplo, as barras do histograma que acabamos de produzir são muito "fininhas". Vamos aumentar sua largura, ou seja, vamos representar mais valores do eixo "x" em cada barra do histograma:
+Para ver todas as tabelas disponíveis na base de dados com a qual fizemos a conexão usamos:
 
 ```{r}
-ggplot(data = fake) + 
-  geom_histogram(aes(x = renda), binwidth = 4000)
+src_tbls(conexao)
 ```
 
-Uma observação crucial aqui: o binwidth é especificado _fora_ do _aes()_. Por que? Porque existe uma regra importante no _ggplot2_ - Parâmetros que variam dependendo de nossos dados devem ficar dentro de _aes()_; Parâmetros fixos que não depende de nossos dados devem ficar fora do _aes()_. Então, em nosso código, temos dentro de _aes()_ uma variavel, renda, e fora de _aes()_ um número exógeno, 4000. 
-
-O gráfico está muito cinza. Se quisemos mudar algumas cores, onde vamos especificar novos parâmetros de cores? Desde que os cores ficam fixos para todo o gráfico e não depende de nossos dados, fora de _aes()_.
+Uma vez conectados com o servidor, fazemos a conexão direta com a tabela "fake_data", que é a que nos interessa (pode haver inúmeras tabelas em uma base de dados). Vamos chamar o objeto criado de "fake". Será este objeto que manipularemos com a gramática que aprendemos anteriormente. 
 
 ```{r}
-ggplot(data = fake) + 
-  geom_histogram(aes(x = renda), binwidth = 4000, colour = "red", fill = "green")
+fake <- tbl(conexao, "fake_data")
 ```
 
-Melhor, não? Certamente não! Mas note que podemos trocar as contornos das barras e seu preenchimento. Em geral, os argumentos "colour" e "fill" servem a várias geometrias.
+Você pode examinar o conteúdo de voos com as funções que já conhecemos, como _head_. (Pela natureza do SQL, ele não nos retorna o número de observações, somente a de variáveis - mas isso é normal e você não precisa se preocupar com isso). 
 
-Curiosidade: R aceita as duas grafias em inglês para a palavra cor, "colour" (britânico) e "color" (americano).
+Em nosso exercício vamos repetir, utilizando a gramática do _dplyr_, algumas tarefas que fizemos no tutorial 5 da aula 3 (sem usarmos _dplyr_ ainda) e ver como podemos aplicar os principais verbos do dessa gramática a tabelas em um servidor MySQL.
 
-# Gráficos com uma variável contínua - Gráficos de densidade
-Histogramas são normalmente bastante adequados para variáveis numéricas com valores bastante espaçados, como é o caso de variáveis discretas numéricas (valores inteiros apenas).
-
-Uma alternativa mais elegante ao histograma, e convencionalmente utilizada para variáveis verdadeiramente contínuas, são os gráficos de densidade. Vamos, assim, apenas alterar a geometria para a mesma variável, renda, e observar novamente sua distribuição. A lição é que, embora a geometria deva corresponder ao tipo de dados, existem várias geometrias que podem funcionar para qualquer tipo de dado específico (histogram ou densidade, por exemplo).
-
-Nota: a partir de agora vamos omitir o nome do parâmetro "data" logo no início do código.
+Por exemplo, se quisermos criar subconjunto dos dados apenas com eleitores independentes, renomeando e selecionando algumas variáveis, e criando uma variável que é a divisão da poupança pela renda.
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda))
+independentes <- fake %>%
+  rename(partido = party, renda = income, poupanca = savings, candidato = candidate) %>%
+  select(partido, renda, poupanca, candidato) %>%
+  filter(partido == "Independent") %>%
+  mutate(renda_poupanca = renda / poupanca)
 ```
 
-Lindo, mas ainda cinza demais. Vamos adicionar cor à borda:
+Note que "independentes" tampouco é um data frame. É, novamente, uma representação do resultado de uma _query_ (ou consulta) em uma tabela no servidor. Para falar a verdade, nem isso é ainda. Por enquanto é uma ordem de execução da _query_, que só será efetivamente executada se os dados forem requisidos para serem armazenados no seu computador ou impressos no console.
+
+## Tradução dplyr-SQL
+
+Podemos traduzir, literalmente, o comando acima para a linguagem de R para SQL como a função _show\_query_
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda), colour="blue")
+show_query(independentes)
 ```
 
-Melhor (melhor?), mas ainda muito branco. Vamos adicionar cor ao interior da curva:
+O output, impresso no console, é a query equivalente que deveríamos produzir no MySQL para executar a mesma tarefa.
+
+## Tabelas temporárias _versus_ criação de tabelas no MySQL
+
+Quando utilizamos os verbos do _dplyr_ para manipulação de dados em servidor MySQL, todas as consultas são geradas como tabelas temporárias no servidor. Como fazer com que as consultas se tornem tabelas permanentes no servidor?
+
+Vamos trabalhar com um servidor fictício, pois não temos permissão para gerar tabelas no servidor que utilizamos como exemplo no tutorial. Vamos supor que temos uma tabela "pagamentos201701" na nossa base de dados "PBF" e que tal tabela contém uma variável "UF" para unidades da federação:
+
+Ao produzir o comando acima, na prática, nada aconteceu. A execução da query só ocorrerá quando tentarmos trazer a tabela para a memória ("fetch") ou explicitarmos que ela deve ser computada.
+
+Se quisermos trazer os dados para a memória, utilizamos a função _collect_.
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda), colour="blue", fill="blue")
+independentes_df <- collect(independentes)
 ```
 
-Muito pior. E se deixássemos a curva mais "transparente"?
+Ao usar o comando _collect_, a query é executada no servidor e os dados enviados ao R. Note, agora, que independentes\_df é um data frame em seu workspace.
+
+O caminho inverso -- subir ao servidor uma tabela -- é feito com a função _copy\_to_. Como estamos tod@s utilizando o mesmo servidor e a tabela "independentes_tbl" já existe, você receberá uma mensagem de erro.
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda), colour="blue", fill="blue",alpha=0.2)
+copy_to(dest = conexao, df = independentes_df, name = "independentes_tbl")
 ```
 
-Agora sim melhorou. Mas nos falta uma referência para facilitar a leitura do gráfico. Por exemplo, seria legal adicionar uma linha vertical que indicasse onde está a média da distribuição. Vamos calcular a média da renda:
+No entanto, _copy\_to_ não geram uma nova tabela no servidor. Para que uma nova tabela seja gerada, é preciso definir o argumento "temporary" como "FALSE" (o padrão é "TRUE"). Novamente, você receberá uma mensagem de erro, pois a tabela já existe.
 
 ```{r}
-media_renda <- mean(fake$renda)
+copy_to(dest = conexao, df = independentes_df, name = "independentes_tbl", temporary = F)
 ```
 
-Mas estamos tratando de curvas de densidade, não estamos? Nessa geometria não há possibilidade de representar valores com uma linha vertical. Vamos, então, adicionar uma nova geometria, com uma "aesthetics" própria, com novos dados (no caso, um valor único), ao gráfico que já havíamos construído:
+Para executar a query no servidor sem que precisemos trazer a tabela e reenviá-la devemos usar a função _compute_, que também tem o argumento "temporary".
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda), colour="blue", fill="blue",alpha=0.2) +
-  geom_vline(aes(xintercept = media_renda))
+compute(minha_query, name = "pagamentos201701_es", temporary = FALSE)
 ```
 
-Veja que, com _ggplot2_ podemos adicionar novas geometrias e dados sempre que precisarmos. Agora, temos duas camadas e duas geometrias. É por esta razão que a estrutura do código deste pacote difere tanto da estrutura para gráficos no pacote base. A flexibilidade adicionar geometrias (usando ou não os dados inicialmente apontados) é uma das vantagens do _ggplot2_ 
+Sem definir "temporary" como "FALSE", a query será executada e a tabela gerada será temporária, apenas.
 
-Para tornar o gráfico mais interessante, vamos alterar a forma e a cor da linha adicionada no gráfico anterior:
+## Outras bases de dados
+
+A conexão a outras bases de dados, MariaDb, SQLite, PostgreSQL e BigQuery, feita exatamente do mesmo modo que fizemos a conexão com um servidor de MySQL. Para as bases citadas usamos, respectivamente, as funções _scr\_mysql_ (sim, para MariaDB a função é a mesma que para MySQL), _scr\_sqlite_, _scr\_postgres_ e _scr\_bigquery_ com os mesmos 5 argumentos que vimos acima: dbname, host, port, user e password.
+
+Os verbos de manipulação de dados do pacote dplyr funcionam normalmente para tabelas nesses servidores.
+
+## Um exemplo com mais de uma tabela
+
+Vamos seguir com outro exemplo de manipulação de dados num servidor MySQL para trabalhar com mais de uma tabela e reforçar o que vimos acima. Vamos utilizar agora dados que estão no servidor do site "Datacamp":
+
+Comecemos com a conexão:
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda), colour="blue", fill="blue",alpha=0.2) +
-  geom_vline(aes(xintercept = media_renda),
-             linetype="dashed",
-             colour="red")
+conexao <- src_mysql(dbname = "tweater", 
+                   host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com", 
+                   port = 3306, 
+                   user = "student",
+                   password = "datacamp")
 ```
 
-"linetype" é outro parâmetro comum a diversas geometrias (obviamente, as geometrias de linhas).
-
-### Exercício
-
-Crie um gráfico de densidade de idade e adicione uma linha vertical que indica as pessoas com mais de 21 anos de idade. Ajuste a formatação para usar as mesmas cores do site da USP.
-
-## Gráficos com uma variável contínua e uma variável discreta
-
-Vamos dar alguns passos para traz e retornar aos histogramas. E se quisermos comparar as distribuições de renda por sexo, por exemplo? Precisamos filtrar os dados e fazer um gráfico para cada categoria de sexo?
-
-Poderíamos. Mas mais interessante é compara as distribuições em um mesmo gráfico. Para fazer isso, precisamos saber como visualizar duas variáveis do nosso data.frame ao mesmo tempo. Como estamos separando uma distribuição de uma variável contínua (renda) em duas, a partir de uma segunda variável discreta (sexo), precisamos adicionar essa nova variável à "aesthetics". Veja como:
+_src\_tables_ fornece a listagem de tabelas na base de dados.
 
 ```{r}
-ggplot(fake) + 
-  geom_histogram(aes(x = renda, fill = sexo), binwidth = 4000, position = "identity")
+src_tbls(conexao)
 ```
 
-Observe que adicionamos o parâmetro "fill" à "aesthetics" (fora do _aes()_ porque ele não depende de nossos dados). Isso significa que a variável sexo separará as distribuições de renda em cores de preenchimento diferentes. Conseguem ver as duas distribuições, uma atrás da outra? Note que agora temos uma legenda.
+Nessa base de dados há 3 tabelas com informações provenientes de uma rede social: "users", que é uma tabela de usuários; "tweats" com informações sobre postagens de usuários; e "comments", com comentários às postagens por outros usuários.
 
-"position" é o que determina como as barras ficarão dispotas uma em relação à outra. Vamos ver outras opções para o mesmo parâmetro (novamente, comum a várias geometrias) para buscar uma opção mais adequada de visualizar os mesmos dados:
+Se você sabe algo de SQL, pode usar a função _tbl_ permite fazer _queries_ em linguagem SQL. Por exemplo.
 
 ```{r}
-ggplot(fake) + 
-  geom_histogram(aes(x = renda, fill = sexo), binwidth = 4000, position = "dodge")
+tbl(conexao, sql("SELECT * FROM comments WHERE user_id > 4"))
 ```
 
-Um pouco melhor?
-
-Vamos tentar algo semelhante com as curvas de densidade. Em vez de "fill", vamos usar a variável sexo em "colour" na "aesthetics" e separa as distribuições por cores de borda:
+Mas queremos evitar o uso da linguagem SQL. Com _tbl_, criamos um objeto de tabela que seja manipulável com as funções do _dplyr_, sem, no entanto, importá-la. Vamos fazer isso para as três tabelas da base de dados que estamos usando:
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda, colour = sexo))
+comments <- tbl(conexao, "comments")
+tweats <- tbl(conexao, "tweats")
+users <- tbl(conexao, "users")
 ```
 
-Agora sim está melhor. Vamos adicionar o mesmo com "fill":
+Repetindo a _query_ acima, em que selecionamos na tabela _comments_ apenas as linhas com _user\_id_ > 4:
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda, fill = sexo))
+filter(comments, user_id > 4)
 ```
 
-Não ficou muito bom. Mas pode melhorar. Com o parâmetro "alpha", que já usamos no passado, podemos deixar as distribuições mais "transparentes" e observar as áreas nas quais se sobrepôe:
+A partir de agora, as funções de manipulação de dados do _dplyr_ são aplicáveis aos novos objetos criados para representar as tabelas que estão no servidor. Por exemplo, vamos renomear a variável "id" em tweats para "tweat_id" e fazer um _left join_ entre _comments_ e _tweats_ por "tweat_id":
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda, fill = sexo), alpha=0.5)
+tweats2 <- rename(tweats, tweat_id = id)
+tabela_join <- left_join(tweats2, comments, "tweat_id")
+head(tabela_join)
 ```
 
-Finalmente, podemos usar "fill" e "colour" juntos na "aesthetics"
+Note que "tweats2" é uma tabela gerada no servidor de SQL e não está na memória RAM de nosso computador.
+
+Novamente, podemos traduzir a query de R para SQL:
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda, fill = sexo, colour = sexo), alpha = 0.5)
+show_query(tabela_join)
 ```
 
-Que belezura de gráfico! A comparação de distribuições de uma variável contínua por uma variável discreta (aqui binária  - duas categorias) é uma das mais úteis em ciência, pois é exatamente a forma gráfica de testes de hipóteses. Qual grupo tem, na média, mais renda em Fakeland? Com os gráficos fica fácil responder
-
-### Exercício
-
-As pessoas mais ricas do Fakeland estão mais propensas a serem membros do partido "Conservative Party"? Crie um gráfico claro para mostrar a relação entre essas variáveis.
-
-## Gráficos com uma variável contínua e uma variável discreta - Gráficos de boxplot
-
-Vamos repetir o gráfico acima, mas, em vez de separar as distribuições por sexo, vamos separar por uma variável com mais categorias: 'educ', que representa nível educacional mais alto obtido pelo indivíduo em Fakeland.
+As funções da gramática do _dplyr_ -- _filter_, _select_, _rename_, _mutate_, _group\_by_, _summarize_, _left\_join_, _right\_join_, _inner\_join_, _full\_join_ e etc -- funcionam normalmente à tabelas remotas e facilitam demais a manipulação. Um exemplo tolo, porém completo, usando o operador %>% ( _pipe_, que permite omitir o primeiro argumento de cada função e nos poupa de repetir o nome da tabela diversas vezes) para ilustrar a aplicação de diversas funções do _dplyr_ ao mesmo tempo:
 
 ```{r}
-ggplot(fake) + 
-  geom_density(aes(x = renda, fill = educ, colour = educ), alpha = 0.5)
+tweats <- tweats %>% 
+  rename(tweat_id = id) %>%              # renomeia variavel
+  mutate(post = toupper(post)) %>%       # post em letras maiusculas
+  left_join(comments, "tweat_id") %>%    # left join con tabela "comments"
+  select(tweat_id, post, message) %>%    # mantem apenas 3 variaveis
+  filter(substr(message, 
+                nchar(message), 
+                nchar(message)) == "!")  # filtra por comentarios que terminam em !
+head(tweats, 7)
 ```
 
-Dá par comparar as distribuições de idade por grupo? Certamente não. Podemos ter alguma ideia de que não há muita diferença, mas o gráfico é poluído demais.
-
-Uma alternativa mais sintética, ou seja, que contém menos informações, para representar distribuições de variáveis numéricas é utilizar boxplot. Vamos ver um exemplo que serve de alternativa ao gráfico anterior.
-
-Nota: na nova "aesthetics" temos agora "x" (eixo horizontal) e "y", eixo vertical.
+Uma maneira simples de trazer à memória de seu computador a tabela gerada a partir da query, com _as.data.frame_ importamos a tabela como _data frame_:
 
 ```{r}
-ggplot(fake) + 
-  geom_boxplot(aes(x = educ, y = renda))
+tabela <- as.data.frame(tweats)
 ```
 
-Importante: se você não tem familiaridade com boxplots, me peça uma rápida explicação.
+Note que "tabela", diferentemente de "tweats", é um _data frame_ no seu _workspace_.
 
-Ainda que com perda de informação, conseguimos compara as distribuições de renda por nível educacional de forma bastante rápida. A média renda das pessoas com "college degree" é maior que os outros, e a variação na renda para aqueles com "High school degree" é grande. Para colocar um pouco de cor nos boxplots, podemos usar "fill" novamente:
-
-```{r}
-ggplot(fake) + 
-  geom_boxplot(aes(x = educ, y = renda, fill = educ))
-```
-
-Gráfico de barras, para variáveis categóricas, e histogramas, curvas de densidade e boxplot são os melhores gráficos para explorarmos as distribuição de variáveis quando queremos conhecer os dados que recém coletamos ou obtemos.
-
-## Gráficos de duas variáveis contínuas
-
-Até agora trabalhamos com distribuições de uma única variável ou com a distribuição conjunta de uma variável contínua por outra discreta (em outras palavras, separados a distribuição de uma variável em várias a partir de um variável categórica).
-
-Vamos ver agora como relacionar graficamente duas variáveis contínuas. O padrão é usarmos a geometria de gráfico de dispersão, que presenta cada par de informações como uma coordenada no espaço bidimensional. Vamos ver um exemplo com idade (eixo horizontal) e renda (eixo vertical) usando a geometria _geom\_point_:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda))
-```
-
-Você consegue ler este gráfico? Cada ponto representa um indivíduo, ou seja, posiciona no espaço o par (idade, renda) daquela(e) indivíduo.
-
-Note que há uma certa tendência nos dados: quanto mais velha a pessoa, maior sua renda. Podemos representar essa relação com modelos lineares e não lineares. A geometria _geom\_smooth_ cumpre esse papel.
-
-Para utilizá-la, precisamos definir qual é o método (parâmetro "method") de ajuste aos dados. O mais convencional é representar a relação entre as variáveis como reta. Veja o exemplo (ignore o parâmetro "se" por enquanto):
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda)) +
-  geom_smooth(aes(x = idade, y = renda), method = "lm", se = FALSE)
-```
-
-Legal, não? Se retirarmos o parâmetro "se", ou voltarmos seu valor para o padrão "TRUE", obteremos também o intervalo de confiança da reta que inserimos.
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda)) +
-  geom_smooth(aes(x = idade, y = renda), method = "lm")
-```
-
-Modelos de regressão, linear ou não, estão bastante fora do escopo deste curso. Mas podemos falar sobre isso individualmente se você quiser. Tente apenas interpretar o resultado gráfico.
-
-A alternativa não linear para representar a relação ao dados mais utilizada com essa geometria é o método "loess". Veja o resultado:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda)) +
-  geom_smooth(aes(x = idade, y = renda), method = "loess")
-```
-
-## Gráficos de três ou mais variáveis
-
-Em geral, estamos limitados por papel e telas bidimensionais para exibir apenas geometrias de duas variáveis. Mas existe um truque que podemos usar para mostrar mais informações - traga os outros parâmetros de uma geometria - os cores, tamanhos e formas - dentro de _aes_ (para que eles podem variar) e conecte-os a uma variável em seu data.frame. 
-
-Se, por exemplo, queremos representar uma terceira variável numérica, podemos colocá-la como o tamanho dos pontos (raio do círculo). Por exemplo, o número de filhos, variável que vai de 1 a 10 nos nossos dados, poderia ser adicionada da seguinte forma:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, size = filhos))
-```
-
-Se, em vez de alterar o tamanho dos pontos por uma variável numérica, quisermos alterar sua cor ou forma dos pontos com base em uma variável categória (sexo, por exemplo), fazemos, respectivamente:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo))
-```
-
-Ou:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, shape = sexo))
-```
-
-Nota: cada símbolo é representado por um número e você encontra facilmente na documentação a tabela de códigos dos diferentes símbolos.
-
-Alterando simultaneamente cor e forma:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo, shape = sexo))
-```
-
-Adicionando uma reta de regressão para cada categoria de sexo:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo, shape = sexo)) +
-  geom_smooth(aes(x = idade, y = renda, colour = sexo, shape = sexo), method = "lm", se = F)
-```
-
-Lindo, não?
-
-Existe mais um outro jeito de mostrar mais de duas variáveis - podemos criar vários gráficos organizados em uma grade sem ter que repetir nosso código toda vez. Como fazer isso? Com _face\_grid_ ou _facet\_wrap_. Veja um exemplo:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda)) +
-  facet_wrap(~sexo)
-```
-
-### Exercício
-
-Vamos usar o banco de dados menor de Fakeland para investigar a relação entre renda, poupança e número de crianças. Começando com o código debaixo, crie um gráfico de dispersão entre renda (income) e poupança (savings), e ajuste o tamanho de cada ponto dependendo do número de crianças (kids). 
-
-```{r}
-fake_menor <- read_delim(file1 <- "https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/fake_data.csv", delim = ";", col_names = T)
-```
-
-## Aspectos não relacionados à geometria
-
-Finalmente, podemos alterar diversos aspectos não relacionados aos dados, geometria e "aesthetics". O procedimento para adicionar alterações em título, eixos, legenda, etc, é o mesmo que para adicionar novas geometrias/camadas.
-
-Em primeiro lugar, vamos adicionar um título ao gráfico:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo)) +
-  ggtitle("Renda por idade, separado por sexo")
-```
-
-A seguir, vamos modificar os nomes dos rótulos dos eixos:
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo)) +
-  ggtitle("Renda por idade, separado por sexo") +
-  xlab("Idade (em anos inteiros)") +
-  ylab("FM$ (Fake Money)")
-```
-
-O _ggplot_ nos permite modificar basicamente todos os elementos de estilo do nosso gráfico, mas isso é muitos detalhes. Para alterar o estilo do nosso gráfico, é mais fácil usar um tema ( _theme_ ) pré-definido. Por exemplo, podemos usar _theme\_classic_ para tirar o preenchimento e a grade do fundo. 
-
-```{r}
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo)) +
-  ggtitle("Renda por idade, separado por sexo") +
-  xlab("Idade (em anos inteiros)") +
-  ylab("FM$ (Fake Money)") +
-  theme_classic()
-```
-
-Os temas também podem ser usados para replicar estilos de outras fontes profissionais, por exemplo usando o pacote _ggthemes_. Debaixo criamos um gráfico usando o estilo da revista "The Economist" em uma linha só de código.
-
-```{r}
-install.packages("ggthemes")
-library(ggthemes)
-
-ggplot(fake) + 
-  geom_point(aes(x = idade, y = renda, colour = sexo)) +
-  ggtitle("Renda por idade, separado por sexo") +
-  xlab("Idade (em anos inteiros)") +
-  ylab("FM$ (Fake Money)") +
-  theme_economist()
-```
-
-### Exercício
-
-Melhore seu gráfico do exercício anterior especificando um título, títulos de eixos e um tema de sua preferência.

@@ -1,33 +1,20 @@
 ###  FLS 6397 - Introdução à Programação e Ferramentas Computacionais para as Ciências Sociais
 
-- Data: 19/04/2019
+- Data: 26/04/2019
 
-## Aula 5 -  RMarkdown, e Integração R e Databases
+## Aula 5 -  Visualização de dados
 
 ### Objetivos Gerais
 
-Na aula passada concluímos uma parte essencial do curso, a manipulação de data frames em R. Antes de avançarmos para novos tópicos relativos ao uso da linguagem, vamos aprender sobre algumas ferramentas e funcionalidades diretamente relacionadas ao uso de R.
-
-O primeiro deles será a integração de R com Sistemas de Gerenciamente de Bancos de Dados que operam em SQL (Structured Query Language), facilitada pelo pacote _dplyr_. A combinação R + SQL é uma solução particularmente boa para a manutenção de grandes bases de dados ("out of memory data") e para o armazenamento de dados utilizados por equipes de trabalho e pesquisa.
-
-A seguir, aprenderemos um pouco sobre Markdown, uma linguagem para a produção de documentos de texto, e de sua versão para R, RMarkdown. É possível, com esta linguagem, combinar texto, código e outputs em um único documento que pode ser exportado como uma página html, um documento pdf ou um arquivo em formato .docx.
-
-Finalmente, veremos como organizar nossa produção em projetos com controle de versão dos documentos utilizando git, que é um software de gerenciamento de versão, github, que é um repositório online que opera com git, e a integração de ambos com Rstudio.
-
-Importante: esta será uma aula com mais momentos de exposição. Fique atenta(o) aos horários.
+Agora você é especialista em acessar e transformar dados e domina pelo menos duas gramáticas diferentes em R. Mas ainda é difícil se comunicar e visualizar sua análise porque só sabemos apresentar texto e tabelas básicas. Hoje, vamos aprender mais uma gramática da linguagem, `ggplot2` (grammar of graphics). Veremos criar gráficos para visualizar os nossos dados usando este poderoso pacote.
 
 ### Roteiro para a aula
 
-LEIA COM CUIDADO E ATÉ O FINAL O ROTEIRO DE HOJE ANTES DE COMEÇAR.
-
-1- Comece o [Tutorial 8](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial08.html) assim que chegar em sala de aula, sobre a integração entre R e SQL.
-
-2- Havendo sobra de tempo em sala de aula, leia, caso não tenha lido, o capítulo 8 do livro _R for Data Science_, [aqui](http://r4ds.had.co.nz/workflow-projects.html), sobre RProjects.
-
-4- Se tiver terminado o Tutorial 8, vá para o [Tutorial 9](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial09.html), sobre RMarkdown.
-
-5- Se houver tempo em sala, leia os capítulos 26 a 30 so livro _R for Data Science_. Esta é a seção do livro sobre Comunicação Científica e a maioria deles trata de RMarkdown.
+1. Faremos uma apresentação rápida sobre _ggplot2_ logo no início da aula.
+2. A seguir, faça o [Tutorial 8](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial08.html), que traz uma introdução ao _ggplot2_.
+3. Caso não tenha lido, leia capítulos 3, 7 e 28 do livro [R for Data Science](http://r4ds.had.co.nz) sobre _ggplot2_. Se já tiver lido, volte aos capítulos e certifique-se de que não restaram dúvidas antes de prosseguir.
+4. Finalmente, faça o [Tutorial 9](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial09.html), que traz mais algums aspectos do _ggplot2_ e aprsenta um outro pacote para visualizações em R, _plotly_
 
 ### Roteiro pós-aula
 
-Ficaremos 2 semanas sem nos encontrarmos novamente. Nesse período você deverá realizar o Desafio 2, que irá ao ar a partir de amanhã a noite e com entrega agendada para 04/05, e finalizar a leitura dos capítulos 1 (_Introduction_) a 18 (_Pipes_, no início da parte III) e 26 a 30 (parte V) do livro do livro _R for Data Science_, [aqui](http://r4ds.had.co.nz/).
+Vamos ler (novamente, se você já leu) capítulo 21, "Iterations", de [R for Data Science](http://r4ds.had.co.nz/iteration.html). O proximo desafio sobre o ggplot2 sera disponivel logo.

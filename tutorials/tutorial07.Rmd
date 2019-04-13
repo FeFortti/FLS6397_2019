@@ -145,7 +145,7 @@ comb_anti <- pagamentos11 %>% anti_join(pagamentos17, by = "nis")
 
 Respire fundo e gaste um tempo refletindo sobre os "joins". Você acabou de aprender como operar bancos de dados relacionais e pode parecer bastante difícil num primeiro momento.
 
-## Exercício: Combinação de tabela e agregações cumulativas
+## Combinação de tabela e agregações cumulativas
 
 Vamos supor que queremos calcular os valores total, médio, máximo, etc, por município e, a seguir, apresentar esses valores como colunas para cada observação. Uma maneira eficiente de fazer isso é usando a combinação de tabelas. Vamos ver como voltando ao exemplo da amostra de saques do Programa Bolsa Família em 2017.
 
