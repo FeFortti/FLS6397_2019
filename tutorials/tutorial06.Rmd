@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 
 # Manipulação de dados com a gramática do Tidyverse
 
-## Um primeiro exemplo
+## Tibbles e data frames
 
 Nosso primeiro exemplo será a base de dados dos saques efetuados pelos beneficiários do Bolsa Família em janeiro de 2017. O arquivo de janeiro 2017 é um arquivo grande, com mais de 12 milhões de linhas, então pegamos uma amostra aleatória de apenas 10000 linhas.
 
@@ -46,6 +46,7 @@ O primeiro argumento da função _rename_ deve ser a base de dados cujos nomes d
 ```{r}
 saques_amostra_201701 <- rename(saques_amostra_201701, uf = UF, munic = `Nome Município`)
 ```
+O 'verbo' rename, da gramática do _dplyr_ é bastante mais simples do que usar do que o método anterior para renomear variáveis em um _data frame_.
 
 ## Uma gramática, duas formas
 
@@ -76,7 +77,7 @@ saques_amostra_201701 <- saques_amostra_201701 %>%
 
 ## Selecionando colunas
 
-Algumas colunas são claramente dispensáveis em nosso banco de dados. Por exemplo, já sabemos que "Código Função", "Código Subfunção", "Código Programa" e "Código Ação" não variam entre as linhas, pois todas se referem ao Programa Bolsa Família. Vamos ficar apenas com as variáveis que já havíamos renomeado.
+Algumas colunas são claramente dispensáveis em nosso banco de dados. Por exemplo, já sabemos que "Código Função", "Código Subfunção", "Código Programa" e "Código Ação" não variam entre as linhas, pois todas se referem ao Programa Bolsa Família. Vamos ficar apenas com as variáveis que já havíamos renomeado. Para tanto, utilizaremos o segundo verbo do _dplyr_ que aprenderemos: _select_
 
 ```{r}
 saques_amostra_201701 <- select(saques_amostra_201701, uf, munic, cod_munic, nome, valor, mes, data_saque)
@@ -137,7 +138,7 @@ ou, em uma forma alternativa,
 saques_amostra_201701 <-mutate(saques_amostra_201701, nome_min = tolower(nome))
 ```
 
-Use o comando View para visualizar o resultado da coluna criada à direita do banco de dados. Simples, não? Basta inserimos dentro do comando _mutate_ a expressão da transformação que queremos.
+Use o comando View para visualizar o resultado da coluna criada à direita do banco de dados. Simples, não? Basta inserimos dentro do 'verbo' _mutate_ a expressão da transformação que queremos.
 
 
 Vamos a um exemplo um pouco mais difícil: A variável 'valor', apesar de conter números, foi lida como texto. Isso ocorre por que o R não entende o uso da vírgula como separador de milhar. Como resolver um problema desses? Precisamos substituir vírgula por vazio em um texto e, a seguir, indicar que o texto é, na verdade, um número. Em vez de criar uma nova variável "valor", vamos apenas alterar a variável já existente duas vezes. Com a função _gsub_, faremos a substituição da vírgula por vazio e com a função _as.numeric_ faremos a transformação texto-número.
@@ -224,7 +225,7 @@ ou
 saques_amostra_ES <-filter(saques_amostra_201701, uf == "ES")
 ```
 
-Exceto o uso da palavra _filter_, não há nada de novo para nós. Nós já vimos condições tipo uf == "ES", que indica que apenas as linhas cuja variável _uf_ assumo valor igual a ES devem ser consideradas. Além da igualdade, poderíamos usar outros símbolos: maior (>). maior ou igual (>=), menor (<), menor ou igual (<=) e diferente (!=). 
+Exceto pelo uso do 'verbo' _filter_, não há nada de novo para nós. Nós já vimos condições como uf == "ES", que indica que apenas as linhas cuja variável _uf_ assumo valor igual a ES devem ser consideradas. Além da igualdade, poderíamos usar outros símbolos: maior (>). maior ou igual (>=), menor (<), menor ou igual (<=) e diferente (!=).  Para casos de _NA_, podemos usar a função is.na(), pois a igualdade '== NA' é inválida em R.
 
 Também utilizamos aspas em "ES". Como estamos comparando os valores para cada linha a um texto, devemos usar as aspas.
 
