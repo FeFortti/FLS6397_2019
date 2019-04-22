@@ -16,8 +16,7 @@ Este breve tutorial fornece um guia para alguns recursos adicionais do ggplot2. 
 Existe uma variedade de geometrias que podemos usar como camadas para visualizar os nossos dados. Vamos continuar com o nosso analise de dados de Fakeland. 
 
 ```{r}
-library(readr)
-library(ggplot2)
+library(tidyverse)
 url_fake_data <- "https://raw.githubusercontent.com/leobarone/cebrap_lab_programacao_r/master/data/fake_data_2.csv"
 fake <- read_delim(url_fake_data, delim = ";", col_names = T)
 ```
@@ -25,36 +24,28 @@ fake <- read_delim(url_fake_data, delim = ";", col_names = T)
 Uma geometria muito útil é _geom\_text_, que coloca como formas geométricas os textos mesmos. Por exemplo, nós podemos especificar um gráfico de dispersão onde os pontos refletem o nome de candidato em que as pessoas votaram, usando o parâmetro 'label'.
 
 ```{r}
-ggplot(fake) +
+fake %>% ggplot() +
   geom_text(aes(x=idade,y=renda,label=candidato))
 ```
 
 Outro geometria útil é _geom\_tile_ que tem uma forte conexão com mapas "raster" que discutiremos mais adiante no curso. Especificamos variáveis x e y, e também uma variável de 'fill' que se aplica a cada célula de interseção de x e y.
 
 ```{r}
-ggplot(fake) +
+fake %>% ggplot() +
   geom_tile(aes(x=idade,y=educ, fill=renda))
 ```
 
 ## Pipes e Gráficos de linha
 
-Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser _ordenado_ para que as linhas façam sentido. Para que podemos transformar os nossos dados na mesma linha de código onde criamos o nosso gráfico, vamos aprender primeiramente como a usar _ggplot2_ com o pipe:
-
-```{r}
-library(tidyverse)
-fake %>% ggplot() +
-  geom_point(aes(x=idade,y=renda))
-```
-
-Só precisamos mexer o data.frame fora do _ggplot2_ e colocá-lo antes do pipe. Note uma coisa chata: existe dois símbolos conetando as nossas ações agora: um pipe ( _%>%_ ) e um "+". Usamos o pipe com data.frames, e o "+" com camadas de gráficos depois da linha _ggplot()_. 
-
-Com este novo fluxo de trabalho, agora é fácil transformar nossos dados antes de visualizar. Por exemplo, podemos visualizar apenas os dados para as mulheres.
+Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser _ordenado_ para que as linhas façam sentido. Só precisamos mexer o data.frame fora do _ggplot2_ e colocá-lo antes do pipe. Por exemplo, podemos visualizar apenas os dados para as mulheres.
 
 ```{r}
 fake %>% filter(sexo=="Female") %>%
   ggplot() +
   geom_point(aes(x=idade,y=renda))
 ```
+
+Note uma coisa chata: existe dois símbolos conetando as nossas ações agora: um pipe ( _%>%_ ) e um "+". Usamos o pipe com data.frames, e o "+" com camadas de gráficos depois da linha _ggplot()_. 
 
 Para criar um gráfico de linha vamos usar 'idade' como nossa variável ordenada e, portanto, precisamos resumir os dados por idade. Vamos analisar a renda média por idade
 
@@ -72,7 +63,7 @@ fake %>% group_by(idade) %>%
   geom_line(aes(x=idade, y=renda_media))
 ```
 
-E se quisermos ter duas linhas, uma para cada sexo? Precisamos reorganizar nossos dados e incluir um parâmetro 'group' em nossa chamada para ggplot2. Isso é essencial para que o _ggplot2_ saiba como desenhar as linhas. 
+E se quisermos ter duas linhas, uma para cada sexo? Precisamos reorganizar nossos dados para criar médias separadas para cada sexo, e incluir um parâmetro 'group' em nossa chamada para _ggplot2_. Isso é essencial para que o _ggplot2_ saiba como desenhar as linhas. 
 
 ```{r}
 fake %>% group_by(idade,sexo) %>%
@@ -96,7 +87,7 @@ Accesse o banco de dados _flights_ no pacote _nycflights13_. Transforme os dados
 
 ## Controlando cores com 'scales'
 
-O ggplot2 usa cores defaults. Claro que podemos controlar os cores usando mais um elemento da gramática dos gráficos, 'scales'. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha ('colour') ou preenchendo uma área ('fill'). Use o tabela debaixo como uma guia:
+O ggplot2 usa cores defaults para mapear variáveis para cores. Claro que podemos controlar os cores usando mais um elemento da gramática dos gráficos, 'scales'. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha ('colour') ou preenchendo uma área ('fill'). Use o tabela debaixo como uma guia:
 
 Tipo de dados | Color (ponto, linha) | Fill (área)
 ------------- | --------------------|---------
@@ -105,7 +96,7 @@ Discreto      | scale_color_brewer(palette="pre-definido")     | scale_fill_brew
   
 Para os cores e palettes, podemos usar vários tipos de referências: nomes, rgb, hex etc. Mas é difícil escolher boas cores - é melhor usar um site, por exemplo http://colorbrewer2.org
 
-Vamos modificar os cores de nosso gráfico de linha. O nosso variável distinguida pela cor é o sexo, que é discreto, e nós queremos colorir as linhas, não as áreas, então precisamos usar _scale\_color\_brewer_. Eu gosto de um escala/palette se chame 'Accent' então adicionamos uma nova linha no código.
+Vamos modificar os cores de nosso gráfico de linha. O nosso variável distinguida pela cor é o sexo, que é discreto, e nós queremos colorir as linhas, não as áreas, então precisamos usar _scale\_color\_brewer_. Eu gosto de uma escala/palette se chame 'Accent' então adicionamos uma nova linha no código.
 
 ```{r}
 fake %>% group_by(idade,sexo) %>%
@@ -125,15 +116,14 @@ ggplot(fake) +
 
 ### Exercício
 
-Com o banco de dados _flights_, filtrar os dados para voos partindo do aeroporto LGA no dia 20 de maio ('month' e 'day'). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distancia, que coloca os nomes de destinos no gráfico, e, usando um 'scale', para que o cor de cada texto reflete o atraso de partido desse voo.
-
+Com o banco de dados _flights_, filtrar os dados para voos partindo do aeroporto LGA no dia 20 de maio ('day' e 'month'). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distancia, que coloca os nomes de destinos no gráfico, e, usando um 'scale', para que o cor de cada texto reflete o atraso de partido desse voo.
 
 ## Gráficos interativas e animações
 
-Se você estiver trabalhando com um site online (e não um PDF), talvez queira tornar seu gráfico interativo para que os usuários possam explorar cada ponto de dados. Isso é fácil com o pacote _plotly_ e o comando _ggplotly_. Gravamos nosso gráfico como um objeto e, em seguida, usamos _ggplotly_.
+Se você estiver trabalhando com um site online (e não um PDF), talvez queira tornar seu gráfico interativo para que os usuários possam explorar cada ponto de dados. Isso é fácil com o pacote _plotly_ e o comando _ggplotly_. Gravamos nosso gráfico no mesmo sintaxe de _ggplot2_ como um objeto e, em seguida, usamos _ggplotly_.
 
 ```{r}
-install.packages("plotly")
+#install.packages("plotly")
 library(plotly)
 
 graf_1 <- fake %>% group_by(idade,sexo) %>%
@@ -156,10 +146,64 @@ graf_2 %>%
   ggplotly()
 ```
 
-## Gráficos em Rmarkdown
+## Gráficos para Regressões
 
-Para incluir o seu gráfico num documento de Rmarkdown, apenas colocar o código dentro de um chunk (sem gravar como objeto). Normalmente, usamos um chunk separado para cada gráfico. Podemos controlar o tamanho do gráfico com os parametros de chunk, 'fig.height' and 'fig.width', em inches, eg. 'fig.height=5'. 
+Os resultados de uma simples regressão pode ser complicada e confusa. Exibindo gráficos dos resultados podem ajudar a comunicar nossas análises ao nosso público. Por exemplo, imagine que queremos mostrar os resultados da regressão de renda sobre idade e número de filhos.
+
+```{r}
+fake %>% lm(renda ~ idade + filhos, data=.) 
+```
+
+Para visualizar, nossa primeira tarefa é extrair os coeficientes e erros padrão de nossa regressão linear, o que é facilitado pela função _tidy () _ no pacote _broom_. Isso produz um data.frame com o qual somos especialistas em trabalhar.
+
+```{r}
+library(broom)
+
+fake %>% lm(renda ~ idade + filhos, data=.) %>% 
+  tidy()
+```
+
+Depois, podemos tirar o intercept que normalmente não nos interessa muito usando _filter_, e calcule os intervalos de confiança de 95\% usando _mutate_.
+
+```{r}
+fake %>% lm(renda ~ idade + filhos, data=.) %>% 
+  tidy() %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(Conf.lo=estimate-1.96*std.error,
+         Conf.hi=estimate+1.96*std.error)
+```
+
+Finalmente, vamos construir um gráfico de efeitos marginais, que mostra as nossas estimativas dos coeficientes com um ponto (uma camada) para a estimativa média e uma linha (outra camada) para o intervalo de confiança de 95\%. Observe que combinamos toda a preparação de dados e gráficos em uma única linha de código. 
+
+```{r}
+fake %>% lm(renda ~ idade + filhos, data=.) %>% 
+  tidy() %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(Conf.lo=estimate-1.96*std.error,
+         Conf.hi=estimate+1.96*std.error) %>%
+  ggplot() + 
+  geom_point(aes(x=term,y=estimate)) +
+  geom_segment(aes(x=term,xend=term,y=Conf.lo,yend=Conf.hi))
+```
+
+Finalmente, adicionamos uma linha horizontal para indicar onde o zero está no gráfico, nós rotulamos os eixos, adicione um título e mude o tema.
+
+```{r}
+fake %>% lm(renda ~ idade + filhos, data=.) %>% 
+  tidy() %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(Conf.lo=estimate-1.96*std.error,
+         Conf.hi=estimate+1.96*std.error) %>%
+  ggplot() + 
+  geom_point(aes(x=term,y=estimate)) +
+  geom_segment(aes(x=term,xend=term,y=Conf.lo,yend=Conf.hi)) +
+  geom_hline(yintercept=0, linetype="dotted") +
+  theme_classic() +
+  ggtitle("Efeitos Marginais Estimados da Idade e do Número de Filhos sobre Renda") + 
+  ylab("Coefficiente") +
+  xlab("Variável")
+```
 
 ### Exercício
 
-Compilar um documento HTML que inclui o gráfico do exercício anterior. Tornar este gráfico para uma animação para que cada slide é um dia diferente em maio.
+Criar um gráfico de efeitos marginais para o efeito de educação e candidato sobre renda.

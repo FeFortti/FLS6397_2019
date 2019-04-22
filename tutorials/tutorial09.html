@@ -194,28 +194,23 @@ $(document).ready(function () {
 <div id="mais-geometrias" class="section level2">
 <h2>Mais geometrias</h2>
 <p>Existe uma variedade de geometrias que podemos usar como camadas para visualizar os nossos dados. Vamos continuar com o nosso analise de dados de Fakeland.</p>
-<pre class="r"><code>library(readr)
-library(ggplot2)
+<pre class="r"><code>library(tidyverse)
 url_fake_data &lt;- &quot;https://raw.githubusercontent.com/leobarone/cebrap_lab_programacao_r/master/data/fake_data_2.csv&quot;
 fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code></pre>
 <p>Uma geometria muito útil é <em>geom_text</em>, que coloca como formas geométricas os textos mesmos. Por exemplo, nós podemos especificar um gráfico de dispersão onde os pontos refletem o nome de candidato em que as pessoas votaram, usando o parâmetro ‘label’.</p>
-<pre class="r"><code>ggplot(fake) +
+<pre class="r"><code>fake %&gt;% ggplot() +
   geom_text(aes(x=idade,y=renda,label=candidato))</code></pre>
 <p>Outro geometria útil é <em>geom_tile</em> que tem uma forte conexão com mapas “raster” que discutiremos mais adiante no curso. Especificamos variáveis x e y, e também uma variável de ‘fill’ que se aplica a cada célula de interseção de x e y.</p>
-<pre class="r"><code>ggplot(fake) +
+<pre class="r"><code>fake %&gt;% ggplot() +
   geom_tile(aes(x=idade,y=educ, fill=renda))</code></pre>
 </div>
 <div id="pipes-e-graficos-de-linha" class="section level2">
 <h2>Pipes e Gráficos de linha</h2>
-<p>Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser <em>ordenado</em> para que as linhas façam sentido. Para que podemos transformar os nossos dados na mesma linha de código onde criamos o nosso gráfico, vamos aprender primeiramente como a usar <em>ggplot2</em> com o pipe:</p>
-<pre class="r"><code>library(tidyverse)
-fake %&gt;% ggplot() +
-  geom_point(aes(x=idade,y=renda))</code></pre>
-<p>Só precisamos mexer o data.frame fora do <em>ggplot2</em> e colocá-lo antes do pipe. Note uma coisa chata: existe dois símbolos conetando as nossas ações agora: um pipe ( <em>%&gt;%</em> ) e um “+”. Usamos o pipe com data.frames, e o “+” com camadas de gráficos depois da linha <em>ggplot()</em>.</p>
-<p>Com este novo fluxo de trabalho, agora é fácil transformar nossos dados antes de visualizar. Por exemplo, podemos visualizar apenas os dados para as mulheres.</p>
+<p>Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser <em>ordenado</em> para que as linhas façam sentido. Só precisamos mexer o data.frame fora do <em>ggplot2</em> e colocá-lo antes do pipe. Por exemplo, podemos visualizar apenas os dados para as mulheres.</p>
 <pre class="r"><code>fake %&gt;% filter(sexo==&quot;Female&quot;) %&gt;%
   ggplot() +
   geom_point(aes(x=idade,y=renda))</code></pre>
+<p>Note uma coisa chata: existe dois símbolos conetando as nossas ações agora: um pipe ( <em>%&gt;%</em> ) e um “+”. Usamos o pipe com data.frames, e o “+” com camadas de gráficos depois da linha <em>ggplot()</em>.</p>
 <p>Para criar um gráfico de linha vamos usar ‘idade’ como nossa variável ordenada e, portanto, precisamos resumir os dados por idade. Vamos analisar a renda média por idade</p>
 <pre class="r"><code>fake %&gt;% group_by(idade) %&gt;%
   summarize(renda_media=mean(renda,na.rm=T))</code></pre>
@@ -224,7 +219,7 @@ fake %&gt;% ggplot() +
   summarize(renda_media=mean(renda,na.rm=T)) %&gt;%
   ggplot() +
   geom_line(aes(x=idade, y=renda_media))</code></pre>
-<p>E se quisermos ter duas linhas, uma para cada sexo? Precisamos reorganizar nossos dados e incluir um parâmetro ‘group’ em nossa chamada para ggplot2. Isso é essencial para que o <em>ggplot2</em> saiba como desenhar as linhas.</p>
+<p>E se quisermos ter duas linhas, uma para cada sexo? Precisamos reorganizar nossos dados para criar médias separadas para cada sexo, e incluir um parâmetro ‘group’ em nossa chamada para <em>ggplot2</em>. Isso é essencial para que o <em>ggplot2</em> saiba como desenhar as linhas.</p>
 <pre class="r"><code>fake %&gt;% group_by(idade,sexo) %&gt;%
   summarize(renda_media=mean(renda,na.rm=T)) %&gt;%
   ggplot() +
@@ -241,7 +236,7 @@ fake %&gt;% ggplot() +
 </div>
 <div id="controlando-cores-com-scales" class="section level2">
 <h2>Controlando cores com ‘scales’</h2>
-<p>O ggplot2 usa cores defaults. Claro que podemos controlar os cores usando mais um elemento da gramática dos gráficos, ‘scales’. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha (‘colour’) ou preenchendo uma área (‘fill’). Use o tabela debaixo como uma guia:</p>
+<p>O ggplot2 usa cores defaults para mapear variáveis para cores. Claro que podemos controlar os cores usando mais um elemento da gramática dos gráficos, ‘scales’. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha (‘colour’) ou preenchendo uma área (‘fill’). Use o tabela debaixo como uma guia:</p>
 <table style="width:62%;">
 <colgroup>
 <col width="19%"></col>
@@ -269,7 +264,7 @@ fake %&gt;% ggplot() +
 </tbody>
 </table>
 <p>Para os cores e palettes, podemos usar vários tipos de referências: nomes, rgb, hex etc. Mas é difícil escolher boas cores - é melhor usar um site, por exemplo <a href="http://colorbrewer2.org" class="uri">http://colorbrewer2.org</a></p>
-<p>Vamos modificar os cores de nosso gráfico de linha. O nosso variável distinguida pela cor é o sexo, que é discreto, e nós queremos colorir as linhas, não as áreas, então precisamos usar <em>scale_color_brewer</em>. Eu gosto de um escala/palette se chame ‘Accent’ então adicionamos uma nova linha no código.</p>
+<p>Vamos modificar os cores de nosso gráfico de linha. O nosso variável distinguida pela cor é o sexo, que é discreto, e nós queremos colorir as linhas, não as áreas, então precisamos usar <em>scale_color_brewer</em>. Eu gosto de uma escala/palette se chame ‘Accent’ então adicionamos uma nova linha no código.</p>
 <pre class="r"><code>fake %&gt;% group_by(idade,sexo) %&gt;%
   summarize(renda_media=mean(renda,na.rm=T)) %&gt;%
   ggplot() +
@@ -281,13 +276,13 @@ fake %&gt;% ggplot() +
   scale_fill_gradient(low=&quot;yellow&quot;,high=&quot;red&quot;)</code></pre>
 <div id="exercicio-1" class="section level3">
 <h3>Exercício</h3>
-<p>Com o banco de dados <em>flights</em>, filtrar os dados para voos partindo do aeroporto LGA no dia 20 de maio (‘month’ e ‘day’). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distancia, que coloca os nomes de destinos no gráfico, e, usando um ‘scale’, para que o cor de cada texto reflete o atraso de partido desse voo.</p>
+<p>Com o banco de dados <em>flights</em>, filtrar os dados para voos partindo do aeroporto LGA no dia 20 de maio (‘day’ e ‘month’). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distancia, que coloca os nomes de destinos no gráfico, e, usando um ‘scale’, para que o cor de cada texto reflete o atraso de partido desse voo.</p>
 </div>
 </div>
 <div id="graficos-interativas-e-animacoes" class="section level2">
 <h2>Gráficos interativas e animações</h2>
-<p>Se você estiver trabalhando com um site online (e não um PDF), talvez queira tornar seu gráfico interativo para que os usuários possam explorar cada ponto de dados. Isso é fácil com o pacote <em>plotly</em> e o comando <em>ggplotly</em>. Gravamos nosso gráfico como um objeto e, em seguida, usamos <em>ggplotly</em>.</p>
-<pre class="r"><code>install.packages(&quot;plotly&quot;)
+<p>Se você estiver trabalhando com um site online (e não um PDF), talvez queira tornar seu gráfico interativo para que os usuários possam explorar cada ponto de dados. Isso é fácil com o pacote <em>plotly</em> e o comando <em>ggplotly</em>. Gravamos nosso gráfico no mesmo sintaxe de <em>ggplot2</em> como um objeto e, em seguida, usamos <em>ggplotly</em>.</p>
+<pre class="r"><code>#install.packages(&quot;plotly&quot;)
 library(plotly)
 
 graf_1 &lt;- fake %&gt;% group_by(idade,sexo) %&gt;%
@@ -305,12 +300,47 @@ graf_1 %&gt;%
 graf_2 %&gt;%
   ggplotly()</code></pre>
 </div>
-<div id="graficos-em-rmarkdown" class="section level2">
-<h2>Gráficos em Rmarkdown</h2>
-<p>Para incluir o seu gráfico num documento de Rmarkdown, apenas colocar o código dentro de um chunk (sem gravar como objeto). Normalmente, usamos um chunk separado para cada gráfico. Podemos controlar o tamanho do gráfico com os parametros de chunk, ‘fig.height’ and ‘fig.width’, em inches, eg. ‘fig.height=5’.</p>
+<div id="graficos-para-regressoes" class="section level2">
+<h2>Gráficos para Regressões</h2>
+<p>Os resultados de uma simples regressão pode ser complicada e confusa. Exibindo gráficos dos resultados podem ajudar a comunicar nossas análises ao nosso público. Por exemplo, imagine que queremos mostrar os resultados da regressão de renda sobre idade e número de filhos.</p>
+<pre class="r"><code>fake %&gt;% lm(renda ~ idade + filhos, data=.) </code></pre>
+<p>Para visualizar, nossa primeira tarefa é extrair os coeficientes e erros padrão de nossa regressão linear, o que é facilitado pela função <em>tidy () </em> no pacote <em>broom</em>. Isso produz um data.frame com o qual somos especialistas em trabalhar.</p>
+<pre class="r"><code>library(broom)
+
+fake %&gt;% lm(renda ~ idade + filhos, data=.) %&gt;% 
+  tidy()</code></pre>
+<p>Depois, podemos tirar o intercept que normalmente não nos interessa muito usando <em>filter</em>, e calcule os intervalos de confiança de 95% usando <em>mutate</em>.</p>
+<pre class="r"><code>fake %&gt;% lm(renda ~ idade + filhos, data=.) %&gt;% 
+  tidy() %&gt;% 
+  filter(term!=&quot;(Intercept)&quot;) %&gt;% 
+  mutate(Conf.lo=estimate-1.96*std.error,
+         Conf.hi=estimate+1.96*std.error)</code></pre>
+<p>Finalmente, vamos construir um gráfico de efeitos marginais, que mostra as nossas estimativas dos coeficientes com um ponto (uma camada) para a estimativa média e uma linha (outra camada) para o intervalo de confiança de 95%. Observe que combinamos toda a preparação de dados e gráficos em uma única linha de código.</p>
+<pre class="r"><code>fake %&gt;% lm(renda ~ idade + filhos, data=.) %&gt;% 
+  tidy() %&gt;% 
+  filter(term!=&quot;(Intercept)&quot;) %&gt;% 
+  mutate(Conf.lo=estimate-1.96*std.error,
+         Conf.hi=estimate+1.96*std.error) %&gt;%
+  ggplot() + 
+  geom_point(aes(x=term,y=estimate)) +
+  geom_segment(aes(x=term,xend=term,y=Conf.lo,yend=Conf.hi))</code></pre>
+<p>Finalmente, adicionamos uma linha horizontal para indicar onde o zero está no gráfico, nós rotulamos os eixos, adicione um título e mude o tema.</p>
+<pre class="r"><code>fake %&gt;% lm(renda ~ idade + filhos, data=.) %&gt;% 
+  tidy() %&gt;% 
+  filter(term!=&quot;(Intercept)&quot;) %&gt;% 
+  mutate(Conf.lo=estimate-1.96*std.error,
+         Conf.hi=estimate+1.96*std.error) %&gt;%
+  ggplot() + 
+  geom_point(aes(x=term,y=estimate)) +
+  geom_segment(aes(x=term,xend=term,y=Conf.lo,yend=Conf.hi)) +
+  geom_hline(yintercept=0, linetype=&quot;dotted&quot;) +
+  theme_classic() +
+  ggtitle(&quot;Efeitos Marginais Estimados da Idade e do Número de Filhos sobre Renda&quot;) + 
+  ylab(&quot;Coefficiente&quot;) +
+  xlab(&quot;Variável&quot;)</code></pre>
 <div id="exercicio-2" class="section level3">
 <h3>Exercício</h3>
-<p>Compilar um documento HTML que inclui o gráfico do exercício anterior. Tornar este gráfico para uma animação para que cada slide é um dia diferente em maio.</p>
+<p>Criar um gráfico de efeitos marginais para o efeito de educação e candidato sobre renda.</p>
 </div>
 </div>
 </div>
