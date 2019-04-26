@@ -90,14 +90,8 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
-.html-widget {
-  margin-bottom: 20px;
-}
 button.code-folding-btn:focus {
   outline: none;
-}
-summary {
-  display: list-item;
 }
 </style>
 
@@ -106,74 +100,14 @@ summary {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
 </script>
 
 <!-- code folding -->
+
 
 
 
@@ -199,7 +133,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <div id="ggplot2-uma-gramatica-de-dados" class="section level2">
 <h2>ggplot2: uma Gramática de Dados</h2>
 <p>Em conjunto com a gramática de manipulação de dados do <em>dplyr</em>, a gramática de gráficos <em>ggplot2</em> é um dos destaques da linguagem R. Além de flexível e aplicável a diversas classes de objetos (data frames, objetos de mapa e redes, por exemplo), a qualidade dos gráficos é excepcionalmente boa.</p>
-<p>Existe uma forte ligação entre a gramática de <em>dplyr</em> e a gramática de <em>ggplot2</em>: toda a informação para o nosso gráfico vem de um data.frame; cada linha em nosso data.frame é uma ‘unidade’'observação’ a ser exibida no gráfico, e cada coluna em nosso data.frame é uma variável que determina um aspeto visual específico do gráfico, incluindo posição, cor, tamanho e forma.</p>
+<p>Existe uma forte ligação entre a gramática de <em>dplyr</em> e a gramática de <em>ggplot2</em>: toda a informação para o nosso gráfico vem de um data.frame; cada linha em nosso data.frame é uma ‘unidade’ a ser exibida no gráfico, e cada coluna em nosso data.frame é uma variável que determina um aspeto visual específico do gráfico, incluindo posição, cor, tamanho e forma.</p>
 <p>Neste tutorial vamos priorizar a compreensão da estrutura do código para produzir gráficos com <em>ggplot2</em> a partir de alguns exemplos simples e propositalmente não cobriremos todas as (inúmeras) possibilidades de visualização.</p>
 <p>Você verá, depois de um punhado de gráficos, que a estrutura pouco muda de um tipo de gráfico a outro. Quando precisar de um “tipo” novo de gráfico, ou, como denominaremos a partir de agora, de uma nova “geometria”, bastará aprender mais uma linha de código a ser adicionada ao final de um código já conhecido.</p>
 <p>Vamos logo a um primeiro exemplo para clarificar o assunto.</p>
@@ -213,8 +147,8 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <p>Comecemos pela primeira linha. A principal função do código é, como era de se esperar, <em>ggplot</em> (sem o 2 mesmo). Note que não estamos fazendo uma atribuição, por enquanto, pois queremos apenas “imprimir” o gráfico, e não guardá-lo como objeto (algo perfeitamente possível!).</p>
 <p>O argumento da função <em>ggplot</em> é “data”, ou seja, o objeto que contém os dados a serem visualizados. No nosso caso, o data frame é <em>fake</em> e podemos colocar os dados no início do nosso código para usar com o símbolo ‘pipe’ (%&gt;%). _ggplot_é uma função que inicia um gráfico, mas na verdade não coloca nenhum conteúdo nele.</p>
 <p>Agora, para adicionar uma geometria, colocamos um símbolo de “+” após fechar o parêntesis da função <em>ggplot</em> e, convencionalmente na linha seguinte, utilizarmos a função da geometria correspondente. Cada “+” nos permite adicionar mais uma camada em nosso gráfico. Mas qual camada? Nós definimos uma camada principalmente por sua <em>geometria</em> - o tipo de representação visual dos nossos dados que queremos. <em>geom_bar</em> indica que queremos uma geometria de barras, como um ‘bar chart’ em excel.</p>
-<p>Crucialmente, a escolha da geometria depende do tipo de dados que você deseja visualizar. Aqui, analisamos a distribuição de preferências de candidato à presidência, que é uma variável discreta (caráter ou fator), então usamos uma geometria que corresponda com dados discretos. A lógica de um gráfico de barras é representar a contagem de frequência de cada categoria discreta, então faz sentido usar <em>geom_bar</em> como a nossa geometria. Vamos ver exemplos de outras geometrias que corespondam com outros dados debaixo.</p>
-<p>Dentro da camada de geometria, a mais estranhesa vem com as 3 letrinhas “aes” que são a abreviação de “aesthetics”. Aqui dentro definiremos quais variáveis de nosso data.frame farão parte do gráfico. Estamos trabalhando por enquanto com apenas uma variável, representada no eixo horizontal, ou eixo “x”. Por esta razão preenchemos o parâmetro “x” da “aesthetics” e nada mais.</p>
+<p>A escolha da geometria depende do tipo de dados que você deseja visualizar de seu dados.frame. Aqui, analisamos a distribuição de preferências de candidato à presidência, que é uma variável discreta (<em>character</em> ou <em>factor</em>), então usamos uma geometria que corresponda com dados discretos. A lógica de um gráfico de barras é representar a contagem de frequência de cada categoria discreta, então faz sentido usar a geometria <em>geom_bar</em>. Vamos ver exemplos de outras geometrias que corespondam a outros dados abaixo.</p>
+<p>Na linha de código da geometria, as 3 letrinhas “aes” causam estranheza. “aes” é a abreviação de “aesthetics”. Aqui definiremos quais variáveis de nosso <em>data.frame</em> farão parte do gráfico. Estamos trabalhando por enquanto com apenas uma variável, representada no eixo horizontal, ou eixo “x”. Por esta razão preenchemos o parâmetro “x” da “aesthetics” e nada mais.</p>
 </div>
 <div id="graficos-com-uma-variavel-continua---graficos-de-histogramas" class="section level2">
 <h2>Gráficos com uma variável contínua - Gráficos de histogramas</h2>
@@ -224,18 +158,18 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <p>Este gráfico está em branco, por quê? Tentamos representar uma variável contínua com uma geometria construído para variáveis discretas. Como cada valor de renda é único, existe uma barra (minúscula) para cada indivíduo e o gráfico não faz sentido. Precisamos mudar o geometria - o equivalente de um gráfico de barras para variáveis contínuas é um histogram, então usamos <em>geom_histogram</em>.</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_histogram(aes(x = renda))</code></pre>
-<p>Faz mais sentido? Espero que sim. Compare os dois códigos dos gráficos acima com calma e compreenda as diferenças. Note que o tipo de variável que demanda uma(s) geometria(s) específica(s), e não contrário.</p>
+<p>Faz mais sentido? Espero que sim. Compare os dois códigos dos gráficos acima com calma e compreenda as diferenças. Note que o tipo de variável que demanda a geometria a ser escolhida, e não contrário.</p>
 <div id="exercicio" class="section level3">
 <h3>Exercício</h3>
-<p>Use o banco de dados de Fakeland para criar um gráfico que mostra o nível de apoio para cada partido, e um gráfico que mostra a distribuição da idade (trata idade como uma variável contínua).</p>
+<p>Use o banco de dados de Fakeland para criar um gráfico que mostre o nível de apoio para cada partido, e outro que gráfico que mostre a distribuição da idade (trate idade como uma variável contínua).</p>
 </div>
 <div id="parametros-fixos" class="section level3">
 <h3>Parâmetros fixos</h3>
-<p>As geometrias, cada uma com sua função, também têm parâmetros que podem ser alterados. Por exemplo, as barras do histograma que acabamos de produzir são muito “fininhas”. Vamos aumentar sua largura, ou seja, vamos representar mais valores do eixo “x” em cada barra do histograma:</p>
+<p>As geometrias, cada uma com sua utilidade, também têm parâmetros que podem ser alterados. Por exemplo, as barras do histograma que acabamos de produzir são muito “fininhas”. Vamos aumentar sua largura, ou seja, vamos representar mais valores do eixo “x” em cada barra do histograma:</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_histogram(aes(x = renda), binwidth = 4000)</code></pre>
-<p>Uma observação crucial aqui: o binwidth é especificado <em>fora</em> do <em>aes()</em>. Por que? Porque existe uma regra importante no <em>ggplot2</em> - Parâmetros que variam dependendo de nossos dados devem ficar dentro de <em>aes()</em>; Parâmetros fixos que não depende de nossos dados devem ficar fora do <em>aes()</em>. Então, em nosso código, temos dentro de <em>aes()</em> uma variavel, renda, e fora de <em>aes()</em> um número exógeno, 4000.</p>
-<p>O gráfico está muito cinza. Se quisemos mudar algumas cores, onde vamos especificar novos parâmetros de cores? Desde que os cores ficam fixos para todo o gráfico e não depende de nossos dados, fora de <em>aes()</em>.</p>
+<p>Uma observação importante aqui: o <em>binwidth</em> é especificado <em>fora</em> do <em>aes()</em>. Por que? Porque existe uma regra importante no <em>ggplot2</em>: parâmetros que variem dependendo de nossos dados devem ficar dentro de <em>aes()</em>; parâmetros fixos que não dependam de nossos dados devem ficar fora do <em>aes()</em>. Então, em nosso código, temos dentro de <em>aes()</em> uma variável, renda, e fora de <em>aes()</em> um número que independe dos dados, 4000.</p>
+<p>O gráfico está muito cinza. Se quisemos mudar algumas cores, onde vamos especificar novos parâmetros de cores? Como as cores são fixas para todo o gráfico e não depende de nossos dados, inserimos o parãmetro fora de <em>aes()</em>.</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_histogram(aes(x = renda), binwidth = 4000, colour = &quot;red&quot;, fill = &quot;green&quot;)</code></pre>
 <p>Melhor, não? Certamente não! Mas note que podemos trocar as contornos das barras e seu preenchimento. Em geral, os argumentos “colour” e “fill” servem a várias geometrias.</p>
@@ -246,7 +180,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <div id="graficos-com-uma-variavel-continua---graficos-de-densidade" class="section level1">
 <h1>Gráficos com uma variável contínua - Gráficos de densidade</h1>
 <p>Histogramas são normalmente bastante adequados para variáveis numéricas com valores bastante espaçados, como é o caso de variáveis discretas numéricas (valores inteiros apenas).</p>
-<p>Uma alternativa mais elegante ao histograma, e convencionalmente utilizada para variáveis verdadeiramente contínuas, são os gráficos de densidade. Vamos, assim, apenas alterar a geometria para a mesma variável, renda, e observar novamente sua distribuição. A lição é que, embora a geometria deva corresponder ao tipo de dados, existem várias geometrias que podem funcionar para qualquer tipo de dado específico (histogram ou densidade, por exemplo).</p>
+<p>Uma alternativa mais elegante ao histograma, e convencionalmente utilizada para variáveis verdadeiramente contínuas, são os gráficos de densidade. Vamos, assim, apenas alterar a geometria para a mesma variável, renda, e observar novamente sua distribuição. A lição é que, embora a geometria deva corresponder ao tipo de dados, existem várias geometrias que podem funcionar para um tipo de dado específico (histogram ou densidade, por exemplo).</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_density(aes(x = renda))</code></pre>
 <p>Lindo, mas ainda cinza demais. Vamos adicionar cor à borda:</p>
@@ -264,7 +198,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_density(aes(x = renda), colour=&quot;blue&quot;, fill=&quot;blue&quot;,alpha=0.2) +
   geom_vline(aes(xintercept = media_renda))</code></pre>
-<p>Veja que, com <em>ggplot2</em> podemos adicionar novas geometrias e dados sempre que precisarmos. Agora, temos duas camadas e duas geometrias diferentes. É por esta razão que a estrutura do código deste pacote difere tanto da estrutura para gráficos no pacote base. A flexibilidade para adicionar geometrias (usando ou não os dados inicialmente apontados) é uma das vantagens do <em>ggplot2</em></p>
+<p>Veja que, com <em>ggplot2</em> podemos adicionar novas geometrias e dados sempre que precisarmos. Agora, temos duas camadas e duas geometrias. É por esta razão que a estrutura do código deste pacote difere tanto da estrutura para gráficos no pacote base. A flexibilidade adicionar geometrias (usando ou não os dados inicialmente apontados) é uma das vantagens do <em>ggplot2</em></p>
 <p>Para tornar o gráfico mais interessante, vamos alterar a forma e a cor da linha adicionada no gráfico anterior:</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_density(aes(x = renda), colour=&quot;blue&quot;, fill=&quot;blue&quot;,alpha=0.2) +
@@ -290,7 +224,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
                  binwidth = 4000, 
                  position = &quot;dodge&quot;)</code></pre>
 <p>Um pouco melhor?</p>
-<p>Vamos tentar algo semelhante com as curvas de densidade. Em vez de “fill”, vamos usar a variável sexo em “colour” na “aesthetics” e separa as distribuições por cores de borda:</p>
+<p>Vamos tentar algo semelhante com as curvas de densidade. Em vez de “fill”, vamos usar a variável sexo em “colour” na “aesthetics” e separar as distribuições por cores de borda:</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_density(aes(x = renda, colour = sexo))</code></pre>
 <p>Agora sim está melhor. Vamos adicionar o mesmo com “fill”:</p>
@@ -302,7 +236,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <p>Finalmente, podemos usar “fill” e “colour” juntos na “aesthetics”</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_density(aes(x = renda, fill = sexo, colour = sexo), alpha = 0.5)</code></pre>
-<p>Que belezura de gráfico! A comparação de distribuições de uma variável contínua por uma variável discreta (aqui binária - duas categorias) é uma das mais úteis em ciência, pois é exatamente a forma gráfica de testes de hipóteses. Qual grupo tem, na média, mais renda em Fakeland? Com os gráficos fica fácil responder.</p>
+<p>Que belezura de gráfico! A comparação de distribuições de uma variável contínua por uma variável discreta (aqui binária - duas categorias) é uma das mais úteis em ciência, pois é exatamente a forma gráfica de testes de hipóteses clássico. Qual grupo tem, na média, mais renda em Fakeland? Com os gráficos fica fácil responder.</p>
 <div id="exercicio-2" class="section level3">
 <h3>Exercício</h3>
 <p>As pessoas mais ricas do Fakeland estão mais propensas a serem membros do partido “Conservative Party”? Crie um gráfico claro para mostrar a relação entre essas variáveis.</p>
@@ -318,7 +252,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <p>Nota: na nova “aesthetics” temos agora “x” (eixo horizontal) e “y”, eixo vertical.</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_boxplot(aes(x = educ, y = renda))</code></pre>
-<p>Importante: se você não tem familiaridade com boxplots, me peça uma rápida explicação.</p>
+<p>Importante: se você não tem familiaridade com boxplots, peça uma rápida explicação.</p>
 <p>Ainda que com perda de informação, conseguimos compara as distribuições de renda por nível educacional de forma bastante rápida. A média renda das pessoas com “college degree” é maior que os outros, e a variação na renda para aqueles com “High school degree” é grande. Para colocar um pouco de cor nos boxplots, podemos usar “fill” novamente:</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_boxplot(aes(x = educ, y = renda, fill = educ))</code></pre>
@@ -348,7 +282,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 </div>
 <div id="graficos-de-tres-ou-mais-variaveis" class="section level2">
 <h2>Gráficos de três ou mais variáveis</h2>
-<p>Em geral, estamos limitados por papel e telas bidimensionais para exibir apenas geometrias de duas variáveis. Mas existe um truque que podemos usar para mostrar mais informações - traga os outros parâmetros de uma geometria - os cores, tamanhos e formas - dentro de <em>aes</em> (para que eles podem variar) e conecte-os a uma variável em seu data.frame.</p>
+<p>Em geral, estamos limitados por papel e telas bidimensionais para exibir apenas geometrias de duas variáveis. Mas existe um truque que podemos usar para mostrar mais informações: incluir os outros parâmetros de uma geometria, tais como cores, tamanhos e formas, dentro de <em>aes</em> segundo uma variável terceira variável em seu data.frame.</p>
 <p>Se, por exemplo, queremos representar uma terceira variável numérica, podemos colocá-la como o tamanho dos pontos (raio do círculo). Por exemplo, o número de filhos, variável que vai de 1 a 10 nos nossos dados, poderia ser adicionada da seguinte forma:</p>
 <pre class="r"><code>fake %&gt;% ggplot() + 
   geom_point(aes(x = idade, y = renda, size = filhos))</code></pre>
@@ -373,7 +307,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
   facet_wrap(~sexo)</code></pre>
 <div id="exercicio-3" class="section level3">
 <h3>Exercício</h3>
-<p>Vamos usar o banco de dados menor de Fakeland para investigar a relação entre renda, poupança e número de crianças. Começando com o código debaixo, crie um gráfico de dispersão entre renda (income) e poupança (savings), e ajuste o tamanho de cada ponto dependendo do número de crianças (kids).</p>
+<p>Vamos usar o banco de dados menor de Fakeland para investigar a relação entre renda, poupança e número de crianças. Começando com o código abaixo, crie um gráfico de dispersão entre renda (income) e poupança (savings), e ajuste o tamanho de cada ponto dependendo do número de crianças (kids).</p>
 <pre class="r"><code>fake_menor &lt;- read_delim(file1 &lt;- &quot;https://raw.githubusercontent.com/leobarone/ifch_intro_r/master/data/fake_data.csv&quot;, delim = &quot;;&quot;, col_names = T)</code></pre>
 </div>
 </div>
