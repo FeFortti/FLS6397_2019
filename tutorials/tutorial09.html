@@ -90,14 +90,8 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
-.html-widget {
-  margin-bottom: 20px;
-}
 button.code-folding-btn:focus {
   outline: none;
-}
-summary {
-  display: list-item;
 }
 </style>
 
@@ -106,74 +100,14 @@ summary {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
 </script>
 
 <!-- code folding -->
+
 
 
 
@@ -200,21 +134,21 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 <p>Uma geometria muito útil é <em>geom_text</em>, que coloca como formas geométricas os textos mesmos. Por exemplo, nós podemos especificar um gráfico de dispersão onde os pontos refletem o nome de candidato em que as pessoas votaram, usando o parâmetro ‘label’.</p>
 <pre class="r"><code>fake %&gt;% ggplot() +
   geom_text(aes(x=idade,y=renda,label=candidato))</code></pre>
-<p>Outro geometria útil é <em>geom_tile</em> que tem uma forte conexão com mapas “raster” que discutiremos mais adiante no curso. Especificamos variáveis x e y, e também uma variável de ‘fill’ que se aplica a cada célula de interseção de x e y.</p>
+<p>Outra geometria útil é <em>geom_tile</em> que tem uma forte conexão com mapas “raster” que discutiremos mais adiante no curso. Especificamos variáveis x e y, e também uma variável de ‘fill’ que se aplica a cada célula de interseção de x e y.</p>
 <pre class="r"><code>fake %&gt;% ggplot() +
   geom_tile(aes(x=idade,y=educ, fill=renda))</code></pre>
 </div>
 <div id="pipes-e-graficos-de-linha" class="section level2">
 <h2>Pipes e Gráficos de linha</h2>
-<p>Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser <em>ordenado</em> para que as linhas façam sentido. Só precisamos mexer o data.frame fora do <em>ggplot2</em> e colocá-lo antes do pipe. Por exemplo, podemos visualizar apenas os dados para as mulheres.</p>
+<p>Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser <em>ordenada</em> para que as linhas façam sentido. Precisamos organizar o data.frame fora do <em>ggplot2</em> e colocá-lo antes do pipe. Por exemplo, podemos visualizar apenas os dados para as mulheres.</p>
 <pre class="r"><code>fake %&gt;% filter(sexo==&quot;Female&quot;) %&gt;%
   ggplot() +
   geom_point(aes(x=idade,y=renda))</code></pre>
-<p>Note uma coisa chata: existe dois símbolos conetando as nossas ações agora: um pipe ( <em>%&gt;%</em> ) e um “+”. Usamos o pipe com data.frames, e o “+” com camadas de gráficos depois da linha <em>ggplot()</em>.</p>
+<p>Note uma coisa chata: existem dois símbolos conetando as nossas ações agora: um pipe ( <em>%&gt;%</em> ) e um “+”. Usamos o pipe com data.frames, e o “+” com camadas de gráficos depois da linha <em>ggplot()</em>.</p>
 <p>Para criar um gráfico de linha vamos usar ‘idade’ como nossa variável ordenada e, portanto, precisamos resumir os dados por idade. Vamos analisar a renda média por idade</p>
 <pre class="r"><code>fake %&gt;% group_by(idade) %&gt;%
   summarize(renda_media=mean(renda,na.rm=T))</code></pre>
-<p>Já criamos um novo tamanho e forma da tabela para analisar. Podemos usar os novos variáveis em nosso gráfico.</p>
+<p>Temo um tabela como novos tamanho e formato para analisar. Podemos usar as novas variáveis em nosso gráfico.</p>
 <pre class="r"><code>fake %&gt;% group_by(idade) %&gt;%
   summarize(renda_media=mean(renda,na.rm=T)) %&gt;%
   ggplot() +
@@ -236,7 +170,7 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 </div>
 <div id="controlando-cores-com-scales" class="section level2">
 <h2>Controlando cores com ‘scales’</h2>
-<p>O ggplot2 usa cores defaults para mapear variáveis para cores. Claro que podemos controlar os cores usando mais um elemento da gramática dos gráficos, ‘scales’. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha (‘colour’) ou preenchendo uma área (‘fill’). Use o tabela debaixo como uma guia:</p>
+<p>O ggplot2 usa cores padrões para mapear variáveis para cores. Claro que podemos controlar as cores usando mais um elemento da gramática dos gráficos, ‘scales’. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha (‘colour’) ou preenchendo uma área (‘fill’). Use o tabela debaixo como uma guia:</p>
 <table style="width:62%;">
 <colgroup>
 <col width="19%"></col>
@@ -263,20 +197,20 @@ fake &lt;- read_delim(url_fake_data, delim = &quot;;&quot;, col_names = T)</code
 </tr>
 </tbody>
 </table>
-<p>Para os cores e palettes, podemos usar vários tipos de referências: nomes, rgb, hex etc. Mas é difícil escolher boas cores - é melhor usar um site, por exemplo <a href="http://colorbrewer2.org" class="uri">http://colorbrewer2.org</a></p>
-<p>Vamos modificar os cores de nosso gráfico de linha. O nosso variável distinguida pela cor é o sexo, que é discreto, e nós queremos colorir as linhas, não as áreas, então precisamos usar <em>scale_color_brewer</em>. Eu gosto de uma escala/palette se chame ‘Accent’ então adicionamos uma nova linha no código.</p>
+<p>Para as cores e paletas, podemos usar vários tipos de referências: nomes, rgb, hex etc. Mas é difícil escolher boas cores - é melhor usar um site, por exemplo <a href="http://colorbrewer2.org" class="uri">http://colorbrewer2.org</a></p>
+<p>Vamos modificar as cores de nosso gráfico de linha. A nosso variável distinguida pela cor é o sexo, que é discreta, e nós queremos colorir as linhas, não as áreas, então precisamos usar <em>scale_color_brewer</em>. Eu gosto de uma escala/palette que se chama ‘Accent’ então adicionamos uma nova linha no código para utilizá-la:</p>
 <pre class="r"><code>fake %&gt;% group_by(idade,sexo) %&gt;%
   summarize(renda_media=mean(renda,na.rm=T)) %&gt;%
   ggplot() +
   geom_line(aes(x=idade, y=renda_media, group=sexo, colour=sexo)) +
   scale_color_brewer(palette=&quot;Accent&quot;)</code></pre>
-<p>Para ilustrar o uso de uma escala contínua e de área, voltamos para o gráfico de <em>geom_tile</em>. Agora, precisamos usar <em>scale_fill_gradient</em> e especificar o cor de valores baixos e o cor de valores altos.</p>
+<p>Para ilustrar o uso de uma escala contínua e de área, voltamos para o gráfico de <em>geom_tile</em>. Agora, precisamos usar <em>scale_fill_gradient</em> e especificar a cor de valores baixos e a cor de valores altos.</p>
 <pre class="r"><code>ggplot(fake) +
   geom_tile(aes(x=idade,y=educ, fill=renda)) +
   scale_fill_gradient(low=&quot;yellow&quot;,high=&quot;red&quot;)</code></pre>
 <div id="exercicio-1" class="section level3">
 <h3>Exercício</h3>
-<p>Com o banco de dados <em>flights</em>, filtrar os dados para voos partindo do aeroporto LGA no dia 20 de maio (‘day’ e ‘month’). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distancia, que coloca os nomes de destinos no gráfico, e, usando um ‘scale’, para que o cor de cada texto reflete o atraso de partido desse voo.</p>
+<p>Com o banco de dados <em>flights</em>, filtrar os dados para vôos partindo do aeroporto LGA no dia 20 de maio (‘day’ e ‘month’). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distância, que coloca os nomes de destinos no gráfico, e, usando um ‘scale’, para que o cor de cada texto reflita o atraso de partido desse vôo.</p>
 </div>
 </div>
 <div id="graficos-interativas-e-animacoes" class="section level2">
@@ -292,7 +226,7 @@ graf_1 &lt;- fake %&gt;% group_by(idade,sexo) %&gt;%
 
 graf_1 %&gt;%
   ggplotly()</code></pre>
-<p>Este pacote também ajuda a transformar gráficos para animações. Podemos usar o mesmo fluxo de trabalho acima, e só precisamos especificar o parâmetro ‘frame’ em <em>ggplot2</em> para a variável que queremos a mudar com cada slide da animação. Para ilustrar, vamos analisar um gráfico de dispersão simples, que muda cada slide para filtrar os dados por número de filhos. Toque ‘play’ no gráfico produzido pelo código debaixo para ver a animação.</p>
+<p>Este pacote também ajuda a transformar gráficos em animações. Podemos usar o mesmo fluxo de trabalho acima, e só precisamos especificar o parâmetro ‘frame’ em <em>ggplot2</em> para que a variável que queremos a mudar com cada slide da animação. Para ilustrar, vamos analisar um gráfico de dispersão simples, que muda a cada slide para filtrar os dados por número de filhos. Toque ‘play’ no gráfico produzido pelo código debaixo para ver a animação.</p>
 <pre class="r"><code>graf_2 &lt;- fake %&gt;%
   ggplot() +
   geom_point(aes(x=idade, y=renda, frame=filhos))
@@ -302,14 +236,14 @@ graf_2 %&gt;%
 </div>
 <div id="graficos-para-regressoes" class="section level2">
 <h2>Gráficos para Regressões</h2>
-<p>Os resultados de uma simples regressão pode ser complicada e confusa. Exibindo gráficos dos resultados podem ajudar a comunicar nossas análises ao nosso público. Por exemplo, imagine que queremos mostrar os resultados da regressão de renda sobre idade e número de filhos.</p>
+<p>Os resultados de uma simples regressão podem ser complicados e confusos. Exibir gráficos de resultados pode ajudar a comunicar nossas análises ao nosso público. Por exemplo, imagine que queremos mostrar os resultados da regressão de renda sobre idade e número de filhos.</p>
 <pre class="r"><code>fake %&gt;% lm(renda ~ idade + filhos, data=.) </code></pre>
 <p>Para visualizar, nossa primeira tarefa é extrair os coeficientes e erros padrão de nossa regressão linear, o que é facilitado pela função <em>tidy () </em> no pacote <em>broom</em>. Isso produz um data.frame com o qual somos especialistas em trabalhar.</p>
 <pre class="r"><code>library(broom)
 
 fake %&gt;% lm(renda ~ idade + filhos, data=.) %&gt;% 
   tidy()</code></pre>
-<p>Depois, podemos tirar o intercept que normalmente não nos interessa muito usando <em>filter</em>, e calcule os intervalos de confiança de 95% usando <em>mutate</em>.</p>
+<p>Depois, podemos tirar o intercepto que normalmente não nos interessa muito usando <em>filter</em>, e calcular os intervalos de confiança de 95% usando <em>mutate</em>.</p>
 <pre class="r"><code>fake %&gt;% lm(renda ~ idade + filhos, data=.) %&gt;% 
   tidy() %&gt;% 
   filter(term!=&quot;(Intercept)&quot;) %&gt;% 

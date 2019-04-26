@@ -28,7 +28,7 @@ fake %>% ggplot() +
   geom_text(aes(x=idade,y=renda,label=candidato))
 ```
 
-Outro geometria útil é _geom\_tile_ que tem uma forte conexão com mapas "raster" que discutiremos mais adiante no curso. Especificamos variáveis x e y, e também uma variável de 'fill' que se aplica a cada célula de interseção de x e y.
+Outra geometria útil é _geom\_tile_ que tem uma forte conexão com mapas "raster" que discutiremos mais adiante no curso. Especificamos variáveis x e y, e também uma variável de 'fill' que se aplica a cada célula de interseção de x e y.
 
 ```{r}
 fake %>% ggplot() +
@@ -37,7 +37,7 @@ fake %>% ggplot() +
 
 ## Pipes e Gráficos de linha
 
-Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser _ordenado_ para que as linhas façam sentido. Só precisamos mexer o data.frame fora do _ggplot2_ e colocá-lo antes do pipe. Por exemplo, podemos visualizar apenas os dados para as mulheres.
+Gráficos de linha exigem, em geral, um pouco mais de preparação de nossos dados. A variável x pode ser discreta ou contínua, mas precisa ser _ordenada_ para que as linhas façam sentido. Precisamos organizar o data.frame fora do _ggplot2_ e colocá-lo antes do pipe. Por exemplo, podemos visualizar apenas os dados para as mulheres.
 
 ```{r}
 fake %>% filter(sexo=="Female") %>%
@@ -45,7 +45,7 @@ fake %>% filter(sexo=="Female") %>%
   geom_point(aes(x=idade,y=renda))
 ```
 
-Note uma coisa chata: existe dois símbolos conetando as nossas ações agora: um pipe ( _%>%_ ) e um "+". Usamos o pipe com data.frames, e o "+" com camadas de gráficos depois da linha _ggplot()_. 
+Note uma coisa chata: existem dois símbolos conetando as nossas ações agora: um pipe ( _%>%_ ) e um "+". Usamos o pipe com data.frames, e o "+" com camadas de gráficos depois da linha _ggplot()_. 
 
 Para criar um gráfico de linha vamos usar 'idade' como nossa variável ordenada e, portanto, precisamos resumir os dados por idade. Vamos analisar a renda média por idade
 
@@ -54,7 +54,7 @@ fake %>% group_by(idade) %>%
   summarize(renda_media=mean(renda,na.rm=T))
 ```
 
-Já criamos um novo tamanho e forma da tabela para analisar. Podemos usar os novos variáveis em nosso gráfico.
+ Temo um tabela como novos tamanho e formato para analisar. Podemos usar as novas variáveis em nosso gráfico.
 
 ```{r}
 fake %>% group_by(idade) %>%
@@ -87,16 +87,16 @@ Accesse o banco de dados _flights_ no pacote _nycflights13_. Transforme os dados
 
 ## Controlando cores com 'scales'
 
-O ggplot2 usa cores defaults para mapear variáveis para cores. Claro que podemos controlar os cores usando mais um elemento da gramática dos gráficos, 'scales'. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha ('colour') ou preenchendo uma área ('fill'). Use o tabela debaixo como uma guia:
+O ggplot2 usa cores padrões para mapear variáveis para cores. Claro que podemos controlar as cores usando mais um elemento da gramática dos gráficos, 'scales'. Adicionamos mais uma linha de código no final para controlar quais cores o ggplot2 deve usar. Infelizmente, precisamos tomar muito cuidado com o tipo de scale, que precisa corresponder ao tipo de nossos dados e também se estamos colorindo um ponto/linha ('colour') ou preenchendo uma área ('fill'). Use o tabela debaixo como uma guia:
 
 Tipo de dados | Color (ponto, linha) | Fill (área)
 ------------- | --------------------|---------
 Continuo      | scale_color_gradient(low="cor1",high="cor2") | scale_fill_gradient(low="cor1",high="cor2")
 Discreto      | scale_color_brewer(palette="pre-definido")     | scale_fill_brewer(palette="pre-definido")
   
-Para os cores e palettes, podemos usar vários tipos de referências: nomes, rgb, hex etc. Mas é difícil escolher boas cores - é melhor usar um site, por exemplo http://colorbrewer2.org
+Para as cores e paletas, podemos usar vários tipos de referências: nomes, rgb, hex etc. Mas é difícil escolher boas cores - é melhor usar um site, por exemplo http://colorbrewer2.org
 
-Vamos modificar os cores de nosso gráfico de linha. O nosso variável distinguida pela cor é o sexo, que é discreto, e nós queremos colorir as linhas, não as áreas, então precisamos usar _scale\_color\_brewer_. Eu gosto de uma escala/palette se chame 'Accent' então adicionamos uma nova linha no código.
+Vamos modificar as cores de nosso gráfico de linha. A nosso variável distinguida pela cor é o sexo, que é discreta, e nós queremos colorir as linhas, não as áreas, então precisamos usar _scale\_color\_brewer_. Eu gosto de uma escala/palette que se chama 'Accent' então adicionamos uma nova linha no código para utilizá-la:
 
 ```{r}
 fake %>% group_by(idade,sexo) %>%
@@ -106,7 +106,7 @@ fake %>% group_by(idade,sexo) %>%
   scale_color_brewer(palette="Accent")
 ```
 
-Para ilustrar o uso de uma escala contínua e de área, voltamos para o gráfico de _geom\_tile_. Agora, precisamos usar _scale\_fill\_gradient_ e especificar o cor de valores baixos e o cor de valores altos.
+Para ilustrar o uso de uma escala contínua e de área, voltamos para o gráfico de _geom\_tile_. Agora, precisamos usar _scale\_fill\_gradient_ e especificar a cor de valores baixos e a cor de valores altos.
 
 ```{r}
 ggplot(fake) +
@@ -116,7 +116,7 @@ ggplot(fake) +
 
 ### Exercício
 
-Com o banco de dados _flights_, filtrar os dados para voos partindo do aeroporto LGA no dia 20 de maio ('day' e 'month'). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distancia, que coloca os nomes de destinos no gráfico, e, usando um 'scale', para que o cor de cada texto reflete o atraso de partido desse voo.
+Com o banco de dados _flights_, filtrar os dados para vôos partindo do aeroporto LGA no dia 20 de maio ('day' e 'month'). Depois, crie um gráfico de dispersão/texto que compara a hora de partida com distância, que coloca os nomes de destinos no gráfico, e, usando um 'scale', para que o cor de cada texto reflita o atraso de partido desse vôo.
 
 ## Gráficos interativas e animações
 
@@ -135,7 +135,7 @@ graf_1 %>%
   ggplotly()
 ```
 
-Este pacote também ajuda a transformar gráficos para animações. Podemos usar o mesmo fluxo de trabalho acima, e só precisamos especificar o parâmetro 'frame' em _ggplot2_ para a variável que queremos a mudar com cada slide da animação. Para ilustrar, vamos analisar um gráfico de dispersão simples, que muda cada slide para filtrar os dados por número de filhos. Toque 'play' no gráfico produzido pelo código debaixo para ver a animação.
+Este pacote também ajuda a transformar gráficos em animações. Podemos usar o mesmo fluxo de trabalho acima, e só precisamos especificar o parâmetro 'frame' em _ggplot2_ para que a variável que queremos a mudar com cada slide da animação. Para ilustrar, vamos analisar um gráfico de dispersão simples, que muda a cada slide para filtrar os dados por número de filhos. Toque 'play' no gráfico produzido pelo código debaixo para ver a animação.
 
 ```{r}
 graf_2 <- fake %>%
@@ -148,7 +148,7 @@ graf_2 %>%
 
 ## Gráficos para Regressões
 
-Os resultados de uma simples regressão pode ser complicada e confusa. Exibindo gráficos dos resultados podem ajudar a comunicar nossas análises ao nosso público. Por exemplo, imagine que queremos mostrar os resultados da regressão de renda sobre idade e número de filhos.
+Os resultados de uma simples regressão podem ser complicados e confusos. Exibir gráficos de resultados pode ajudar a comunicar nossas análises ao nosso público. Por exemplo, imagine que queremos mostrar os resultados da regressão de renda sobre idade e número de filhos.
 
 ```{r}
 fake %>% lm(renda ~ idade + filhos, data=.) 
@@ -163,7 +163,7 @@ fake %>% lm(renda ~ idade + filhos, data=.) %>%
   tidy()
 ```
 
-Depois, podemos tirar o intercept que normalmente não nos interessa muito usando _filter_, e calcule os intervalos de confiança de 95\% usando _mutate_.
+Depois, podemos tirar o intercepto que normalmente não nos interessa muito usando _filter_, e calcular os intervalos de confiança de 95\% usando _mutate_.
 
 ```{r}
 fake %>% lm(renda ~ idade + filhos, data=.) %>% 
