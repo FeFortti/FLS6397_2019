@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE, eval=F)
 ```
 # Antes de começar
 
-Antes de iniciar o tutorial, certifique-se de que os pacotes _sf_, _mapview_ e _ggmap_ são instalados.
+Antes de iniciar o tutorial, certifique-se de que os pacotes _sf_, _devtools_, a versão de desenvolvedor _ggplot2_, _mapview_ e _ggmap_.
 
 ```{r, echo=F}
 install.packages("sf")
