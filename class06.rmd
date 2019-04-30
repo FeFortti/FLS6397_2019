@@ -11,5 +11,3 @@ Faremos hoje a aula de mapas no R e discutiremos as propostas de trabalho final.
 ### Roteiro para a aula
 
 1 - Faça o [Tutorial 10](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10.html), que apresenta o recém publicado pacote 'sf' para lidar com mapas no R.
-
-2 - Se houver tempo e interesse, você pode examinar outras formas de trabalhar com mapas no R fazendo o tutorial [Tutorial 10b](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10b.html). A primeira parte do tutorial apresenta como utilizar APIs de mapas (ex: Google Maps) para obter 'camadas' de mapas para suas visualizações.
