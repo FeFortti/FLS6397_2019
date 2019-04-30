@@ -4,15 +4,10 @@ output: html_document
 ---
 
 ```{r setup, include=F}
-knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
+knitr::opts_chunk$set(echo = T, eval=F, include=T)
 ```
 
 # Mapas em R
-
-```{r, echo=F}
-knitr::opts_chunk$set(echo = TRUE, eval=F)
-```
-# Antes de começar
 
 Antes de iniciar o tutorial, certifique-se de que os pacotes _sf_, _mapview_, _tmap_ e _cepespR_ são instalados.
 
@@ -180,26 +175,12 @@ municipios <- municipios %>% st_transform(4326)
 
 Se abre o objeto _municipios_ vai ver os detalhes de CRS/projeção e o data.frame dele mesmo, incluindo a coluna de 'geometry' e também todas as colunas normais, incluindo o código municipal (CD_GEOCODM). Isso é uma oportunidade para nós - se tivermos dados não-espaciais de todos os municípios, podemos simplesmente 'join' estes dados com o nosso shapefile e, em seguida, podemos visualizar mapas dessas variáveis.
 
-Por exemplo, vamos baixar os dados eleitorais de 2010 para cada município e calcular o percentagem de voto da Dilma no segundo turno. 
+Por exemplo, vamos baixar os dados eleitorais de 2010 para cada município com o percentagem de voto da Dilma no segundo turno. 
 
 ```{r}
-download.file("https://github.com/JonnyPhillips/FLS6397_2019/data/raw/master/Dilma_2010_segundo_turno.csv",destfile="Dilma_2010_segundo_turno.csv")
+download.file("https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/Dilma_2010_segundo_turno.csv",destfile="Dilma_2010_segundo_turno.csv")
 
 Dilma_2010 <- read_csv("Dilma_2010_segundo_turno.csv")
-
-library(cepespR)
-dados_eletorais <- get_elections(year=2010, 
-                                 position="President",
-                                 regional_aggregation="Municipality", 
-                                 political_aggregation="Candidate")
-
-dados_eletorais <- dados_eletorais %>% filter(NUM_TURNO==2) %>% 
-  group_by(COD_MUN_IBGE) %>%
-  mutate(pct_voto=100*(QTDE_VOTOS/sum(QTDE_VOTOS))) %>%
-  filter(NOME_URNA_CANDIDATO=="DILMA") %>% 
-  select(COD_MUN_IBGE, NOME_CANDIDATO, QTDE_VOTOS)
-
-dados_eletorais %>% write_csv("Dilma_2010_segundo_turno.csv") 
 ```
 
 Agora, se quisermos tornar esses dados eleitorais espaciais podemos fazer um _left\_join_ com o nosso shapefile, contanto que, como normal, os nomes e tipo de colunas chaves - o código do IBGE - nos dois bancos de dados são os mesmos. 
@@ -210,7 +191,7 @@ municipios <- municipios %>% rename("COD_MUN_IBGE"="CD_GEOCODM") %>%
   left_join(dados_eletorais,by="COD_MUN_IBGE")
 ```
 
-Quantas colunas o nosso objeto _municipios_ tem agora? Muitos - todos os dados eletorais também.
+Quantas colunas o nosso objeto _municipios_ tem agora? Mais! - os dados eletorais também.
 
 ```{r}
 municipios
@@ -219,7 +200,7 @@ municipios
 Para visualizar a coluna 'pct_voto' num mapa, podemos trabalhar em ggplot como normal. Para polígonos, colocamos o nome de coluna para o parâmetro _fill_ ( _color_ com pontos e linhas). Um mapa de todo o Brasil pode ser esmagador, então vamos nos concentrar em São Paulo com um _filter_.
 
 ```{r}
-municipios %>% filter(SIGLA_UE=="SP") %>% 
+municipios %>% filter(UF=="SP") %>% 
   ggplot() +
   geom_sf(aes(fill=pct_voto))
 ```
@@ -227,7 +208,7 @@ municipios %>% filter(SIGLA_UE=="SP") %>%
 Vamos destacar as fronteiras em branco, aplicar um tema e tirar as linhas de longitude/latitude.
 
 ```{r}
-municipios %>% filter(SIGLA_UE=="SP") %>% 
+municipios %>% filter(UF=="SP") %>% 
   ggplot() +
   geom_sf(aes(fill=pct_voto),color="white") +
   theme_classic() +
@@ -237,7 +218,7 @@ municipios %>% filter(SIGLA_UE=="SP") %>%
 Além disso, podemos alterar as escalas de cores como normal em ggplot. 
 
 ```{r}
-municipios %>% filter(SIGLA_UE=="SP") %>% 
+municipios %>% filter(UF=="SP") %>% 
   ggplot() +
   geom_sf(aes(fill=pct_voto),color="white") +
   theme_classic() +
@@ -245,10 +226,10 @@ municipios %>% filter(SIGLA_UE=="SP") %>%
   scale_fill_gradient(low="white",high="red")
 ```
 
-Podemos colocar os pontos no mesmo mapa? Sim - apenas especificamos o parâmetro de dados para uma nova camada dentro de _geom\_sf_. (Isto assume que nós confirmamos que ambas as camadas têm a mesma projeção, como confirmamos acima).
+Podemos colocar os pontos dos CEUs no mesmo mapa? Sim - apenas especificamos o parâmetro de 'data' para uma nova camada dentro de _geom\_sf_. (Isto assume que nós confirmamos que ambas as camadas têm a mesma projeção, como confirmamos acima).
 
 ```{r}
-municipios %>% filter(SIGLA_UE=="SP") %>% 
+municipios %>% filter(UF=="SP") %>% 
   ggplot() +
   geom_sf(aes(fill=pct_voto),color="white") +
   theme_classic() +
@@ -258,11 +239,11 @@ municipios %>% filter(SIGLA_UE=="SP") %>%
 ```
 
 ### Exercício
-Crie um mapa do percentagem de voto de Serra nos municipios de Tocantins no segundo turno da eleição presidencial de 2010.
+Crie um mapa do percentagem de voto de Dilma nos municipios de Tocantins no segundo turno da eleição presidencial de 2010.
 
 ## Joins Espaciais
 
-O mundo espacial abre um novo tipo de join entre diversas bancos de dados - joins espaciais que são definido pela localização semelhante e não por uma chave comum nas tabelas de dados. Existe diversas tipos de joins espaciais mas vamos focar sobre um join entre uma camada de polígonos e uma camada de pontos. Queremos pegar os dados de polígono (município) em que fica cada ponto (escola). Vamos usar _st\_join_ para fazer um join espacial e usar o tipo de comparação de _st\_intersects_ (que simplesmente significa que um join existe quando um ponto é dentro de um polígono). (Lembra-se que é importante confirmar que ambas as camadas têm a mesma projeção, como confirmamos acima).
+O mundo espacial abre um novo tipo de join entre diversas bancos de dados - joins espaciais que são definido pela localização semelhante e não por uma chave comum nas tabelas de dados. Existe diversas tipos de joins espaciais mas vamos focar sobre um join entre uma camada de polígonos e uma camada de pontos. Queremos pegar os dados de polígono (município) em que fica cada ponto (escola). Vamos usar _st\_join_ para fazer um join espacial e usar o tipo de comparação de _st\_contains_ (que simplesmente significa que um join existe quando um ponto é dentro de um polígono). (Lembra-se que é importante confirmar que ambas as camadas têm a mesma projeção, como confirmamos acima).
 
 ```{r}
 joined <- ceu %>% st_join(municipios,st_intersects)
@@ -321,7 +302,6 @@ log(cambodia+0.00001) %>%
   mapview(layer.name="khm_popdenr_landscan_2011")
 ```
 
-
-#### Exercício:
+### Exercício:
 
 Vá a uma das duas fontes de mapas indicadas -- [Prefeitura de São Paulo](http://www.prefeitura.sp.gov.br/cidade/secretarias/urbanismo/dados_estatisticos/index.php?p=160798) ou  [Centro de Estudos da Metrópole (CEM)](http://www.fflch.usp.br/centrodametropole/) -- importe os dados e produza um mapa. Dependendo do tema que você escolher, você produzirá mapas com polígonos (por exemplo, mapas de divisões políticas ou administrativas), linhas (ruas, ciclovias, etc), pontos (unidades de saúde, escolas, etc) ou rasters.
