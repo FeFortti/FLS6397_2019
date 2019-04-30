@@ -183,6 +183,10 @@ Se abre o objeto _municipios_ vai ver os detalhes de CRS/projeção e o data.fra
 Por exemplo, vamos baixar os dados eleitorais de 2010 para cada município e calcular o percentagem de voto da Dilma no segundo turno. 
 
 ```{r}
+download.file("https://github.com/JonnyPhillips/FLS6397_2019/data/raw/master/Dilma_2010_segundo_turno.csv",destfile="Dilma_2010_segundo_turno.csv")
+
+Dilma_2010 <- read_csv("Dilma_2010_segundo_turno.csv")
+
 library(cepespR)
 dados_eletorais <- get_elections(year=2010, 
                                  position="President",
