@@ -6,15 +6,19 @@
 
 ### Objetivos Gerais
 
-Agora você é especialista em acessar e transformar dados e domina pelo menos duas gramáticas diferentes em R. Mas ainda é difícil se comunicar e visualizar sua análise porque só sabemos apresentar texto e tabelas básicas. Hoje, vamos aprender mais uma gramática da linguagem, `ggplot2` (grammar of graphics). Veremos criar gráficos para visualizar os nossos dados usando este poderoso pacote.
+Agora você é especialista em acessar e transformar dados e domina pelo menos duas gramáticas diferentes em R, a gramática básica e a gramática do _dplyr_. Mas ainda é difícil se comunicar e visualizar sua análise porque só sabemos apresentar texto e tabelas básicas. Hoje, vamos aprender mais uma gramática da linguagem, a gramática do pacote _ggplot2_ (grammar of graphics). Veremos como criar gráficos para visualizar os nossos dados usando este poderoso pacote.
 
 ### Roteiro para a aula
 
-1. Faremos uma apresentação rápida sobre _ggplot2_ logo no início da aula.
+1. Faremos uma apresentação rápida sobre _ggplot2_ logo no início da aula, quando houver quórum.
 2. A seguir, faça o [Tutorial 8](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial08.html), que traz uma introdução ao _ggplot2_.
 3. Caso não tenha lido, leia capítulos 3, 7 e 28 do livro [R for Data Science](http://r4ds.had.co.nz) sobre _ggplot2_. Se já tiver lido, volte aos capítulos e certifique-se de que não restaram dúvidas antes de prosseguir.
 4. Finalmente, faça o [Tutorial 9](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial09.html), que traz mais algums aspectos do _ggplot2_ e aprsenta um outro pacote para visualizações em R, _plotly_
 
+### Livro _R Graphics Cookbook_
+
+Um dos livros mais populares sobre _ggplot2_ acabou de ser disponibilizado gratuitamente na internet ([aqui](https://r-graphics.org/)). Você pode começar lendo os capítulos 2 a 6, que apresentam algumas das geometrias gráficas mais populares em R.
+
 ### Roteiro pós-aula
 
-Vamos ler (novamente, se você já leu) capítulo 21, "Iterations", de [R for Data Science](http://r4ds.had.co.nz/iteration.html). O proximo desafio sobre o ggplot2 sera disponivel logo.
+Vamos ler (novamente, se você já leu) capítulo 21, "Iterations", de [R for Data Science](http://r4ds.had.co.nz/iteration.html). O próximo desafio sobre o _ggplot2_ estará disponivel logo.
