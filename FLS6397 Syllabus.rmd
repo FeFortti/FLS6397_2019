@@ -56,12 +56,12 @@ Não é necessário nenhum conhecimento prévio de programação, pacotes estat�
 4. Primeiros passos no tidyverse (12/04/2019)
 5. Visualização de dados (26/04/2019)
 6. Mapas e GIS (03/05/2019)
-7. RMarkdown, e integração R e databases (10/05/2019)
+7. Strings e Mineração de Textos (10/05/2019)
 8. Funções, iteração e vetorialização (17/05/2019)
-9. Strings e Mineração de Textos (24/05/2019)
-10. Raspagem de dados na internet (31/05/2019)
+9. Raspagem de dados na internet (24/05/2019)
+10. RMarkdown, e integração R e databases (31/05/2019)
 11. Latex, Git e Pesquisa Reproduzível (07/06/2019)
-12. Programação Funcional e simulações (14/05/2019)
+12. Programação Funcional e simulações (14/06/2019)
 
 ## 6. Bibliografia
 

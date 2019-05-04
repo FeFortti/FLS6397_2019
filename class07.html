@@ -370,27 +370,25 @@ $(document).ready(function () {
 <li>Data: 10/05/2019</li>
 </ul>
 </div>
-<div id="aula-7---rmarkdown-e-integracao-r-e-databases" class="section level2">
-<h2>Aula 7 - RMarkdown, e Integração R e Databases</h2>
+<div id="aula-7---strings-e-mineracao-de-textos-no-r" class="section level2">
+<h2>Aula 7 - Strings e Mineração de Textos no R</h2>
 <div id="objetivos-gerais" class="section level3">
 <h3>Objetivos Gerais</h3>
-<p>Antes de avançarmos para novos tópicos relativos ao uso da linguagem, vamos aprender sobre algumas ferramentas e funcionalidades diretamente relacionadas ao uso de R.</p>
-<p>O primeiro deles será a integração de R com Sistemas de Gerenciamente de Bancos de Dados que operam em SQL (Structured Query Language), facilitada pelo pacote <em>dplyr</em>. A combinação R + SQL é uma solução particularmente boa para a manutenção de grandes bases de dados (“out of memory data”) e para o armazenamento de dados utilizados por equipes de trabalho e pesquisa.</p>
-<p>A seguir, aprenderemos um pouco sobre Markdown, uma linguagem para a produção de documentos de texto, e de sua versão para R, RMarkdown. É possível, com esta linguagem, combinar texto, código e outputs em um único documento que pode ser exportado como uma página html, um documento pdf ou um arquivo em formato .docx.</p>
-<p>Finalmente, veremos como organizar nossa produção em projetos com controle de versão dos documentos utilizando git, que é um software de gerenciamento de versão, github, que é um repositório online que opera com git, e a integração de ambos com Rstudio.</p>
-<p>Importante: esta será uma aula com mais momentos de exposição. Fique atenta(o) aos horários.</p>
+<p>Aprender sobre as diferentes formas de manipular strings e textos no R.</p>
 </div>
 <div id="roteiro-para-a-aula" class="section level3">
 <h3>Roteiro para a aula</h3>
-<p>LEIA COM CUIDADO E ATÉ O FINAL O ROTEIRO DE HOJE ANTES DE COMEÇAR.</p>
-<p>1- Comece o <a href="https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial11.html">Tutorial 11</a> assim que chegar em sala de aula, sobre a integração entre R e SQL.</p>
-<p>2- Havendo sobra de tempo em sala de aula, leia, caso não tenha lido, o capítulo 8 do livro <em>R for Data Science</em>, <a href="http://r4ds.had.co.nz/workflow-projects.html">aqui</a>, sobre RProjects.</p>
-<p>4- Se tiver terminado o Tutorial 8, vá para o <a href="https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial12.html">Tutorial 12</a>, sobre RMarkdown.</p>
-<p>5- Se houver tempo em sala, leia os capítulos 26 a 30 so livro <em>R for Data Science</em>. Esta é a seção do livro sobre Comunicação Científica e a maioria deles trata de RMarkdown.</p>
-</div>
-<div id="roteiro-pos-aula" class="section level3">
-<h3>Roteiro pós-aula</h3>
-<p>Finalizar a leitura dos capítulos 1 (<em>Introduction</em>) a 18 (<em>Pipes</em>, no início da parte III) e 26 a 30 (parte V) do livro do livro <em>R for Data Science</em>, <a href="http://r4ds.had.co.nz/">aqui</a>.</p>
+<p>Nesta aula veremos 3 pacotes diferentes para trabalhar com texto como dado: <em>stringr</em>, que é bastante útil para ‘limpeza’ de textos; <em>tm</em>, que foi durante vários anos o pacote principal para mineração de texto e análise de <em>corpus</em> em R; e <em>tidytext</em>, pacote do <em>tidyverse</em> para mineração de texto, bastante recente.</p>
+<p><em>stringr</em> - <a href="https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial11.html">Tutorial 11</a></p>
+<p><em>tm</em> - <a href="https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial12.html">Tutorial 12</a></p>
+<p><em>tidytext</em> - <a href="https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial13.html">Tutorial 13</a></p>
+<p>Se houver tempo em sala de aula e você quiser se aprofundar no assunto, leia alguns dos capítulos do livro sobre “tidy” text mining, <a href="http://tidytextmining.com/">Text Mining with R</a>, também disponível em formato bookdown:</p>
+<ul>
+<li><p><a href="http://tidytextmining.com/sentiment.html">Capítulo 2 - Análise de Sentimento (com textos em inglês)</a></p></li>
+<li><p><a href="http://tidytextmining.com/tfidf.html">Capítulo 3 - Análise de frequência de palavras</a></p></li>
+<li><p><a href="http://tidytextmining.com/ngrams.html">Capítulo 4 - Relacionamento entre palavras, n-gramas e correlação</a></p></li>
+<li><p><a href="http://tidytextmining.com/topicmodeling.html">Capítulo 6 - Topic Modeling</a></p></li>
+</ul>
 </div>
 </div>
 

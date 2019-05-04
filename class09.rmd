@@ -1,6 +1,6 @@
 ###  FLS 6397 - Introdução à Programação e Ferramentas Computacionais para as Ciências Sociais
 
-- Data: 17/05/2019
+- Data: 24/05/2019
 
 ## Aula 9 - Captura de dados na internet com R
 

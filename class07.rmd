@@ -2,32 +2,29 @@
 
 - Data: 10/05/2019
 
-## Aula 7 -  RMarkdown, e Integração R e Databases
+## Aula 7 - Strings e Mineração de Textos no R
 
 ### Objetivos Gerais
 
-Antes de avançarmos para novos tópicos relativos ao uso da linguagem, vamos aprender sobre algumas ferramentas e funcionalidades diretamente relacionadas ao uso de R.
-
-O primeiro deles será a integração de R com Sistemas de Gerenciamente de Bancos de Dados que operam em SQL (Structured Query Language), facilitada pelo pacote _dplyr_. A combinação R + SQL é uma solução particularmente boa para a manutenção de grandes bases de dados ("out of memory data") e para o armazenamento de dados utilizados por equipes de trabalho e pesquisa.
-
-A seguir, aprenderemos um pouco sobre Markdown, uma linguagem para a produção de documentos de texto, e de sua versão para R, RMarkdown. É possível, com esta linguagem, combinar texto, código e outputs em um único documento que pode ser exportado como uma página html, um documento pdf ou um arquivo em formato .docx.
-
-Finalmente, veremos como organizar nossa produção em projetos com controle de versão dos documentos utilizando git, que é um software de gerenciamento de versão, github, que é um repositório online que opera com git, e a integração de ambos com Rstudio.
-
-Importante: esta será uma aula com mais momentos de exposição. Fique atenta(o) aos horários.
+Aprender sobre as diferentes formas de manipular strings e textos no R.
 
 ### Roteiro para a aula
 
-LEIA COM CUIDADO E ATÉ O FINAL O ROTEIRO DE HOJE ANTES DE COMEÇAR.
+Nesta aula veremos 3 pacotes diferentes para trabalhar com texto como dado: _stringr_, que é bastante útil para 'limpeza' de textos; _tm_, que foi durante vários anos o pacote principal para mineração de texto e análise de _corpus_ em R; e _tidytext_, pacote do _tidyverse_ para mineração de texto, bastante recente.
 
-1- Comece o [Tutorial 11](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial11.html) assim que chegar em sala de aula, sobre a integração entre R e SQL.
+_stringr_ - [Tutorial 11](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial11.html)
 
-2- Havendo sobra de tempo em sala de aula, leia, caso não tenha lido, o capítulo 8 do livro _R for Data Science_, [aqui](http://r4ds.had.co.nz/workflow-projects.html), sobre RProjects.
+_tm_ - [Tutorial 12](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial12.html)
 
-4- Se tiver terminado o Tutorial 8, vá para o [Tutorial 12](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial12.html), sobre RMarkdown.
+_tidytext_ - [Tutorial 13](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial13.html)
 
-5- Se houver tempo em sala, leia os capítulos 26 a 30 so livro _R for Data Science_. Esta é a seção do livro sobre Comunicação Científica e a maioria deles trata de RMarkdown.
+Se houver tempo em sala de aula e você quiser se aprofundar no assunto, leia alguns dos capítulos do livro sobre "tidy" text mining, [Text Mining with R](http://tidytextmining.com/), também disponível em formato bookdown:
 
-### Roteiro pós-aula
+- [Capítulo 2 - Análise de Sentimento (com textos em inglês)](http://tidytextmining.com/sentiment.html)
 
-Finalizar a leitura dos capítulos 1 (_Introduction_) a 18 (_Pipes_, no início da parte III) e 26 a 30 (parte V) do livro do livro _R for Data Science_, [aqui](http://r4ds.had.co.nz/).
+- [Capítulo 3 - Análise de frequência de palavras](http://tidytextmining.com/tfidf.html)
+
+- [Capítulo 4 - Relacionamento entre palavras, n-gramas e correlação](http://tidytextmining.com/ngrams.html)
+
+- [Capítulo 6 - Topic Modeling](http://tidytextmining.com/topicmodeling.html)
+

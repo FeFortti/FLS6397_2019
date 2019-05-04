@@ -6,4 +6,6 @@
 
 1. Caso ainda não tenha, crie uma conta no site [github](https://github.com/).
 
-2. Usaremos o [Tutorial 10](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10.html) de guia.
+2. Usaremos o [Tutorial 21](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial21.html) de guia.
+
+2. Usaremos o [Tutorial 22](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial22.html) de guia.
