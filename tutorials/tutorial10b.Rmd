@@ -1,7 +1,6 @@
 # Mapas no R com ggmap
 
-Data frames foram, até este momento do curso, o protagonista de nossa análise de dados. Vimos como manipular dados que estão sempre no mesmo formato
-
+Este tutorial mostra como adicionar uma 'camada base' ou fundo aos seus mapas de ggplot.
 
 ## Informação espacial armazenada em data frames - pontos no google maps
 
@@ -10,6 +9,7 @@ Vamos começar a trabalhar com mapas a partir de um exemplo que, veremos, utiliz
 Nossa primeira tarefa é baixar os dados e faremos isso de forma inteligente e sem "cliques". A partir do url do arquivo do cadastro, que guardaremos no objeto "url\_cadatros\_escolas", faremos o download do arquivo e guardaremos o arquivo .csv baixado como o nome "temp.csv":
 
 ```{r}
+library(tidyverse)
 url_cadatros_escolas <- "http://dados.prefeitura.sp.gov.br/dataset/8da55b0e-b385-4b54-9296-d0000014ddd5/resource/39db5031-7238-4139-bcaa-e620a3180188/download/escolasr34fev2017.csv"
 download.file(url_cadatros_escolas, "temp.csv")
 ```
@@ -17,14 +17,12 @@ download.file(url_cadatros_escolas, "temp.csv")
 Veja que baixar o arquivo diretamente no R é preferível ao processo manual, pois podemos rapidamente reproduzir o processo, além de documentá-lo. Vamos abrir o arquivo:
 
 ```{r}
-library(readr)
 escolas <- read_delim("temp.csv", delim = ";")
 ```
 
 Explore o arquivo com o comando _glimpse_:
 
 ```{r}
-library(dplyr)
 glimpse(escolas)
 ```
 
@@ -43,12 +41,18 @@ emef <- escolas  %>%
 
 Pronto! Temos agora uma informação geográfica das EMEFs e uma variável de interesse -- ano -- que utilizaremos para investigar a expansão da rede.
 
+Para analisar estes dados como dados espaciais precisamos dizer a R quais são as variáveis de localização e transformá-lo em um objeto 'simple features' usando o biblioteca _sf_ e a função _st\_as\_sf_ para criar um objeto tipo "simple features". Lembre-se de instalar o pacote antes de carregá-lo.
+
+```{r}
+library(sf)
+emef <- emef %>% st_as_sf(coords=c("lon","lat"), crs=4326)
+```
+
 Vamos construir um primeiro mapa, usando a função que conhecemos -- ggplot -- a partir das informações de latitude e longitude das escolas:
 
 ```{r}
-library(ggplot2)
-ggplot(aes(lon, lat), data = emef) +
-  geom_point()
+emef %>% ggplot() +
+  geom_sf()
 ```
 
 Veja que podemos "imaginar" o formato da cidade de São Paulo com os pontos, mas o mapa não é propriamente um mapa. Falta uma "camada" básica, sobre a qual os pontos serão desenhados.
@@ -76,7 +80,7 @@ Antes de alterar estes argumentos, vamos utilizar uma função "irmã" à _ggplo
 
 ```{r}
 ggmap(map_sp) +
-  geom_point(aes(lon, lat), data = emef)
+  geom_sf(data = emef, inherit.aes=F)
 ```
 
 Feio ainda, porém bastante mais informativo. Veja que combinamos duas fontes de dados: o cadastro da PMSP e um mapa obtido na API da Stamen.
@@ -86,9 +90,8 @@ Agora, vamos usar uma informação sobre as escolas para diferenciar os pontos. 
 Introduziremos em nosso mapa uma escala de cores para diferenciar as EMEFs por ano de criação:
 
 ```{r}
-ggmap(map_sp, 
-      base_layer = ggplot(aes(lon, lat, color = ano), data = emef)) +
-  geom_point()
+ggmap(map_sp) +
+  geom_sf(data = emef, inherit.aes=F, aes(color=ano))
 ```
 
 Como era de se esperar, os pontos mais claros na cidade estão nos extremos e as EMEFs mais antigas, e geral, nos bairros que consolidaram mais cedo no processo de urbanização.

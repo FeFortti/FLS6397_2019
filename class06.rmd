@@ -14,4 +14,4 @@ Faremos hoje a aula de mapas no R e discutiremos as propostas de trabalho final.
 
 2 - Utilize o tempo livre para recuperar o tempo perdido em aulas anteriores e fazer tutoriais atrasados e/ou avançar nos desafios.
 
-3 - Se quiser, você pode fazer os tutoriais [Tutorial 10b](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10b.html) e [Tutorial 10c](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10c.html)
+3 - Se quiser, você pode fazer os tutoriais opcionais [Tutorial 10b](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10b.html) e [Tutorial 10c](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10c.html)

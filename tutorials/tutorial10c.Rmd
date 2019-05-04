@@ -8,7 +8,7 @@ Há vários sistemas de coordenadas utilizados em diferentes bases de dados cart
 
 Por outro lado, se precisarmos de mapas que incluem outras representações geométricas, como linhas e pontos, somos obrigados a multiplicar o número de linhas em um data frame pelo número de vértices de tais figuras (2 vezes para uma linha e _n_ vezes para um polígono, onde _n_ é o número de vértices do polígono). Esse método, ainda que possível, é muito ineficiente.
 
-A solução é trabalharmos com classes de objetos mais complexas (e completas) do que data frames. Vamos falar sobre isso ao explorarmos as principais classes do pacote _sp_. Em nosso tutorial vamos trabalhar com as classes de objetos do pacote _sp_ e om as funções disponíveis para sua manipulação.
+A solução é trabalharmos com classes de objetos mais complexas (e completas) do que data frames. Vamos falar sobre isso ao explorarmos as principais classes do pacote _sp_. Em nosso tutorial vamos trabalhar com as classes de objetos do pacote _sp_ e com as funções disponíveis para sua manipulação.
 
 Antes disso, poré, vamos conhecer o formato mais comum para armazenar dados espaciais -- _shapefile_ -- e como abrí-los em R.
 
@@ -65,6 +65,7 @@ plot(rmsp)
 Podemos utilizar o pacote _ggplot2_ e sua gramática para plotar objetos da classe "SpatialPolygonsDataFrame":
 
 ```{r}
+library(mapproj)
 ggplot(data = rmsp, 
        aes(x = long, y = lat, group = group)) + 
   geom_polygon(color = 'white', fill = 'darkgrey') +
