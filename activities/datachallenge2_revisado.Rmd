@@ -22,7 +22,8 @@ As primeiras linhas do seu script devem conter suas informações pessoais como 
 
 ## Parte 1 - Abrindo os dados
 
-1. Vamos fazer o download de dados eleitorais de CEPESPdata (dados limpos e organizados do TSE). Pode fazer o download usando o API de R, seguindo as instruções [aqui](https://github.com/Cepesp-Fgv/cepesp-r) ou pode buscar manualmente no [site](http://www.cepesp.io/cepesp-data/), baixar o arquivo e abrir em R. Em qualquer forma, vamos baixar **duas tabelas separadas** - uma tabela de candidatos ([http://cepesp.io/consulta/candidatos](http://cepesp.io/consulta/candidatos)) e uma tabela de resultados ([http://cepesp.io/consulta/votos](http://cepesp.io/consulta/votos)). Precisamos os dados de prefeitos na agregação regional do município e por 2016. (Se baixar do site, pode ter que adicionar a coluna `COD_MUN_IBGE` com a opção de 'Selectionar Colunas').
+1. Vamos fazer o download de dados eleitorais de CEPESPdata (dados limpos e organizados do TSE). Pode fazer o download usando o API de R, seguindo as instruções [aqui](https://github.com/Cepesp-Fgv/cepesp-r) ou pode buscar manualmente no [site](http://www.cepesp.io/cepesp-data/), baixar o arquivo e abrir em R. Em qualquer forma, vamos baixar **duas tabelas separadas** - uma tabela de candidatos ([http://cepesp.io/consulta/candidatos](http://cepesp.io/consulta/candidatos)) e uma tabela de votos ([http://cepesp.io/consulta/votos](http://cepesp.io/consulta/votos)). Precisamos os dados de prefeitos na agregação regional do município e por 2016. 
+    - Se baixar os arquivos do site direitamente, tenha que adicionar as colunas `COD_MUN_IBGE`, `UF`, `NOME_MUNICIPIO` e `SIGLA_UE` manualmente para o banco de dados de votos com a opção de 'Selectionar Colunas', e as colunas `DESCRICAO_SEXO`, `NOME_CANDIDATO` e `DESCRICAO_GRAU_INSTRUCAO` para o banco de dados de candidatos.
 
 2 - Usando os verbos de `dplyr`/`tidyverse`, nomeie estes data.frames `resultados` e `candidatos`. Filtre as tabelas para escolher os três estados do sul (`UF` e `SIGLA_UF`).
 
@@ -36,9 +37,9 @@ As primeiras linhas do seu script devem conter suas informações pessoais como 
 
 ## Parte 3 - Integrando os bancos de dados
 
-6. Antes de combinando os dois bancos de dados, escolhe apenas as colunas seguintes da tabela `resultados` para torná-lo mais fácil de usar: `NUMERO_CANDIDATO`,`SIGLA_UE`,`QTDE_VOTOS` e as colunas de total de votos por município e percentagem de votos no município que você criou.
+6. Antes de combinando os dois bancos de dados, escolhe apenas as colunas seguintes da tabela `resultados` para torná-lo mais fácil de usar: `NUMERO_CANDIDATO`,`NOME_MUNICIPIO`,`SIGLA_UE`,`QTDE_VOTOS` e as colunas de total de votos por município e percentagem de votos no município que você criou.
 
-7. Vamos combinar os data.frames `candidatos` e `resultados` usando alguma função do tipo `join` apropriada. Note que precisamos usar duas colunas-chaves - `NUMERO_CANDIDATO` e `SIGLA_UE` - porque `NUMERO_CANDIDATO` é apenas um identificador único para candidatos dentro do mesmo município. 
+7. Vamos combinar os data.frames `candidatos` e `resultados` usando alguma função do tipo `join` apropriada. Note que precisamos usar duas colunas-chaves - `NUMERO_CANDIDATO` e `SIGLA_UE` - porque `NUMERO_CANDIDATO` é apenas um identificador único para candidatos dentro do mesmo município. `SIGLA_UE`  é um identificador único para cada eleição municipal diferente.
 
 ## Parte 4 - Produzindo tabelas de resumo
 
@@ -50,4 +51,4 @@ As primeiras linhas do seu script devem conter suas informações pessoais como 
 
 11. Crie uma tabela que compara a média percentagem de voto por grau de escolaridade de candidatos (`DESCRICAO_GRAU_INSTRUCAO`).
 
-12. Qual candidato foi eleito (`DESC_SIT_TOT_TURNO`) no município (`DESCRICAO_UE`) de Guaramirim no estado de Santa Catarina (`SIGLA_UF`)?  Identifique esse candidato e o partido dele/dela, e o percentagem do voto que ele/ela recebeu. 
+12. Qual candidato foi eleito (`DESC_SIT_TOT_TURNO`) no município (`NOME_MUNICIPIO`) de Guaramirim no estado de Santa Catarina (`SIGLA_UF`)?  Identifique esse candidato e o partido dele/dela, e o percentagem do voto que ele/ela recebeu. 

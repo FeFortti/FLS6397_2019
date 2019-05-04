@@ -203,12 +203,6 @@ valores_munic_mutate <- saques_amostra_201701 %>%
             maximo = max(valor_num))
 ```
 
-Para verificar que as duas tabelas de resultados são exatamente os mesmos podemos verificar com a função _identical_. Deve ser 'TRUE'.
-
-```{r}
-identical(valores_munic,valores_munic_mutate)
-```
-
 # Exercício
 
 - Calcule o total de valores por UF em um novo _data frame_.

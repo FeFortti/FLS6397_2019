@@ -39,7 +39,7 @@ navbar:
       - text: "Desafio 1"
         href: activities/datachallenge1.html
       - text: "Desafio 2"
-        href: activities/datachallenge2.html
+        href: activities/datachallenge2_revisado.html
       - text: "Desafio 3"
         href: activities/datachallenge3.html
       - text: "Desafio 4"
