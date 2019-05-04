@@ -403,13 +403,13 @@ $(document).ready(function () {
 </ul></li>
 </ol>
 <p>2 - Usando os verbos de <code>dplyr</code>/<code>tidyverse</code>, nomeie estes data.frames <code>resultados</code> e <code>candidatos</code>. Filtre as tabelas para escolher os três estados do sul (<code>UF</code> e <code>SIGLA_UF</code>).</p>
-<p>3 - Filtre as tabelas para incluir apenas os dados de prefeitos (não vereadores ou vice-prefeitos) (<code>DESCRICAO_CARGO</code>) e do primeiro turno da eleição (<code>NUM_TURNO</code>).</p>
+<p>3 - Filtre as tabelas para incluir apenas os dados do primeiro turno da eleição (<code>NUM_TURNO</code>).</p>
 </div>
 <div id="parte-2---calcule-percentagens-de-votacao" class="section level2">
 <h2>Parte 2 - Calcule percentagens de votação</h2>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Usando as funções <code>group_by</code> e <code>mutate</code>, adicione uma nova coluna no data.frame <code>resultados</code> que contém o total de votos (<code>QTDE_VOTO</code>) por município (<code>COD_MUN_IBGE</code>).</p></li>
-<li><p>Agora, crie mais uma coluna que contém o percentagem de voto do candidato no município em relação ao total de votos recebdidos por todos os candidatos no município (vamos ignorar a existência de votos na legenda para fins didáticos).</p></li>
+<li><p>Agora, crie mais uma coluna que contém o percentagem de voto do candidato no município em relação ao total de votos recebdidos por todos os candidatos no município.</p></li>
 </ol>
 </div>
 <div id="parte-3---integrando-os-bancos-de-dados" class="section level2">
@@ -449,7 +449,7 @@ $(document).ready(function () {
 
 </script>
 
-<!---- dynamically load mathjax for compatibility with self-contained ---->
+<!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
   (function () {
     var script = document.createElement("script");

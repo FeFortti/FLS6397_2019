@@ -27,13 +27,13 @@ As primeiras linhas do seu script devem conter suas informações pessoais como 
 
 2 - Usando os verbos de `dplyr`/`tidyverse`, nomeie estes data.frames `resultados` e `candidatos`. Filtre as tabelas para escolher os três estados do sul (`UF` e `SIGLA_UF`).
 
-3 - Filtre as tabelas para incluir apenas os dados de prefeitos (não vereadores ou vice-prefeitos) (`DESCRICAO_CARGO`) e do primeiro turno da eleição (`NUM_TURNO`). 
+3 - Filtre as tabelas para incluir apenas os dados do primeiro turno da eleição (`NUM_TURNO`). 
 
 ## Parte 2 - Calcule percentagens de votação
 
 4. Usando as funções `group_by` e `mutate`, adicione uma nova coluna no data.frame `resultados` que contém o total de votos (`QTDE_VOTO`) por município (`COD_MUN_IBGE`).
 
-5. Agora, crie mais uma coluna que contém o percentagem de voto do candidato no município em relação ao total de votos recebdidos por todos os candidatos no município (vamos ignorar a existência de votos na legenda para fins didáticos).
+5. Agora, crie mais uma coluna que contém o percentagem de voto do candidato no município em relação ao total de votos recebdidos por todos os candidatos no município.
 
 ## Parte 3 - Integrando os bancos de dados
 
