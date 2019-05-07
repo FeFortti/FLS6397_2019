@@ -9,12 +9,13 @@ knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 
 # Análise de texto no R - pacote _stringr_
 
-### Webscrapping para capturar material para o tutorial
+### Fonte de Textos
 
-Esta parte do tutorial foi alterada para trabalharmos offline. Idealmente, capturaríamos um conjunto de discursos de um parlamentar na Câmara dos deputados para trabalharmos com os diferentes pacotes de mineração de texto. Em vez de capturarmos os dados, abra o arquivo .RData passado via pen drive e comece da sessão abaixo
+Vamos abrir um arquivo do R (.rds) que contém discursos de um parlamentar na Câmara dos deputados para trabalharmos com os diferentes pacotes de mineração de texto. 
 
 ```{r}
-load("aula_offline.RData")
+download.
+discursos <- readRDS("")
 ```
 
 
