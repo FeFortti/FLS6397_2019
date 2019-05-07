@@ -15,20 +15,24 @@ Corpora são os objetos clássicos para processamento de linguagem natural. No R
 
 Vamos fazer uma rápida introdução, mas recomendo fortemente a leitura do livro [Text Mininig with R](http://tidytextmining.com/), disponível o formato "bookdown".
 
-Comecemos carregando os seguintes pacotes:
+Comecemos carregando os seguintes pacotes e abramos de novo os nossos textos do Congresso:
 
 ```{r, eval = FALSE}
 library(tidytext)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
+
+url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds"
+download.file(url, destfile="discursos.rds")
+
+discursos <- readRDS("discursos.rds")
 ```
 
 Vamos recriar o data frame com os discursos:
 
 ```{r, eval = FALSE}
-discursos_df <- data_frame(id_discurso = 1:length(discursos), 
+discursos_df <- tibble(doc_id = 1:length(discursos), 
                           text = discursos)
-glimpse(discursos_df)
+discursos_df
 ```
 
 ### Tokens
@@ -38,17 +42,17 @@ A primeira função interessante do pacote _tidytext_ é justamente a tokenizaç
 ```{r, eval = FALSE}
 discursos_token <- discursos_df %>%
   unnest_tokens(word, text)
-glimpse(discursos_token)
+discursos_token
 ```
 
-Note que a variável _id\_discurso, criada por nós, é mantida. "text", porém, se torna "words", na exata sequência do texto. Veja que o formato de um "tidytext" é completamnte diferente de um Corpus.
+Note que a variável _doc\_id_, criada por nós, é mantida. "text", porém, se torna "words", na exata sequência do texto. Veja que o formato de um "tidytext" é completamnte diferente de um Corpus.
 
 Como excluir stopwords nessa abordagem? Precisamos de um data frame com stopwords. Vamos recriar um vetor stopwords_pt, que é a versão ampliada das stopwords disponíveis no R, e criar um data frame com tal vetor:
 
 ```{r, eval = FALSE}
 stopwords_pt <- c(stopwords("pt"), "presidente", "é", "sr", "sra", "luiza", 
                   "erundina", "oradora", "revisão", "sp", "v.exa")
-stopwords_pt_df <- data.frame(word = stopwords_pt)
+stopwords_pt_df <- tibble(word = stopwords_pt)
 ```
 
 Com _anti\_join_ (lembra dessa função?) mantemos em "discursos\_token" apenas as palavras que não estao em "stopwords\_pt\_df"
@@ -67,7 +71,7 @@ discursos_token %>%
 
 Com _ggplot_, podemos construir um gráfico de barras dos temos mais frequêntes, por exemplo, com frequência maior do que 500. Neste ponto do curso, nada do que estamos fazendo abaixo deve ser novo a você:
 
-```{r, eval = FALSE}
+```{r, eval = F}
 discursos_token %>%
   count(word, sort = TRUE) %>%
   filter(n > 500) %>%
@@ -97,7 +101,7 @@ discurso_bigrams <- discursos_df %>%
   unnest_tokens(bigram, text, token = "ngrams", n = 2)
 ```
 
-Note que, ao tokenizar o texto, automaticamente foram excluídas as as pontuações e as palavras foram alteradas para minúscula (use o argumento "to_lower = FALSE" caso não queira a conversão). Vamos contar os bigrams:
+Note que, ao tokenizar o texto, automaticamente foram excluídas as pontuações e as palavras foram alteradas para minúscula (use o argumento "to_lower = FALSE" caso não queira a conversão). Vamos contar os bigrams e veja os mais frequentes:
 
 ```{r, eval = FALSE}
 discurso_bigrams %>%
@@ -190,7 +194,7 @@ discursos_df %>%
   count(word1, word2, word3, sort = TRUE)
 ```
 
-"sociedade civil organizada" é o "trigram" mais frequente no discurso da deputada.
+"colegas parlamentares telespectadores" and "sociedade civil organizada" são os "trigrams" mais frequente no discurso da deputada.
 
 ### Redes de palavras
 

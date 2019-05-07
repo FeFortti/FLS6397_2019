@@ -13,10 +13,15 @@ knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 
 O pacote mais popular para trabalharmos com texto no R se chama _tm_ ("Text Mining"). Vamos carregá-lo e passar por algumas funções do pacote para, então, trabalharmos com uma nova classe de objeto: Corpus.
 
-Carregue o pacote:
+Carregue o pacote e abre o mesmo arquivo que usamos em Tutorial 11:
 
 ```{r, eval = FALSE}
 library(tm)
+
+url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds"
+download.file(url, destfile="discursos.rds")
+
+discursos <- readRDS("discursos.rds")
 ```
 
 Uma boa prática ao trabalharmos com texto é transformarmos todas as palavras em minúsculas (exceto, obviamente, quando a diferenciação importar). _tolower_, função da biblioteca básica do R, cumpre a tarefa e vamos criar um objeto "discursos2", que será nossa versão modificada dos discursos.
@@ -107,7 +112,7 @@ discursos4 <- stemDocument(discursos2, language = "portuguese")
 discursos4[1]
 ```
 
-Hummmm... meio estranho, não? Mas você pegou o espírito. Vamos seguir em frente
+Hummmm... meio estranho, não? Mas você pegou o espírito. Vamos seguir em frente.
 
 ### Tokenização
 
@@ -161,10 +166,9 @@ Aliás, metadados são a única boa razão para trabalharmos com Corpus e não c
 Vamos reabrir os dados usando um data frame como fonte. Vamos criar um:
 
 ```{r, eval = FALSE}
-discursos_df <- data.frame(id_discurso = 1:length(discursos), 
-                          text = discursos,
-                           stringsAsFactors = F)
-str(discursos_df)
+discursos_df <- tibble(doc_id = 1:length(discursos), 
+                          text = discursos)
+discursos_df
 ```
 
 E repetir o processo, com a diferença que utilizamos _DataframeSource_ para indicar a fonte dos dados:
@@ -179,13 +183,13 @@ Mesma coisa, não?
 Ao trabalharmos com Corpus, não aplicamos diretamente as funções do pacote _tm_. Em vez disso, utilizamos a função _tm\_map_, que aplica uma outra função a todos os elementos do Corpus. Esse uso lembra as funções do pacote _purrr_ e da família _apply_, caso você tenha lido sobre elas alhures. Observe a remoção de pontuação com _removePunctuation_:
 
 ```{r, eval = FALSE}
-discursos_corpus <- tm_map(discursos_corpus, removePunctuation)
+discursos_df_corpus <- tm_map(discursos_df_corpus, removePunctuation)
 ```
 
 A aplicação de qualquer função do pacote _tm_ segue este procedimento. Quando a função não pertence ao pacote _tm_, porém, precisamos "passá-la" dentro da função _content\_transformer_:
 
 ```{r, eval = FALSE}
-discursos_corpus <- tm_map(discursos_corpus, content_transformer(tolower))
+discursos_df_corpus <- tm_map(discursos_df_corpus, content_transformer(tolower))
 ```
 
 Se você criar uma função para alteração de um texto, você deve utilizar _content\_transformer_ também.
@@ -193,8 +197,8 @@ Se você criar uma função para alteração de um texto, você deve utilizar _c
 Mais dois exemplos, com _removeNumbers_ e _removeWords_:
 
 ```{r, eval = FALSE}
-discursos_corpus <- tm_map(discursos_corpus, removeNumbers)
-discursos_corpus <- tm_map(discursos_corpus, removeWords, stopwords("pt"))
+discursos_df_corpus <- tm_map(discursos_df_corpus, removeNumbers)
+discursos_df_corpus <- tm_map(discursos_df_corpus, removeWords, stopwords("pt"))
 ```
 
 Porque tanto trabalho? Para trabalharmos com Corpus, que tem a vantagem de armazenar os metadados, em vez de um vetor.
@@ -230,7 +234,7 @@ dtm_discursos <- DocumentTermMatrix(discursos_corpus)
 Veja um fragmento da "dtm" que criamos (documentos 101 a 105 e termos 996 a 1000):
 
 ```{r, eval = FALSE}
-as.matrix(dtm_discursos[101:105, 996:1000])
+as.matrix(dtm_discursos[401:410, 970:975])
 ```
 
 Se quisermos rapidamente olhar os termos com frequência maior do que, digamos, 500:

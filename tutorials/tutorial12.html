@@ -383,8 +383,13 @@ $(document).ready(function () {
 <div id="corpus-e-o-pacote-tm" class="section level2">
 <h2>Corpus e o pacote <em>tm</em></h2>
 <p>O pacote mais popular para trabalharmos com texto no R se chama <em>tm</em> (“Text Mining”). Vamos carregá-lo e passar por algumas funções do pacote para, então, trabalharmos com uma nova classe de objeto: Corpus.</p>
-<p>Carregue o pacote:</p>
-<pre class="r"><code>library(tm)</code></pre>
+<p>Carregue o pacote e abre o mesmo arquivo que usamos em Tutorial 11:</p>
+<pre class="r"><code>library(tm)
+
+url &lt;- &quot;https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds&quot;
+download.file(url, destfile=&quot;discursos.rds&quot;)
+
+discursos &lt;- readRDS(&quot;discursos.rds&quot;)</code></pre>
 <p>Uma boa prática ao trabalharmos com texto é transformarmos todas as palavras em minúsculas (exceto, obviamente, quando a diferenciação importar). <em>tolower</em>, função da biblioteca básica do R, cumpre a tarefa e vamos criar um objeto “discursos2”, que será nossa versão modificada dos discursos.</p>
 <pre class="r"><code>discursos2 &lt;- tolower(discursos)
 discursos2[1]</code></pre>
@@ -421,7 +426,7 @@ wordcloud(discursos3, max.words = 50)</code></pre>
 <p>Vamos ver o resultado da função <em>stemDocument</em> no primeiro discurso:</p>
 <pre class="r"><code>discursos4 &lt;- stemDocument(discursos2, language = &quot;portuguese&quot;)
 discursos4[1]</code></pre>
-<p>Hummmm… meio estranho, não? Mas você pegou o espírito. Vamos seguir em frente</p>
+<p>Hummmm… meio estranho, não? Mas você pegou o espírito. Vamos seguir em frente.</p>
 <div id="tokenizacao" class="section level3">
 <h3>Tokenização</h3>
 <p>Tokenização de um texto significa a separação em pequenos “tokens”, que podem ser palavras ou n-grams, que são pequenos conjuntos de palavras. Bigrams, por exemplo, são pares de palavras. Voltaremos a esse tópico adiante e com mais cuidado. Mas vamos aproveitar o objeto tal como está para apresentarmos uma função do pacote <em>stringr</em> que deixamos propositalmente para trás: <em>str_split</em>. Como as palavras estão separadas por espaço, no resultado final será uma lista contendo um vetor de tokens para cada discurso:</p>
@@ -445,22 +450,21 @@ class(discursos_corpus)</code></pre>
 <p>Em metadata temos diversas variáveis: author, description, id, language, etc. Veja que id está preenchido com a ordem dos discursos e a língua está em inglês, por “default”. Neste exercícios temos mais controle sobre os metadados, pois capturamos os textos de uma fonte específica, mas seria legal armazenar os metadados de um Corpus para compartilhá-lo ou trabalhar com Corpora (plural de Corpus) mais complexos.</p>
 <p>Aliás, metadados são a única boa razão para trabalharmos com Corpus e não com vetores. Guardar informações sobre os textos é fundamental para selecionarmos subconjuntos e produzirmos análise.</p>
 <p>Vamos reabrir os dados usando um data frame como fonte. Vamos criar um:</p>
-<pre class="r"><code>discursos_df &lt;- data.frame(id_discurso = 1:length(discursos), 
-                          text = discursos,
-                           stringsAsFactors = F)
-str(discursos_df)</code></pre>
+<pre class="r"><code>discursos_df &lt;- tibble(doc_id = 1:length(discursos), 
+                          text = discursos)
+discursos_df</code></pre>
 <p>E repetir o processo, com a diferença que utilizamos <em>DataframeSource</em> para indicar a fonte dos dados:</p>
 <pre class="r"><code>discursos_df_source &lt;- DataframeSource(discursos_df)
 discursos_df_corpus &lt;- VCorpus(discursos_df_source)</code></pre>
 <p>Mesma coisa, não?</p>
 <p>Ao trabalharmos com Corpus, não aplicamos diretamente as funções do pacote <em>tm</em>. Em vez disso, utilizamos a função <em>tm_map</em>, que aplica uma outra função a todos os elementos do Corpus. Esse uso lembra as funções do pacote <em>purrr</em> e da família <em>apply</em>, caso você tenha lido sobre elas alhures. Observe a remoção de pontuação com <em>removePunctuation</em>:</p>
-<pre class="r"><code>discursos_corpus &lt;- tm_map(discursos_corpus, removePunctuation)</code></pre>
+<pre class="r"><code>discursos_df_corpus &lt;- tm_map(discursos_df_corpus, removePunctuation)</code></pre>
 <p>A aplicação de qualquer função do pacote <em>tm</em> segue este procedimento. Quando a função não pertence ao pacote <em>tm</em>, porém, precisamos “passá-la” dentro da função <em>content_transformer</em>:</p>
-<pre class="r"><code>discursos_corpus &lt;- tm_map(discursos_corpus, content_transformer(tolower))</code></pre>
+<pre class="r"><code>discursos_df_corpus &lt;- tm_map(discursos_df_corpus, content_transformer(tolower))</code></pre>
 <p>Se você criar uma função para alteração de um texto, você deve utilizar <em>content_transformer</em> também.</p>
 <p>Mais dois exemplos, com <em>removeNumbers</em> e <em>removeWords</em>:</p>
-<pre class="r"><code>discursos_corpus &lt;- tm_map(discursos_corpus, removeNumbers)
-discursos_corpus &lt;- tm_map(discursos_corpus, removeWords, stopwords(&quot;pt&quot;))</code></pre>
+<pre class="r"><code>discursos_df_corpus &lt;- tm_map(discursos_df_corpus, removeNumbers)
+discursos_df_corpus &lt;- tm_map(discursos_df_corpus, removeWords, stopwords(&quot;pt&quot;))</code></pre>
 <p>Porque tanto trabalho? Para trabalharmos com Corpus, que tem a vantagem de armazenar os metadados, em vez de um vetor.</p>
 <p>Para poupar seu trabalho, você pode “envelopar” todas as transformações que quiser produzir em um Corpus em uma função:</p>
 <pre class="r"><code>limpa_corpus &lt;- function(corpus){
@@ -480,7 +484,7 @@ discursos_corpus &lt;- tm_map(discursos_corpus, removeWords, stopwords(&quot;pt&
 <p>O principal uso do pacote <em>tm</em> é gerar uma matriz de documentos-termos (“dtm”). Basicamente, essa matriz tem cada documento na linha e cada termo na coluna. O conteúdo da célula é a frequência do termo em cada documento.</p>
 <pre class="r"><code>dtm_discursos &lt;- DocumentTermMatrix(discursos_corpus)</code></pre>
 <p>Veja um fragmento da “dtm” que criamos (documentos 101 a 105 e termos 996 a 1000):</p>
-<pre class="r"><code>as.matrix(dtm_discursos[101:105, 996:1000])</code></pre>
+<pre class="r"><code>as.matrix(dtm_discursos[401:410, 970:975])</code></pre>
 <p>Se quisermos rapidamente olhar os termos com frequência maior do que, digamos, 500:</p>
 <pre class="r"><code>findFreqTerms(dtm_discursos, 500)</code></pre>
 <p>Há uma série de usos para a classe Corpus do pacote <em>tm</em> para mineração de texto. Não vamos explorá-los e você pode buscar sozinh@. Vamos adotar agora uma abordagem que não envolve a criação de um Corpus.</p>
