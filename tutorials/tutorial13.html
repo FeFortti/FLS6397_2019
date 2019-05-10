@@ -388,10 +388,10 @@ $(document).ready(function () {
 <pre class="r"><code>library(tidytext)
 library(tidyverse)
 
-url &lt;- &quot;https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds&quot;
-download.file(url, destfile=&quot;discursos.rds&quot;)
+url &lt;- &quot;https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.txt&quot;
+download.file(url, destfile=&quot;discursos.txt&quot;)
 
-discursos &lt;- readRDS(&quot;discursos.rds&quot;)</code></pre>
+discursos &lt;- readLines(&quot;discursos.txt&quot;)</code></pre>
 <p>Vamos recriar o data frame com os discursos:</p>
 <pre class="r"><code>discursos_df &lt;- tibble(doc_id = 1:length(discursos), 
                           text = discursos)

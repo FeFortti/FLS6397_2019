@@ -21,10 +21,10 @@ Comecemos carregando os seguintes pacotes e abramos de novo os nossos textos do 
 library(tidytext)
 library(tidyverse)
 
-url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds"
-download.file(url, destfile="discursos.rds")
+url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.txt"
+download.file(url, destfile="discursos.txt")
 
-discursos <- readRDS("discursos.rds")
+discursos <- readLines("discursos.txt")
 ```
 
 Vamos recriar o data frame com os discursos:

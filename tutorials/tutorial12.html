@@ -386,10 +386,10 @@ $(document).ready(function () {
 <p>Carregue o pacote e abre o mesmo arquivo que usamos em Tutorial 11:</p>
 <pre class="r"><code>library(tm)
 
-url &lt;- &quot;https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds&quot;
-download.file(url, destfile=&quot;discursos.rds&quot;)
+url &lt;- &quot;https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.txt&quot;
+download.file(url, destfile=&quot;discursos.txt&quot;)
 
-discursos &lt;- readRDS(&quot;discursos.rds&quot;)</code></pre>
+discursos &lt;- readLines(&quot;discursos.txt&quot;)</code></pre>
 <p>Uma boa prática ao trabalharmos com texto é transformarmos todas as palavras em minúsculas (exceto, obviamente, quando a diferenciação importar). <em>tolower</em>, função da biblioteca básica do R, cumpre a tarefa e vamos criar um objeto “discursos2”, que será nossa versão modificada dos discursos.</p>
 <pre class="r"><code>discursos2 &lt;- tolower(discursos)
 discursos2[1]</code></pre>

@@ -18,10 +18,10 @@ Carregue o pacote e abre o mesmo arquivo que usamos em Tutorial 11:
 ```{r, eval = FALSE}
 library(tm)
 
-url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds"
-download.file(url, destfile="discursos.rds")
+url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.txt"
+download.file(url, destfile="discursos.txt")
 
-discursos <- readRDS("discursos.rds")
+discursos <- readLines("discursos.txt")
 ```
 
 Uma boa prática ao trabalharmos com texto é transformarmos todas as palavras em minúsculas (exceto, obviamente, quando a diferenciação importar). _tolower_, função da biblioteca básica do R, cumpre a tarefa e vamos criar um objeto "discursos2", que será nossa versão modificada dos discursos.

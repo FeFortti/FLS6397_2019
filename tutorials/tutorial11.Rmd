@@ -14,10 +14,10 @@ knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 Vamos abrir um arquivo do R (.rds) que contém discursos de um parlamentar na Câmara dos deputados para trabalharmos com os diferentes pacotes de mineração de texto. 
 
 ```{r}
-url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.rds"
-download.file(url, destfile="discursos.rds")
+url <- "https://github.com/JonnyPhillips/FLS6397_2019/raw/master/data/discursos.txt"
+download.file(url, destfile="discursos.txt")
 
-discursos <- readRDS("discursos.rds")
+discursos <- readLines("discursos.txt")
 ```
 
 ### Funcionalidades do _stringr_
