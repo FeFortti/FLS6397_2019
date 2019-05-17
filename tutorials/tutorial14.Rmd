@@ -15,10 +15,12 @@ Estes exemplos servirão de norte para que você leia, em sala, os capítulos [1
 
 ## Exemplo 1 - substituindo repetição de código por loops
 
-Imagine que você precisa organizar dados dos candidatos à presidência de diversos anos (2006 a 2014) e vai utilizar a API do CEPESP Data. Utilizando a função _get_candidates_ do pacote _cepespR_ podemos obter os dados:
+Imagine que você precisa organizar dados dos candidatos à presidência de diversos anos (2006 a 2014) e vai utilizar a API do CEPESP Data. Utilizando a função _get_candidates_ do pacote _cepespR_ podemos obter os dados (se você precisar instalar o pacote _cepespR_ veja o site [https://github.com/Cepesp-Fgv/cepesp-r](https://github.com/Cepesp-Fgv/cepesp-r) para instruções):
+
 
 ```{r}
 library(cepespR)
+
 candidatos06 <- get_candidates(year = 2006, position = "President")
 candidatos10 <- get_candidates(year = 2010, position = "President")
 candidatos14 <- get_candidates(year = 2014, position = "President")
