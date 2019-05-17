@@ -19,6 +19,8 @@ Imagine que você precisa organizar dados dos candidatos à presidência de dive
 
 
 ```{r}
+if (!require("devtools")) install.packages("devtools")
+devtools::install_github("Cepesp-Fgv/cepesp-r")
 library(cepespR)
 
 candidatos06 <- get_candidates(year = 2006, position = "President")
