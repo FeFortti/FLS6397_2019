@@ -1,0 +1,56 @@
+name: "Introdução à Programação"
+output_dir: "."
+navbar:
+  title: "Introdução à Programação"
+  left:
+    - text: "Intro"
+      icon: fa-home
+      href: index.html
+    - text: "Programa"
+      href: FLS6397_Syllabus.html
+    - text: "Aulas"
+      menu:
+      - text: "Aula 1"
+        href: class01.html
+      - text: "Aula 2"
+        href: class02.html
+      - text: "Aula 3"
+        href: class03.html
+      - text: "Aula 4"
+        href: class04.html
+      - text: "Aula 5"
+        href: class05.html
+      - text: "Aula 6"
+        href: class06.html
+      - text: "Aula 7"
+        href: class07.html
+      - text: "Aula 8"
+        href: class08.html
+      - text: "Aula 9"
+        href: class09.html
+      - text: "Aula 10"
+        href: class10.html
+      - text: "Aula 11"
+        href: class11.html
+      - text: "Aula 12"
+        href: class12.html
+    - text: "Desafios"
+      menu:
+      - text: "Desafio 1"
+        href: activities/datachallenge1.html
+      - text: "Desafio 2"
+        href: activities/datachallenge2_revisado.html
+      - text: "Desafio 3"
+        href: activities/datachallenge3.html
+      - text: "Desafio 4"
+        href: activities/datachallenge4.html
+      - text: "Desafio 5"
+        href: activities/datachallenge5.html
+
+output:
+  html_document:
+    theme: journal
+    css: styles.css
+    highlight: tango
+    lib_dir: site_libs
+    self_contained: no

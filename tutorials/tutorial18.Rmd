@@ -1,0 +1,10 @@
+---
+title: 'Tutorial 18'
+output: html_document
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
+```
+
+Latex

@@ -1,0 +1,17 @@
+###  FLS 6397 - Introdução à Programação e Ferramentas Computacionais para as Ciências Sociais
+
+- Data: 03/05/2019
+
+## Aula 6 - Mapas e GIS
+
+### Objetivos Gerais
+
+Faremos hoje a aula de mapas no R e discutiremos as propostas de trabalho final.
+
+### Roteiro para a aula
+
+1 - Faça o [Tutorial 10](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10.html), que apresenta o recém publicado pacote 'sf' para lidar com mapas no R.
+
+2 - Utilize o tempo livre para recuperar o tempo perdido em aulas anteriores e fazer tutoriais atrasados e/ou avançar nos desafios.
+
+3 - Se quiser, você pode fazer os tutoriais opcionais [Tutorial 10b](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10b.html) e [Tutorial 10c](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial10c.html)

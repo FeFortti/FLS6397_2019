@@ -1,0 +1,11 @@
+###  FLS 6397 - Introdução à Programação e Ferramentas Computacionais para as Ciências Sociais
+
+- Data: 31/05/2019
+
+## Aula 10 - Latex, Git e Pesquisa Reproduzível
+
+1. Caso ainda não tenha, crie uma conta no site [github](https://github.com/).
+
+2. Usaremos o [Tutorial 17](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial17.html) de guia.
+
+2. Usaremos o [Tutorial 18](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial18.html) de guia.

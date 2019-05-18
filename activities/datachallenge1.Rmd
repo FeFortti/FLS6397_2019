@@ -1,0 +1,48 @@
+# Desafio 1
+
+## Instruções para Entrega
+
+Data: 22/04
+
+Formato: RScript (arquivo .R)
+
+Via: e-mail com título "[FLS6397] - D1" para leobarone@gmail.com e jonnyphillips@gmail.com.
+
+## Instruções para a atividade
+
+Siga as instruções abaixo. Documente __TODOS__ os seus passos em um script. Comente no seu script __TODOS__ os seus passos e explique a si mesma(o) suas escolhas e estratégias. Colar pedaços de código de outras(os) colegas nesta atividade é permitido e peça ajuda se precisar. Mencione __SEMPRE__ em comentários quando a solução encontrada não for sua.
+
+As primeiras linhas do seu script devem conter suas informações pessoais como comentário, tal qual o modelo abaixo:
+
+```{r}
+### nome <- "Fulano da Silva Sauro"
+### programa <- "Mestrado em Paleontologia"
+### n_usp <- 32165498
+### data_entrega: "29/02/2017"
+```
+
+## Roteiro da atividade
+
+1. Vá ao [Repositório de Dados Eleitorais do TSE](http://www.tse.jus.br/eleitor-e-eleicoes/estatisticas/repositorio-de-dados-eleitorais-1/repositorio-de-dados-eleitorais). Na página "Resultados" e no ano 2016, faça o download do arquivo "Votação nominal por município e zona" e descompacte-o. Você pode fazer tudo à mão se tiver dificuldade de copiar o modelo do [tutorial 4](https://jonnyphillips.github.io/FLS6397_2019/tutorials/tutorial04.html), em que abrimos os dados da MUNIC 2005. 
+
+2. Importe para o R os resultados eleitorais de cada um dos 3 estados do Sul (em arquivos seperados).
+
+3. Com a função _rbind_, junte os 3 _data frames_ importados.
+
+4. Nomear as colunas com base nas informações do arquivo _LEIAME.pdf_ (p.13-14). 
+
+5. Leia até o final as instruções e identifique quais variáveis são necessárias para a tarefa. Selecione apenas tais variáveis (você pode trocar a ordem se achar mais fácil).
+
+6. Selecione apenas as linhas que contém resultados eleitorais para prefeita(o).
+
+7. Selecione apenas as linhas que contém os resultados eleitorais para prefeitas(os) eleitas(os).
+
+8. Quantas linhas restaram? Quantas colunas?
+
+9. Crie, a seu critério, uma nova variável com 3 categorias de partido: esquerda, direita, outros partidos. Dê o nome de _partido\_categoria_ a esta variável.
+
+10. Faça uma tabela da nova variável _partido\_categoria_.
+
+11. Substituir "Eleito" para "Prefeito Atual".
+
+12. Categorize usando _cut_ os municípios em que prefeitos eleitos receberam menos que 500 votos, entre 500 e 3.000 votos e mais que 3.000 votos em categorias 'baixa', 'média' e 'alta'.

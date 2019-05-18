@@ -1,0 +1,98 @@
+# Mapas no R com ggmap
+
+Este tutorial mostra como adicionar uma 'camada base' ou fundo aos seus mapas de ggplot.
+
+## Informação espacial armazenada em data frames - pontos no google maps
+
+Vamos começar a trabalhar com mapas a partir de um exemplo que, veremos, utilizará as ferramentas que aprendemos até então para produzir nossos primeiros mapas. Para tanto, vamos utilizar o cadastro de escolas que a Prefeitura Municipal de São Paulo disponibiliza [aqui](http://dados.prefeitura.sp.gov.br/).
+
+Nossa primeira tarefa é baixar os dados e faremos isso de forma inteligente e sem "cliques". A partir do url do arquivo do cadastro, que guardaremos no objeto "url\_cadatros\_escolas", faremos o download do arquivo e guardaremos o arquivo .csv baixado como o nome "temp.csv":
+
+```{r}
+library(tidyverse)
+url_cadatros_escolas <- "http://dados.prefeitura.sp.gov.br/dataset/8da55b0e-b385-4b54-9296-d0000014ddd5/resource/39db5031-7238-4139-bcaa-e620a3180188/download/escolasr34fev2017.csv"
+download.file(url_cadatros_escolas, "temp.csv")
+```
+
+Veja que baixar o arquivo diretamente no R é preferível ao processo manual, pois podemos rapidamente reproduzir o processo, além de documentá-lo. Vamos abrir o arquivo:
+
+```{r}
+escolas <- read_delim("temp.csv", delim = ";")
+```
+
+Explore o arquivo com o comando _glimpse_:
+
+```{r}
+glimpse(escolas)
+```
+
+Não há nada de extraordinário no arquivo, que se assemelha aos que vimos até então. Há, porém, uma dupla de variáveis que nos permite trabalhar "geograficamente" com o dado: LATITUDE e LONGITUDE. "Lat e Long" são a informação fundamental de um dos sistemas de coordenadas (coordinate reference system, CRS) mais utilizados para localização de objetos na superfície da terra.
+
+Por uma razão desconhecida, a informação fornecida pela PMSP está em formato diferente do convenional. Latitudes são representadas por números entre -90 e 90, com 8 casas decimais, e Longitudes por números entre -180 e 180, também com 8 casas decimais. Em nosso par de variáveis, o separador de decimal está omitido e por esta razão faremos um pequena modificação na variável. Aproveitaremos também para renomear algumas variáveis de nosso interesse -- como tipo da escola (CEI, EMEI, EMEF, CEU, etc) e o ano de início do funcionamento -- e selecionaremos apenas as linhas referentes a EMEF (Escolas Municipal de Ensino Fundamental):
+
+```{r}
+emef <- escolas  %>%
+  rename(lat = LATITUDE, lon = LONGITUDE, tipo = TIPOESC) %>% 
+  mutate(lat = lat / 1000000, 
+         lon = lon / 1000000,
+         ano = as.numeric(substr(DT_INI_FUNC, 7, 10))) %>%
+  filter(tipo == "EMEF")
+```
+
+Pronto! Temos agora uma informação geográfica das EMEFs e uma variável de interesse -- ano -- que utilizaremos para investigar a expansão da rede.
+
+Para analisar estes dados como dados espaciais precisamos dizer a R quais são as variáveis de localização e transformá-lo em um objeto 'simple features' usando o biblioteca _sf_ e a função _st\_as\_sf_ para criar um objeto tipo "simple features". Lembre-se de instalar o pacote antes de carregá-lo.
+
+```{r}
+library(sf)
+emef <- emef %>% st_as_sf(coords=c("lon","lat"), crs=4326)
+```
+
+Vamos construir um primeiro mapa, usando a função que conhecemos -- ggplot -- a partir das informações de latitude e longitude das escolas:
+
+```{r}
+emef %>% ggplot() +
+  geom_sf()
+```
+
+Veja que podemos "imaginar" o formato da cidade de São Paulo com os pontos, mas o mapa não é propriamente um mapa. Falta uma "camada" básica, sobre a qual os pontos serão desenhados.
+
+Vamos utilizar o pacote _ggmap_, que é um pacote para visualização de dados espaciais com o pacote _ggplot2_ para obter tal "camada". Com a função _get\_map_, faremos o download de um mapa que servirá de base para os pontos das EMEFs.
+
+Por padrão, utilizaríamos a função _get\_map_, que retorna um mapa de "terreno" e utiliza a API da Google, com zoom e escala automáticos. No entanto, a Google trocou os termos de uso da API e agora é necessário ter uma conta, informar o número do cartão de crédito e fazer autenticação via R. Por esta razão, vamos utilizamos a API 'stamen', que utiliza a função _get\_stamenmap_ em vez de _get\_map_
+
+```{r}
+library(ggmap)
+bbox_sp <- c(left = -46.869803,
+             bottom = -23.774462,
+             right = -46.4417181,
+             top = -23.3921176)
+```
+
+Com as coordenadas da cidade, vamos obter um mapa de São Paulo:
+
+```{r}
+map_sp <- map_sp <- get_stamenmap(bbox_sp, zoom = 12, maptype = "toner")
+plot(map_sp)
+```
+
+Antes de alterar estes argumentos, vamos utilizar uma função "irmã" à _ggplot_, _ggmap_, para juntar o mapa de São Paulo com os pontos das escolas:
+
+```{r}
+ggmap(map_sp) +
+  geom_sf(data = emef, inherit.aes=F)
+```
+
+Feio ainda, porém bastante mais informativo. Veja que combinamos duas fontes de dados: o cadastro da PMSP e um mapa obtido na API da Stamen.
+
+Agora, vamos usar uma informação sobre as escolas para diferenciar os pontos. Os dados do cadastro não trazem informações muito interessantes sobre a escola e por isso utilizaremos o ano de criação. Em nosso desafio seguinte trabalharemos com informações sobre a escola que vêm de outra base do mesmo portal da prefeitura.
+
+Introduziremos em nosso mapa uma escala de cores para diferenciar as EMEFs por ano de criação:
+
+```{r}
+ggmap(map_sp) +
+  geom_sf(data = emef, inherit.aes=F, aes(color=ano))
+```
+
+Como era de se esperar, os pontos mais claros na cidade estão nos extremos e as EMEFs mais antigas, e geral, nos bairros que consolidaram mais cedo no processo de urbanização.
+
