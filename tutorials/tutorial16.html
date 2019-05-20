@@ -383,25 +383,26 @@ $(document).ready(function () {
 <p>Como sabemos que o seu código não contém um erro? Como podemos provar que não manipulamos a análise de um paper? Como contribuimos para um projeto comparthilado? A reprodutibilidade de nossos scripts (e os outputs que eles geram) é central para programação e pesquisa. Nesse tutorial, vamos explorar várias ferramentas para apoiar a reprodutibilidade.</p>
 <ol style="list-style-type: decimal">
 <li><strong>Projetos em R</strong> - pastas para organizar os nossos inputs, scripts e outputs</li>
-<li><strong>R Markdown</strong> - um outro outro tipo de script que transforma seu código de R em documentos finais (PDF, Word, HTML)</li>
+<li><strong>R Markdown</strong> - um outro tipo de script que transforma seu código de R em documentos finais (PDF, Word, HTML)</li>
 </ol>
 </div>
 <div id="projetos-em-r" class="section level1">
 <h1>Projetos em R</h1>
 <p>Até agora, trabalhamos com arquivos de R individuais. Uma desvantagem disso é que temos que especificar referências longas para os arquivos de inputs e outputs. Isso é chato, porque é fácil cometer um erro e fácil perder seus arquivos. Além disso, quando você manda seu código para outra pessoa, ele não é reproduzível porque a estrutura de pasta deles será diferente da sua.</p>
-<p>Projetos em R ajuda resolver este problema. Um projeto em R é simplesmente uma pasta contendo vários arquivos: um arquivo genérico de “.Rproj” que o Rstudio abre, todos os nossos scripts, os nossos arquivos de input, e os nossos outputs. Crucialmente, quando quisemos abrir um “.csv” dentro dessa pasta, não precisamos especificar a referência completa do arquivo, apenas o nome do arquivo. Em termos técnicos, o diretório de trabalho é automaticamente a pasta do projeto atual. Por exemplo podemos substituir:</p>
+<p>Projetos em R ajuda resolver este problema. Um projeto em R é simplesmente uma pasta contendo vários arquivos: um arquivo genérico de “.Rproj” que o Rstudio abre, todos os nossos scripts, os nossos arquivos de input, e os nossos outputs. Crucialmente, quando quisemos abrir um “.csv” dentro dessa pasta, não precisamos especificar a referência completa (endereço ‘absoluto’) do arquivo, apenas o nome do arquivo (endereço ‘relativo’). Em termos técnicos, o diretório de trabalho é automaticamente a pasta do projeto atual. Por exemplo podemos substituir:</p>
 <pre class="r"><code>pasta &lt;- &quot;C:\\User\\Name\\Projects\\New\\Political Science\\2018\\Examples\\&quot;
-path_file1 &lt;- file.path(pasta, &quot;file1.txt&quot;)
-dados &lt;- read.table(file1, header = T, sep = &quot;,&quot;)</code></pre>
+path_file1 &lt;- file.path(pasta, &quot;file1.csv&quot;)
+dados &lt;- read_csv(path_file1)</code></pre>
 <p>por:</p>
-<pre class="r"><code>dados &lt;- read.table(&quot;file1.txt&quot;, header = T, sep = &quot;,&quot;)</code></pre>
-<p>A outra vantagem de trabalhar em projetos é que eles facilitam o uso do controle de versão de Git dentro do Rstudio (vamos discutir mais na aula).</p>
-<p>Para abrir um projeto, simplesmente escolhe File -&gt; New Project -&gt; New Directory -&gt; New Project e digite o nome desejado da pasta do projeto. Dado que um projeto é apenas uma pasta, em seguida precisamos abrir um script novo e salvá-lo na mesma pasta.</p>
+<pre class="r"><code>dados &lt;- read_csv(&quot;file1.csv&quot;)</code></pre>
+<p>A outra vantagem de trabalhar em projetos é que eles facilitam o uso do controle de versão de Git dentro do Rstudio (vamos discutir isso na próxima aula).</p>
+<p>Para abrir um projeto, simplesmente escolhe File -&gt; New Project -&gt; New Directory -&gt; New Project e digite o nome desejado da pasta do projeto. Dado que um projeto é apenas uma pasta, em seguida precisamos abrir um script novo e salvá-lo na mesma pasta. Note que no canto superior direito do RStudio, tem um menu de opções com o seu projeto aberto.</p>
 </div>
 <div id="produzindo-outputs-profissionais-com-o-r-markdown" class="section level1">
 <h1>Produzindo ‘outputs’ profissionais com o R Markdown</h1>
 <p>Agora, sabemos como a executar um análise de dados na linguagem de R. Mas o nosso objetivo geralmente não é apenas executar algum código, mas produzir uma tabela, um gráfico, um relatório, um documento ou um site. Como podemos comunicar o nosso análise numa forma profissional, documentada e reproduzivel? Vamos usar o R Markdown: um tipo de arquivo compatível com o RStudio e uma linguagem bem fácil e flexível para formatar documentos.</p>
-<p>Um script em R tem a extensão de arquivo “.R”; um arquivo de R Markdown tem uma extensão de arquivo “.Rmd”. Com o mesmo arquivo “.Rmd” podemos criar três tipos de documentos sem mudar nada: um PDF, um Documento de Word e um site de HTML. Então podemos compartilhar os nossos resultados com tudo mundo, evitando a duplicação de códigos e arquivos. Só uma dica: Todos podem criar outputs em HTML e Word. Para criar PDFs precisa instalar <a href="http://linorg.usp.br/CTAN/systems/win32/miktex/setup/windows-x64/setup-2.9.6637-x64.exe">LATEX for Windows Complete</a>.</p>
+<p>Um script em R tem a extensão de arquivo “.R”; um arquivo de R Markdown tem uma extensão de arquivo “.Rmd”. Com o mesmo arquivo “.Rmd” podemos criar três tipos de documentos sem mudar nada: um PDF, um Documento de Word e um site de HTML. Então podemos compartilhar os nossos resultados com tudo mundo em formatos diversos, evitando a duplicação de códigos e arquivos.</p>
+<p>Só uma dica: Todos podem criar outputs em HTML e Word. Para criar PDFs precisa instalar <a href="https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/setup-2.9.6942-x64.exe">LATEX for Windows Complete</a>.</p>
 <p>Na verdade, este tutorial não foi feito por mágica, mas por R Markdown!</p>
 </div>
 <div id="abrindo-um-arquivo-de-r-markdown" class="section level1">
@@ -435,12 +436,12 @@ dados &lt;- read.table(file1, header = T, sep = &quot;,&quot;)</code></pre>
 <td>Tabelas criados com código de R</td>
 </tr>
 <tr class="odd">
-<td>’</td>
 <td>Gráficos criados com código de R</td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<p>Para inserir um chunk, clique: Insert -&gt; R (ou toque Ctrl+Alt+I). Aparece uma caixa cinza onde podemos colocar o nosso código:</p>
+<p>Para inserir um chunk, clique: Insert -&gt; R. Aparece uma caixa cinza onde podemos colocar o nosso código:</p>
 <pre><code>
 ```r
 x &lt;- 1 + 1
@@ -449,7 +450,7 @@ x &lt;- 1 + 1
 </div>
 <div id="produzindo-um-documento-final" class="section level1">
 <h1>Produzindo um documento final</h1>
-<p>Para transformar o nosso script “.Rmd” para um PDF, clique no botão “Knit”. Feito. O documento o documento é salvo na pasta de trabalho (do projeto atual). Para criar um outro formato de documento, clique a flecha ao lado de “Knit” e eschole o formato preferido.</p>
+<p>Para transformar o nosso script “.Rmd” para um PDF, clique no botão “Knit”. Feito. O documento é salvo na pasta de trabalho (do projeto atual). Para criar um outro formato de documento, clique a flecha ao lado de “Knit” e eschole o formato preferido.</p>
 <p>O RStudio abre uma nova janela “R Markdown” que mostra o progresso e descreve os erros.</p>
 </div>
 <div id="formatacao-de-texto-basico" class="section level1">
@@ -467,7 +468,7 @@ x &lt;- 1 + 1
 <div id="sub-sub-header" class="section level3">
 <h3>Sub-Sub-Header</h3>
 <p><code>### Sub-Sub-Header</code></p>
-<p><a href="www.google.com">link</a> - <code>[link](www.google.com)</code></p>
+<p><a href="www.google.com">link</a> - <code>[link](http://www.google.com)</code></p>
 <ul>
 <li>Bullets
 <ul>
@@ -490,10 +491,10 @@ x &lt;- 1 + 1
 </div>
 <div id="equacoes" class="section level1">
 <h1>Equações</h1>
-<p>Podemos escrever equações com a linguagem de Latex. Dentro de uma frase, use <code>$ equation $</code>, e para centralizar numa nova linha use <code>$$ big equation $$</code>. A sintaxe é assim:</p>
+<p>Podemos escrever equações com a linguagem de Latex (que vamos aprender a semana que vem). Dentro de uma frase, use <code>$ equation $</code>, e para centralizar numa nova linha use <code>$$ big equation $$</code>. A sintaxe é assim:</p>
 <p><code>$$\alpha^2 + \beta^2 = \chi^2$$</code> <span class="math display">\[\alpha^2 + \beta^2 = \chi^2\]</span><br />
 <code>$$\frac{\sqrt{1}}{2} * \frac{a}{2b} = \frac{a}{4b}$$</code> <span class="math display">\[\frac{\sqrt{1}}{2} * \frac{a}{2b} = \frac{a}{4b}\]</span> <code>$$\sum_0^{10} x = ...$$</code> <span class="math display">\[\sum_0^{10} x = ...\]</span></p>
-<p>Mais detalhes <a href="https://reu.dimacs.rutgers.edu/Symbols.pdf">aqui</a>.</p>
+<p>Mais detalhes <a href="https://www.caam.rice.edu/~heinken/latex/symbols.pdf">aqui</a>.</p>
 </div>
 <div id="exercicio" class="section level1">
 <h1>Exercício</h1>
@@ -507,17 +508,17 @@ x &lt;- 1 + 1
 raio &lt;- 20
 area &lt;- pi * raio^2
 ```</code></pre>
-<p>Como incluimos o resultado numérico <code>area</code> dentro de uma frase em nosso texto? Podemos usar “in-line code” para exibir um valor simples no documento final. O formato é assim:</p>
+<p>Como incluimos o resultado numérico <code>area</code> dentro de uma frase em nosso texto (for do chunk do código)? Podemos usar “in-line code” para exibir um valor simples no documento final. O formato é assim, usando o acento grave:</p>
 <p>A área de um círculo de raio 20 é <code>`r area`</code>.</p>
 <p>A área de um círculo de raio 20 é 1256.6370614.</p>
 </div>
 <div id="exercicio-1" class="section level1">
 <h1>Exercício</h1>
-<p>O volume de uma esfera é <span class="math inline">\(A=\frac{4}{3} \pi r^3\)</span>. Use um chunk para calcular a área de uma esfera de raio 7 e relate o resultado numérico dentro (‘in-line’) de uma frase explicativa. Crie um documento PDF (ou HTML se não tem Latex).</p>
+<p>O volume de uma esfera é <span class="math inline">\(A=\frac{4}{3} \pi r^3\)</span>. Use um chunk para calcular a área de uma esfera de raio 7 e relate o resultado numérico dentro (‘in-line’) de uma frase explicativa. Crie um documento PDF (ou HTML se não tem Latex instalado).</p>
 </div>
 <div id="tabelas" class="section level1">
 <h1>Tabelas</h1>
-<p>Qual é a diferença entre uma tabela num documento, e um data.frame (/tibble) em R? Por nós, nada exceto formatação! Então podemos facilmente transformar nossos data.frames em tabelas para exibir para os leitores. Podemos criar um data.frame usando as nossas ferramentas existentes dentro de um chunk. Depois, temos várias funções que nos ajudam a formatar essas tabelas. Para tabelas simples, podemos usar a função <code>kable()</code> (e para tabelas de regressão podemos usar <code>stargazer()</code>). Note que não fazemos nada fora de chunk - o R Markdown exibe o código <strong>e</strong> o resultado da execução do código assim que não atribuamos / salve o resultado.</p>
+<p>Qual é a diferença entre uma tabela num documento, e um data.frame (/tibble) em R? Por nós, nada exceto formatação! Então podemos facilmente transformar nossos data.frames em tabelas para exibir para os leitores. Podemos criar um data.frame usando as nossas ferramentas existentes dentro de um chunk. Depois, temos várias funções que nos ajudam a formatar essas tabelas. Para tabelas simples, podemos usar a função <code>kable()</code> (e para tabelas de regressão podemos usar <code>stargazer()</code>). Note que não fazemos nada fora do chunk - o R Markdown exibe o código <strong>e</strong> o resultado da execução do código assim que não atribuamos / salve o resultado.</p>
 <p>Vamos abrir um banco de dados simples, manipular a estrutura, e mandar para <code>kable()</code> para criar uma tabela.</p>
 <pre class="r"><code>library(tidyverse)
 library(knitr)
@@ -535,7 +536,7 @@ dados %&gt;% group_by(uf) %&gt;%
 </div>
 <div id="graficos" class="section level1">
 <h1>Gráficos</h1>
-<p>Os gráficos seguem a mesma lógica que usamos para tabelas. Criamos o nosso gráfico e manda para um <code>plot</code>/<code>ggplot</code> (que vamos explorar mais a semana que vem).</p>
+<p>Os gráficos seguem a mesma lógica que usamos para tabelas. Criamos o nosso gráfico e manda para um <code>plot</code>/<code>ggplot</code>.</p>
 <pre class="r"><code>dados %&gt;% group_by(uf) %&gt;%
   summarize(valor_total=sum(valor)) %&gt;%
   ggplot() +
@@ -543,7 +544,7 @@ dados %&gt;% group_by(uf) %&gt;%
 </div>
 <div id="exercicio-2" class="section level1">
 <h1>Exercício</h1>
-<p>Usando o link acima para os dados de Bolsa família, criar uma tabela dos cinco maiores valores recebidos, formate-lo com um título, nomes de colunas e o número apropriado de dígitos, e ‘knit’ para um PDF (ou HTML se não tem Latex).</p>
+<p>Usando o link acima para os dados de Bolsa família, criar uma tabela dos cinco maiores valores recebidos, formate-lo com um título, nomes de colunas e o número apropriado de dígitos, e ‘Knit’.</p>
 </div>
 <div id="parametros-de-chunks" class="section level1">
 <h1>Parâmetros de Chunks</h1>

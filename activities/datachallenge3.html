@@ -407,6 +407,7 @@ $(document).ready(function () {
 </ul>
 <p>Quem tiver dificuldades com a obtenção/abertura de algumas das bases de dados, pode utilizar as cópias armazenadas no repositório do curso: <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/Base_MUNIC_2015_xls.zip">MUNIC15</a>, <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/obitos_datasus.csv">DATASUS</a> e <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/receitas_orc_finbra.zip">FINBRA</a></p>
 <p>Lembre-se que as bases devem ser combinadas utilizando o código de município. Algumas fontes podem conter códigos com 6 ou 7 dígitos e você deve ignorar o 7o dígito se isso ocorrer. Para tranformar um código de 7 dígitos em um de 6 dígitos faça:</p>
+<pre class="r"><code>cod_ibge6 &lt;- as.numeric(substr(cod_ibge7, 1, 6))</code></pre>
 <p>Escolha as variáveis de seu interesse em cada fonte e mantenha apenas estas no data frame.</p>
 <p>Sugestão: use <em>inner_join</em> para fazer as combinações de bases para ficar apenas com os casos completos em todas as variáveis de seu interesse. Não esqueça, porém, de notar que alguns casos serão perdidos.</p>
 </div>

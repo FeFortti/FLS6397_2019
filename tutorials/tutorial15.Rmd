@@ -20,7 +20,7 @@ library(dplyr)
 library(RMySQL)
 ```
 
-O primeiro passo importante para trabalhar com dados em um servidor MySQL é fazer a conexão com uma base de dados. Vamos supor que temos um banco de dados (que, para o MySQL, significa um conjunto de tabelas, e não apenas uma tabela) chamado "PBF" em um servidor local, ou seja, no próprio computador, e que dentro desse banco de dados existe a tabela "transferencias201701". O usuário e senha fictícias são, respectivamente, "root" e "pass". Usamos, então, a função _src\_mysql_ para criar um objeto de "conexão", que chamaremos de "bd_mysql". Obviamente, o código abaixo não funcionará no seu computador, pois tal servidor não existe.
+O primeiro passo importante para trabalhar com dados em um servidor MySQL é fazer a conexão com uma base de dados. Vamos supor que temos um banco de dados (que, para o MySQL, significa um conjunto de tabelas, e não apenas uma tabela) chamado "PBF" em um servidor local, ou seja, no próprio computador, e que dentro desse banco de dados existe a tabela "pagamentos201701". O usuário e senha fictícias são, respectivamente, "root" e "pass". Usamos, então, a função _src\_mysql_ para criar um objeto de "conexão". Obviamente, o código abaixo não funcionará no seu computador, pois tal servidor não existe.
 
 ```{r}
 conexao <- src_mysql(dbname = "PBF", 
@@ -28,7 +28,7 @@ conexao <- src_mysql(dbname = "PBF",
                    password = "pass")
 ```
 
-A seguir, criamos um objeto "tabela", que mantém a conexão direto com a tabela "transferencias201701" que está no banco de dados "PBF".
+A seguir, criamos um objeto "tabela", que mantém a conexão direto com a tabela "pagamentos201701" que está no banco de dados "PBF".
 
 ```{r}
 tabela <- tbl(conexao, "pagamentos201701")
