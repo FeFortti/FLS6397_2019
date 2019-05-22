@@ -45,11 +45,11 @@ Acessaremos servidor remoto de MySQL que contém um banco de dados denominada "m
 Comecemos estabelecendo a conexão com o servidor e o banco de dados, tal como fizemos anteriormente. A diferença, agora, é que estamos lidando com um servidor remoto e por isso precisamos informar seu "endereço". Fazemos isso preenchendo os argumentos "host" e "port", cujos valores foram fornecidos pelos criadores do servidor, além, obviamente, do nome do banco de dados, usuário e senha ("leobarone" e "usp3697560", respectivamente). Para esta atividade, utilizei o serviço de hospedagem gratuito "db4free.net".
 
 ```{r}
-conexao <- src_mysql(dbname = "mysql_leobarone", 
-                   host = "db4free.net", 
-                   port = 3306, 
-                   user = "leobarone",
-                   password = "usp3697560")
+conexao <- src_mysql(dbname = "fake_data", 
+                     host = "db4free.net", 
+                     port = 3306, 
+                     user = "jonnyphillips",
+                     password = "usp_test")
 ```
 
 Para ver todas as tabelas disponíveis na base de dados com a qual fizemos a conexão usamos:
@@ -58,10 +58,10 @@ Para ver todas as tabelas disponíveis na base de dados com a qual fizemos a con
 src_tbls(conexao)
 ```
 
-Uma vez conectados com o servidor, fazemos a conexão direta com a tabela "fake_data", que é a que nos interessa (pode haver inúmeras tabelas em uma base de dados). Vamos chamar o objeto criado de "fake". Será este objeto que manipularemos com a gramática que aprendemos anteriormente. 
+Uma vez conectados com o servidor, fazemos a conexão direta com a tabela "TABLE 1", que é a que nos interessa (pode haver inúmeras tabelas em uma base de dados). Vamos chamar o objeto criado de "fake". Será este objeto que manipularemos com a gramática que aprendemos anteriormente. 
 
 ```{r}
-fake <- tbl(conexao, "fake_data")
+fake <- tbl(conexao, "TABLE 1")
 ```
 
 Você pode examinar o conteúdo de voos com as funções que já conhecemos, como _head_. (Pela natureza do SQL, ele não nos retorna o número de observações, somente a de variáveis - mas isso é normal e você não precisa se preocupar com isso). 
@@ -171,14 +171,14 @@ users <- tbl(conexao, "users")
 Repetindo a _query_ acima, em que selecionamos na tabela _comments_ apenas as linhas com _user\_id_ > 4:
 
 ```{r}
-filter(comments, user_id > 4)
+comments %>% filter(user_id > 4)
 ```
 
 A partir de agora, as funções de manipulação de dados do _dplyr_ são aplicáveis aos novos objetos criados para representar as tabelas que estão no servidor. Por exemplo, vamos renomear a variável "id" em tweats para "tweat_id" e fazer um _left join_ entre _comments_ e _tweats_ por "tweat_id":
 
 ```{r}
-tweats2 <- rename(tweats, tweat_id = id)
-tabela_join <- left_join(tweats2, comments, "tweat_id")
+tweats2 <- tweats %>% rename(tweat_id = id)
+tabela_join <- tweats2 %>% left_join(comments, "tweat_id")
 head(tabela_join)
 ```
 
@@ -190,24 +190,25 @@ Novamente, podemos traduzir a query de R para SQL:
 show_query(tabela_join)
 ```
 
-As funções da gramática do _dplyr_ -- _filter_, _select_, _rename_, _mutate_, _group\_by_, _summarize_, _left\_join_, _right\_join_, _inner\_join_, _full\_join_ e etc -- funcionam normalmente à tabelas remotas e facilitam demais a manipulação. Um exemplo tolo, porém completo, usando o operador %>% ( _pipe_, que permite omitir o primeiro argumento de cada função e nos poupa de repetir o nome da tabela diversas vezes) para ilustrar a aplicação de diversas funções do _dplyr_ ao mesmo tempo:
+As funções da gramática do _dplyr_ -- _filter_, _select_, _rename_, _mutate_, _group\_by_, _summarize_, _left\_join_, _right\_join_, _inner\_join_, _full\_join_ e etc -- funcionam normalmente à tabelas remotas e facilitam demais a manipulação. Um exemplo tolo, porém completo, para ilustrar a aplicação de diversas funções do _dplyr_ ao mesmo tempo:
 
 ```{r}
-tweats <- tweats %>% 
+library(stringr)
+
+tweats3 <- tweats %>% 
   rename(tweat_id = id) %>%              # renomeia variavel
   mutate(post = toupper(post)) %>%       # post em letras maiusculas
   left_join(comments, "tweat_id") %>%    # left join con tabela "comments"
   select(tweat_id, post, message) %>%    # mantem apenas 3 variaveis
-  filter(substr(message, 
-                nchar(message), 
-                nchar(message)) == "!")  # filtra por comentarios que terminam em !
-head(tweats, 7)
+  filter(str_detect(message,"!"))  # filtra por comentarios que terminam em !
+
+tweats3
 ```
 
 Uma maneira simples de trazer à memória de seu computador a tabela gerada a partir da query, com _as.data.frame_ importamos a tabela como _data frame_:
 
 ```{r}
-tabela <- as.data.frame(tweats)
+tabela <- as.data.frame(tweats3)
 ```
 
 Note que "tabela", diferentemente de "tweats", é um _data frame_ no seu _workspace_.

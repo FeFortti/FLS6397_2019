@@ -385,11 +385,11 @@ $(document).ready(function () {
 <p>Antes de prosseguir, faça a instalação do pacote <em>RMySQL</em>. Carregue tal pacote e o <em>dplyr</em> antes de começar.</p>
 <pre class="r"><code>library(dplyr)
 library(RMySQL)</code></pre>
-<p>O primeiro passo importante para trabalhar com dados em um servidor MySQL é fazer a conexão com uma base de dados. Vamos supor que temos um banco de dados (que, para o MySQL, significa um conjunto de tabelas, e não apenas uma tabela) chamado “PBF” em um servidor local, ou seja, no próprio computador, e que dentro desse banco de dados existe a tabela “transferencias201701”. O usuário e senha fictícias são, respectivamente, “root” e “pass”. Usamos, então, a função <em>src_mysql</em> para criar um objeto de “conexão”, que chamaremos de “bd_mysql”. Obviamente, o código abaixo não funcionará no seu computador, pois tal servidor não existe.</p>
+<p>O primeiro passo importante para trabalhar com dados em um servidor MySQL é fazer a conexão com uma base de dados. Vamos supor que temos um banco de dados (que, para o MySQL, significa um conjunto de tabelas, e não apenas uma tabela) chamado “PBF” em um servidor local, ou seja, no próprio computador, e que dentro desse banco de dados existe a tabela “pagamentos201701”. O usuário e senha fictícias são, respectivamente, “root” e “pass”. Usamos, então, a função <em>src_mysql</em> para criar um objeto de “conexão”. Obviamente, o código abaixo não funcionará no seu computador, pois tal servidor não existe.</p>
 <pre class="r"><code>conexao &lt;- src_mysql(dbname = &quot;PBF&quot;, 
                    user = &quot;root&quot;,
                    password = &quot;pass&quot;)</code></pre>
-<p>A seguir, criamos um objeto “tabela”, que mantém a conexão direto com a tabela “transferencias201701” que está no banco de dados “PBF”.</p>
+<p>A seguir, criamos um objeto “tabela”, que mantém a conexão direto com a tabela “pagamentos201701” que está no banco de dados “PBF”.</p>
 <pre class="r"><code>tabela &lt;- tbl(conexao, &quot;pagamentos201701&quot;)</code></pre>
 <p>Simples, não? A partir deste ponto, basta trabalhar com objeto “tabela” da mesma maneira que trabalhamos <em>data frames</em> até agora. A diferença é que o objeto “tabela” não contém dados, mas representa a conexão a uma tabela em um servidor que contém os dados. A gramática oferecida pelo pacote <em>dplyr</em> funciona normalmente e, quando quisermos, podemos exportar os dados com os métodos acima.</p>
 <div id="fake-data" class="section level2">
@@ -397,15 +397,15 @@ library(RMySQL)</code></pre>
 <p>Vamos ao exemplo simples com o data frame “fake data”. Os códigos abaixo funcionarão normalmente no seu computador.</p>
 <p>Acessaremos servidor remoto de MySQL que contém um banco de dados denominada “mysql_leobarone”. Esta, por sua vez, contém uma tabela também chamada “fake_data” com informações sobre eleitores fictícios em “Fakeland”.</p>
 <p>Comecemos estabelecendo a conexão com o servidor e o banco de dados, tal como fizemos anteriormente. A diferença, agora, é que estamos lidando com um servidor remoto e por isso precisamos informar seu “endereço”. Fazemos isso preenchendo os argumentos “host” e “port”, cujos valores foram fornecidos pelos criadores do servidor, além, obviamente, do nome do banco de dados, usuário e senha (“leobarone” e “usp3697560”, respectivamente). Para esta atividade, utilizei o serviço de hospedagem gratuito “db4free.net”.</p>
-<pre class="r"><code>conexao &lt;- src_mysql(dbname = &quot;mysql_leobarone&quot;, 
-                   host = &quot;db4free.net&quot;, 
-                   port = 3306, 
-                   user = &quot;leobarone&quot;,
-                   password = &quot;usp3697560&quot;)</code></pre>
+<pre class="r"><code>conexao &lt;- src_mysql(dbname = &quot;fake_data&quot;, 
+                     host = &quot;db4free.net&quot;, 
+                     port = 3306, 
+                     user = &quot;jonnyphillips&quot;,
+                     password = &quot;usp_test&quot;)</code></pre>
 <p>Para ver todas as tabelas disponíveis na base de dados com a qual fizemos a conexão usamos:</p>
 <pre class="r"><code>src_tbls(conexao)</code></pre>
-<p>Uma vez conectados com o servidor, fazemos a conexão direta com a tabela “fake_data”, que é a que nos interessa (pode haver inúmeras tabelas em uma base de dados). Vamos chamar o objeto criado de “fake”. Será este objeto que manipularemos com a gramática que aprendemos anteriormente.</p>
-<pre class="r"><code>fake &lt;- tbl(conexao, &quot;fake_data&quot;)</code></pre>
+<p>Uma vez conectados com o servidor, fazemos a conexão direta com a tabela “TABLE 1”, que é a que nos interessa (pode haver inúmeras tabelas em uma base de dados). Vamos chamar o objeto criado de “fake”. Será este objeto que manipularemos com a gramática que aprendemos anteriormente.</p>
+<pre class="r"><code>fake &lt;- tbl(conexao, &quot;TABLE 1&quot;)</code></pre>
 <p>Você pode examinar o conteúdo de voos com as funções que já conhecemos, como <em>head</em>. (Pela natureza do SQL, ele não nos retorna o número de observações, somente a de variáveis - mas isso é normal e você não precisa se preocupar com isso).</p>
 <p>Em nosso exercício vamos repetir, utilizando a gramática do <em>dplyr</em>, algumas tarefas que fizemos no tutorial 5 da aula 3 (sem usarmos <em>dplyr</em> ainda) e ver como podemos aplicar os principais verbos do dessa gramática a tabelas em um servidor MySQL.</p>
 <p>Por exemplo, se quisermos criar subconjunto dos dados apenas com eleitores independentes, renomeando e selecionando algumas variáveis, e criando uma variável que é a divisão da poupança pela renda.</p>
@@ -462,26 +462,27 @@ library(RMySQL)</code></pre>
 tweats &lt;- tbl(conexao, &quot;tweats&quot;)
 users &lt;- tbl(conexao, &quot;users&quot;)</code></pre>
 <p>Repetindo a <em>query</em> acima, em que selecionamos na tabela <em>comments</em> apenas as linhas com <em>user_id</em> &gt; 4:</p>
-<pre class="r"><code>filter(comments, user_id &gt; 4)</code></pre>
+<pre class="r"><code>comments %&gt;% filter(user_id &gt; 4)</code></pre>
 <p>A partir de agora, as funções de manipulação de dados do <em>dplyr</em> são aplicáveis aos novos objetos criados para representar as tabelas que estão no servidor. Por exemplo, vamos renomear a variável “id” em tweats para “tweat_id” e fazer um <em>left join</em> entre <em>comments</em> e <em>tweats</em> por “tweat_id”:</p>
-<pre class="r"><code>tweats2 &lt;- rename(tweats, tweat_id = id)
-tabela_join &lt;- left_join(tweats2, comments, &quot;tweat_id&quot;)
+<pre class="r"><code>tweats2 &lt;- tweats %&gt;% rename(tweat_id = id)
+tabela_join &lt;- tweats2 %&gt;% left_join(comments, &quot;tweat_id&quot;)
 head(tabela_join)</code></pre>
 <p>Note que “tweats2” é uma tabela gerada no servidor de SQL e não está na memória RAM de nosso computador.</p>
 <p>Novamente, podemos traduzir a query de R para SQL:</p>
 <pre class="r"><code>show_query(tabela_join)</code></pre>
-<p>As funções da gramática do <em>dplyr</em> – <em>filter</em>, <em>select</em>, <em>rename</em>, <em>mutate</em>, <em>group_by</em>, <em>summarize</em>, <em>left_join</em>, <em>right_join</em>, <em>inner_join</em>, <em>full_join</em> e etc – funcionam normalmente à tabelas remotas e facilitam demais a manipulação. Um exemplo tolo, porém completo, usando o operador %&gt;% ( <em>pipe</em>, que permite omitir o primeiro argumento de cada função e nos poupa de repetir o nome da tabela diversas vezes) para ilustrar a aplicação de diversas funções do <em>dplyr</em> ao mesmo tempo:</p>
-<pre class="r"><code>tweats &lt;- tweats %&gt;% 
+<p>As funções da gramática do <em>dplyr</em> – <em>filter</em>, <em>select</em>, <em>rename</em>, <em>mutate</em>, <em>group_by</em>, <em>summarize</em>, <em>left_join</em>, <em>right_join</em>, <em>inner_join</em>, <em>full_join</em> e etc – funcionam normalmente à tabelas remotas e facilitam demais a manipulação. Um exemplo tolo, porém completo, para ilustrar a aplicação de diversas funções do <em>dplyr</em> ao mesmo tempo:</p>
+<pre class="r"><code>library(stringr)
+
+tweats3 &lt;- tweats %&gt;% 
   rename(tweat_id = id) %&gt;%              # renomeia variavel
   mutate(post = toupper(post)) %&gt;%       # post em letras maiusculas
   left_join(comments, &quot;tweat_id&quot;) %&gt;%    # left join con tabela &quot;comments&quot;
   select(tweat_id, post, message) %&gt;%    # mantem apenas 3 variaveis
-  filter(substr(message, 
-                nchar(message), 
-                nchar(message)) == &quot;!&quot;)  # filtra por comentarios que terminam em !
-head(tweats, 7)</code></pre>
+  filter(str_detect(message,&quot;!&quot;))  # filtra por comentarios que terminam em !
+
+tweats3</code></pre>
 <p>Uma maneira simples de trazer à memória de seu computador a tabela gerada a partir da query, com <em>as.data.frame</em> importamos a tabela como <em>data frame</em>:</p>
-<pre class="r"><code>tabela &lt;- as.data.frame(tweats)</code></pre>
+<pre class="r"><code>tabela &lt;- as.data.frame(tweats3)</code></pre>
 <p>Note que “tabela”, diferentemente de “tweats”, é um <em>data frame</em> no seu <em>workspace</em>.</p>
 </div>
 </div>
