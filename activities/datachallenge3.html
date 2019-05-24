@@ -405,7 +405,7 @@ $(document).ready(function () {
 <li><a href="http://www.cepesp.io/cepesp-data/">CEPESPData</a> (ou usando o pacote <em>cepespr</em>)</li>
 <li>Outra fonte de sua escolha, desde que devidamente indicada no documento.</li>
 </ul>
-<p>Quem tiver dificuldades com a obtenção/abertura de algumas das bases de dados, pode utilizar as cópias armazenadas no repositório do curso: <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/Base_MUNIC_2015_xls.zip">MUNIC15</a>, <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/obitos_datasus.csv">DATASUS</a> e <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/receitas_orc_finbra.zip">FINBRA</a></p>
+<p>Quem tiver dificuldades com a obtenção/abertura de algumas das bases de dados, pode utilizar as cópias armazenadas no repositório do curso: <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/Base_MUNIC_2015_xls.zip">MUNIC15</a>, <a href="https://raw.githubusercontent.com/JonnyPhillips/FLS6397_2019/master/data/data_sus.csv">DATASUS</a> e <a href="https://raw.githubusercontent.com/leobarone/FLS6397/master/data/receitas_orc_finbra.zip">FINBRA</a></p>
 <p>Lembre-se que as bases devem ser combinadas utilizando o código de município. Algumas fontes podem conter códigos com 6 ou 7 dígitos e você deve ignorar o 7o dígito se isso ocorrer. Para tranformar um código de 7 dígitos em um de 6 dígitos faça:</p>
 <pre class="r"><code>cod_ibge6 &lt;- as.numeric(substr(cod_ibge7, 1, 6))</code></pre>
 <p>Escolha as variáveis de seu interesse em cada fonte e mantenha apenas estas no data frame.</p>

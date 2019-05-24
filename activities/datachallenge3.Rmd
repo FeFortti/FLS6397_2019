@@ -35,7 +35,7 @@ Você deve construir esse data frame combinando pelo menos 3 das seguintes fonte
 - [CEPESPData](http://www.cepesp.io/cepesp-data/) (ou usando o pacote _cepespr_)
 - Outra fonte de sua escolha, desde que devidamente indicada no documento.
 
-Quem tiver dificuldades com a obtenção/abertura de algumas das bases de dados, pode utilizar as cópias armazenadas no repositório do curso: [MUNIC15](https://raw.githubusercontent.com/leobarone/FLS6397/master/data/Base_MUNIC_2015_xls.zip), [DATASUS](https://raw.githubusercontent.com/leobarone/FLS6397/master/data/obitos_datasus.csv) e [FINBRA](https://raw.githubusercontent.com/leobarone/FLS6397/master/data/receitas_orc_finbra.zip)
+Quem tiver dificuldades com a obtenção/abertura de algumas das bases de dados, pode utilizar as cópias armazenadas no repositório do curso: [MUNIC15](https://raw.githubusercontent.com/leobarone/FLS6397/master/data/Base_MUNIC_2015_xls.zip), [DATASUS](https://raw.githubusercontent.com/JonnyPhillips/FLS6397_2019/master/data/data_sus.csv) e [FINBRA](https://raw.githubusercontent.com/leobarone/FLS6397/master/data/receitas_orc_finbra.zip)
 
 Lembre-se que as bases devem ser combinadas utilizando o código de município. Algumas fontes podem conter códigos com 6 ou 7 dígitos e você deve ignorar o 7o dígito se isso ocorrer. Para tranformar um código de 7 dígitos em um de 6 dígitos faça:
 
