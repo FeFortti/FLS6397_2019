@@ -2,7 +2,7 @@
 
 ## Instruções para Entrega
 
-Data: 31/05
+Data: 04/06
 
 Formato: RScript (arquivo .R)
 
