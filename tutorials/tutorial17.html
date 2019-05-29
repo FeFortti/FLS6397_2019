@@ -380,47 +380,53 @@ $(document).ready(function () {
 
 <p>Nesse tutorial, vamos explorar duas ferramentas para apoiar a reprodutibilidade.</p>
 <ol style="list-style-type: decimal">
-<li><strong>Git e Github</strong></li>
+<li><strong>Git e Github</strong> - ferramentas para fazer backups, controle de versões e divulgação dos seus scripts</li>
 <li><strong>Checkpoint</strong> - um pacote de R que garante que as funções/bibliotecas que você usa estejam disponíveis para outras pessoas sem conflitos</li>
 </ol>
-<div id="git-github-e-rstudio" class="section level1">
-<h1>Git, Github e RStudio</h1>
+<div id="git-github-e-rstudio" class="section level2">
+<h2>Git, Github e RStudio</h2>
 <p>1- Comece criando uma conta no github: <a href="https://github.com/">https://github.com/</a>. Github é um serviço web-based de controle de versão, que utiliza o software de código aberto <em>git</em>.</p>
 <p>2- A seguir, instale git no seu computador. Para Windowns, use o url: <a href="https://git-scm.com/download/win">https://git-scm.com/download/win</a></p>
 <p>3- Opcionalmente, você pode instalar o Github Desktop em seu computador. Não utilizaremos em sala de aula, mas é uma ferramenta interessante: <a href="https://desktop.github.com/">https://desktop.github.com/</a></p>
-<div id="tarefa-1---fork-e-clone" class="section level2">
-<h2>Tarefa 1 - Fork e clone</h2>
-<p>4- Vá para sua conta no github e faça login. Famos “forkar” o repositório: <a href="https://github.com/leobarone/repositorio_clone">https://github.com/leobarone/repositorio_clone</a></p>
-<p>5- Clonar o repositório (alterar “SEULOGIN” para o seu nome de usuário no github):<a href="https://github.com/SEULOGIN/repositorio_clone" class="uri">https://github.com/SEULOGIN/repositorio_clone</a></p>
-<p>6- Criar um novo script que abra os dados e produza uma regressão e um gráfico, como no código abaixo:</p>
-<pre class="r"><code>dados &lt;- read.csv(&quot;~/repositorio_clone/dados.csv&quot;)
-lm(idade ~ sexo + reprovacoes, data = dados)
-plot(density(idade))</code></pre>
-<p>7- Salvar com nome de “analise.R”</p>
-<p>8- Produzir um arquivo “.Rmd” de sua autoria, comentando (muito brevemente) a regressão e o gráfico. Salvar como “analise.Rmd”</p>
-<p>9- Add, commit e push usando a interface do RStudio.</p>
 </div>
-<div id="tarefa-2---criando-um-novo-projeto" class="section level2">
-<h2>Tarefa 2 - Criando um novo projeto</h2>
-<p>10- Criar um repositório novo diretamente no github.</p>
-<p>11- Clonar.</p>
-<p>12- Editar o README.</p>
+<div id="trabalhando-com-git" class="section level2">
+<h2>Trabalhando com Git</h2>
+<p>4- Existem milhões de repositórios online, com o código de outras pessoas. Podemos copiar qualquer repositório e gerar uma cópia exata em nossa própria conta. Isso se chama um “fork” em git. Vá para sua conta no github e faça login. Vamos para o repositório: <a href="https://github.com/leobarone/repositorio_clone">https://github.com/leobarone/repositorio_clone</a> e clicar em “Fork”.</p>
+<p>5- O git nos permitem baixar um repositório que existe em nossa conta online para o nosso computador local. Isso se chama um “clone” em git. Vá para sua própria conta no github, abre o repositório que já ‘forcamos’ e clicar em “Clone or download” e copiar o link que aparece. Depois, abre RStudio e vamos ‘clonar’ este repositório: File -&gt; New Project -&gt; Version Control -&gt; Git e escolha o nome e a pasta onde o repositório será baixado no seu computador.</p>
+<ol start="6" style="list-style-type: decimal">
+<li>Na aba ‘files’ em RStudio agora aparece a lista de arquivos no repositório. Crie um novo script do R e salve na mesma pasta do repositório.</li>
+</ol>
+<p>7- Neste arquivo, coloca o código seguinte para abrir os dados e produza um gráfico. Salvar com nome de “teste.R”.</p>
+<pre class="r"><code>library(tidyverse)
+dados &lt;- read.csv(&quot;~/repositorio_clone/dados.csv&quot;)
+
+dados %&gt;% ggplot() + geom_density(aes(idade))</code></pre>
+<p>8- Vá para o repositório na sua conta no github - veja que o arquivo ‘teste.Rmd’ não está presente e só fica no seu computador local. Para sincronizar e ‘atualizar’ o repositório do github com as nossa mudanças locais, temos que fazer o seguinte:</p>
+<p>8a- “Add” todos os arquivos novos para o nosso fluxo de trabalho. Na aba ‘Git’ em RStudio, clicar o checkbox ao lado de cada arquivo que você quer atualizar. O ‘Status’ vai mudar para “A”. Cada vez que você ajuste um arquivo do repositório local, o arquivo vai aparecer na lista nesta aba do Git.</p>
+<p>8b- “Commit” um conjunto de arquivos que você mudou como uma contribuição integral. Clicar ‘Commit’ na aba de Git e vai abrir uma caixa que mostra todas as diferenças entre o nosso código local e o código no github online: aditivos em verde e remoções em vermalha. A única coisa que temos que fazer nessa caixa é adicionar um mensagen que descreve o conteúdo da mudança que será realizada com o novo código, e clicar em ‘Commit’.</p>
+<p>8c- “Push” os seus commits pendentes para o repositório online do github. Feche a caixa e deve ver que a aba de Git está vazia com a notícia de “Your branch is ahead of ‘origin/master’ by 1 commit”. Isso significa que ao seu novo script foi cadastrado no fluxo de trabalho do projeto, mas ainda não foi sincronizado online. Para sincronizar, finalmente clicaos ‘Push’ na aba ‘Git’ em RStudio (a seta verde).</p>
+<p>9- Agora vá para o repositório na sua conta no github, refresh a página, e confirme que o novo arquivo ‘teste.R’ aparece.</p>
+</div>
+<div id="exercicio---criando-um-novo-repositorioprojeto" class="section level2">
+<h2>Exercício - Criando um novo repositório/projeto</h2>
+<p>10- Criar um repositório novo diretamente no github (explore o site, na aba ‘repositories’). Lembre-se de clicar em ‘Initialize this repository with a README’.</p>
+<p>11- Clonar o seu repositório.</p>
+<p>12- Editar o README. Pode usar a língua de Rmarkdown que você já conhece.</p>
 <p>13- Adicionar 2 novos arquivos de sua escolha.</p>
-<p>14- Add, commit e push.</p>
+<p>14- Add, commit e push para sincronizar as mudanças locais com o repositório online.</p>
 </div>
+<div id="git-e-colaboracao" class="section level2">
+<h2>Git e Colaboração</h2>
+<p>O poder do Git e Github é bem mais óbvio quando colobarando com colegas e tudo mundo pode contribuir melhorias ao código. Mas isso também gera o potencial para conflitos entre mudanças. Para evitar isso, é sempre uma boa prática fazer um ‘pull’ (a seta azul na aba Git em RStudio) antes de começar mexendo nos documentos, e com certeza antes de fazer em push. Isso vai trazer todas as contribuições das suas colegas para o seu computador local.</p>
 </div>
 <div id="checkpoint" class="section level1">
 <h1>Checkpoint</h1>
 <p>O que vai acontecer se mandamos o nosso script ou arquivo de R Markdown para uma colega? Vai funciona? Será reprodutível? Freqüentemente não. Mesmo que eles tem exatamente os mesmos arquivos e usa a mesma versão de R e RStudio, não podemos garantir que eles terão acesso às mesmas funções que usamos para fazer nosso script. Lembre-se que tivemos que instalar cada um dos nossos pacotes (<code>install.packages()</code>) - se o receptor não tiver feito o mesmo ou tiver uma versão diferente de um pacote, nosso código vai quebrar.</p>
-<p>Para resolver isso, vamos usar o pacote <code>checkpoint</code> para garantir reprodutibilidade de pacotes. Num site online, o checkpoint salva cada dia todos os pacotes disponível em R (de CRAN). Nós só precisamos escolher uma data para o nosso código para que ele use o conjunto consistente de pacotes salvos nessa data sempre que o código seja executado. Como aproveitamos? Apenas coloque o seguinte código (com sua data preferida) no início do seu código:</p>
+<p>Para resolver isso, podemos usar o pacote <code>checkpoint</code> para garantir reprodutibilidade de pacotes. Num site online, o checkpoint salva cada dia todos os pacotes disponível em R (de CRAN). Nós só precisamos escolher uma data para o nosso código para que ele use o conjunto consistente de pacotes salvos nessa data sempre que o código seja executado. Como aproveitamos? Apenas coloque o seguinte código (com sua data preferida) no início do seu código:</p>
 <pre class="r"><code>install.packages(&quot;checkpoint&quot;)
 library(checkpoint)
 checkpoint(&quot;2018-04-19&quot;)</code></pre>
 <p>Desde que o checkpoint vai salvar uma copia dos pacotes localmente, funciona melhor dentro de um projeto de R.</p>
-</div>
-<div id="exercicio" class="section level1">
-<h1>Exercício</h1>
-<p>Vamos limpar e organizar o script com quem você está trabalhando para criar um documento PDF (ou HTML se não tem Latex instalado) profissional. Especifique parâmetros de cada chunk para tirar todos os mensagens, warnings e código bruto do documento final. O seu PDF deve conter apenas o seu texto explicativo, ‘in-line’ código, e tabelas/gráficos.</p>
 </div>
 
 
