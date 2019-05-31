@@ -72,7 +72,7 @@ Mais detalhes [aqui](https://www.caam.rice.edu/~heinken/latex/symbols.pdf).
 
 Para inserir acentos, temos duas opções. Primeira opção, abrir um pacote antes de begin{document} e digitar como normal:
 
-\usepackage[utf8]{inputenc}
+\\usepackage[utf8]{inputenc}
 
 Segunda opção é usar a formatação especifíca para cada acento, ex:
 
