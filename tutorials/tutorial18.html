@@ -411,8 +411,8 @@ $(document).ready(function () {
 \subsection{Subtitulo 1}<br />
 \subsubsection{Subsubtitulo 1}</p>
 <p>Títulos e Secões não numerados:<br />
-\section<em>{Titulo 1}<br />
-\subsection</em>{Subtitulo 1}<br />
+\section*{Titulo 1}<br />
+\subsection*{Subtitulo 1}<br />
 \subsubsection*{Subsubtitulo 1}</p>
 </div>
 <div id="equacoes-em-latex" class="section level2">
@@ -425,7 +425,7 @@ $(document).ready(function () {
 <div id="acentos-em-latex" class="section level2">
 <h2>Acentos em Latex</h2>
 <p>Para inserir acentos, temos duas opções. Primeira opção, abrir um pacote antes de begin{document} e digitar como normal:</p>
-<p>\usepackage[utf8]{inputenc}</p>
+<p>\usepackage[latin1]{inputenc}</p>
 <p>Segunda opção é usar a formatação especifíca para cada acento, ex:</p>
 <ul>
 <li>\’{e}</li>
@@ -438,7 +438,9 @@ $(document).ready(function () {
 <div id="pagina-inicial-do-documento" class="section level2">
 <h2>Página inicial do documento</h2>
 <p>O nosso típo de documento ‘article’ nos permitem especificar um título e vários outros característicos <em>antes</em> de \begin{document}.</p>
-
+<p>\title{Relatório}<br />
+\author{My Name}<br />
+\date{Maio 2019}</p>
 <p>Se compilar o seu PDF agora, não veja nenhuma diferença. Por que? Porque não tem nada diferente entre begin{document} e end{document}. Para estes característicos aparecem em nosso documento, precisamos inserir o seguinte depois de \begin{document}:</p>
 <p>\begin{document}</p>
 <p>\maketitle</p>
@@ -453,10 +455,14 @@ $(document).ready(function () {
 <p>Latex é muito útil para apresentações profissionais. Tem vários opções, mas o mais comum é o estilo ‘beamer’. Começa no início com:</p>
 <p>\documentclass{beamer}</p>
 <p>Para definir cada ‘slide’ de nossa apresentação, use o seguinte formato:</p>
-<p>\begin{frame} \frametitle{Título do Slide} Texto, conteúdo normal Mais texto \end{frame}</p>
+<p>\begin{frame}<br />
+\frametitle{Título do Slide}<br />
+Texto, conteúdo normal<br />
+Mais texto<br />
+\end{frame}</p>
 <p>Para incluir imagens de um arquivo local na mesma pasta do seu script <em>.Rnw</em> coloca:</p>
 <p>\usepackage{graphicx} - antes de begin{document}</p>
-<p>\includegraphics[width=]{image.png} - na página/slide onde o imagem deve aparecer</p>
+<p>\includegraphics[width=\linewidth]{image.png} - na página/slide onde o imagem deve aparecer</p>
 </div>
 <div id="exercicio-1" class="section level2">
 <h2>Exercício</h2>
@@ -473,6 +479,7 @@ x &lt;- 1+1
 ```r
 x &lt;- 1 + 1
 ```</code></pre>
+<p>Podemos também inserir os resultados do nosso chunk dentro do parágrafo usando \Sexpr{x}</p>
 <p>Como em Rmarkdown, podemos especificar parâmetros dos chunks entre &lt;&lt;&gt;&gt;.</p>
 <p>&lt;&lt;echo=F, eval=T, warning=F, message=F&gt;&gt;</p>
 <div id="tabelas-em-knitr" class="section level3">

@@ -54,9 +54,9 @@ Títulos e Secões numerados:
 \\subsubsection{Subsubtitulo 1}
 
 Títulos e Secões não numerados:  
-\\section*{Titulo 1}  
-\\subsection*{Subtitulo 1}  
-\\subsubsection*{Subsubtitulo 1}
+\\section\*{Titulo 1}  
+\\subsection\*{Subtitulo 1}  
+\\subsubsection\*{Subsubtitulo 1}
 
 ## Equações em Latex
 
@@ -72,7 +72,7 @@ Mais detalhes [aqui](https://www.caam.rice.edu/~heinken/latex/symbols.pdf).
 
 Para inserir acentos, temos duas opções. Primeira opção, abrir um pacote antes de begin{document} e digitar como normal:
 
-\\usepackage[utf8]{inputenc}
+\\usepackage[latin1]{inputenc}
 
 Segunda opção é usar a formatação especifíca para cada acento, ex:
 
@@ -86,9 +86,9 @@ Segunda opção é usar a formatação especifíca para cada acento, ex:
 
 O nosso típo de documento 'article' nos permitem especificar um título e vários outros característicos *antes* de \\begin{document}. 
 
-\title{Relat\'{o}rio}
-\author{My Name}
-\date{Maio 2019}
+\\title{Relatório}  
+\\author{My Name}  
+\\date{Maio 2019}
 
 Se compilar o seu PDF agora, não veja nenhuma diferença. Por que? Porque não tem nada diferente entre begin{document} e end{document}. Para estes característicos aparecem em nosso documento, precisamos inserir o seguinte depois de \\begin{document}:
 
@@ -110,17 +110,17 @@ Latex é muito útil para apresentações profissionais. Tem vários opções, m
 
 Para definir cada 'slide' de nossa apresentação, use o seguinte formato:
 
-\\begin{frame}
-\\frametitle{Título do Slide}
-Texto, conteúdo normal
-Mais texto
+\\begin{frame}  
+\\frametitle{Título do Slide}  
+Texto, conteúdo normal  
+Mais texto  
 \\end{frame}
 
 Para incluir imagens de um arquivo local na mesma pasta do seu script _.Rnw_ coloca:
 
 \\usepackage{graphicx} - antes de begin{document}
 
-\\includegraphics[width=\linewidth]{image.png} - na página/slide onde o imagem deve aparecer
+\\includegraphics[width=\\linewidth]{image.png} - na página/slide onde o imagem deve aparecer
 
 ## Exercício
 
@@ -143,6 +143,8 @@ Mas significa exatamente o mesmo que o seguinte em Rmarkdown:
 x <- 1 + 1
 ```
 ````
+
+Podemos também inserir os resultados do nosso chunk dentro do parágrafo usando \\Sexpr{x}
 
 Como em Rmarkdown, podemos especificar parâmetros dos chunks entre <<>>. 
 
