@@ -7,21 +7,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, eval=F, include=T)
 ```
 
-# Introdução ao purrr
+# Revisão de purrr
 
 ## Funções map
 
-Vamos começar, como sempre, carregando as bibliotecas que precisaremos para o tutorial. Além de _dplyr_, utilizaremos também o pacote _purrr_, sobre o qual aprenderemos um pouco mais neste tutorial. Instale-o se ainda não tiver feito.
+Vamos começar, como sempre, carregando as bibliotecas que precisaremos para o tutorial. Além de _tidyverse_, utilizaremos também o pacote _purrr_, sobre o qual aprenderemos um pouco mais neste tutorial. Instale-o se ainda não tiver feito.
 
 ```{r}
-library(dplyr)
+library(tidyverse)
 library(purrr)
 ```
 
 Geraremos um data frame simples, com três variáveis numéricas, para utilizarmos no início do tutorial. Note no código abaixo que variável "x" terá aproximadamente 5% de missing values:
 
 ```{r}
-df <- data_frame(x = sample(c(rnorm(95), rep(NA, 5)), 
+df <- tibble(x = sample(c(rnorm(95), rep(NA, 5)), 
                             1000, 
                             replace = T),
                  y = rnorm(1000, 42, 3),
@@ -34,6 +34,7 @@ Uma possível solução com for loops é:
 
 ```{r}
 media_col <- c()
+
 for (i in 1:ncol(df)){
   media_col <- c(media_col, mean(df[[i]], na.rm = T))
 }
@@ -43,6 +44,7 @@ No exemplo acima, criamos um objeto vazio e a cada iteração do loop "anexamos"
 
 ```{r}
 media_col <- vector("double", ncol(df))
+
 for (i in 1:ncol(df)){
   media_col[[i]] <- mean(df[[i]], na.rm = T)
 }
@@ -58,13 +60,13 @@ map(df, mean)
 
 A função _map_ pode ser aplicada a uma lista, a um data frame (que é uma lista de vetores na vertical e pareados) ou a um vetor e, para cada posição da lista/data frame/vetor aplica uma função. O resultado é uma lista de tais aplicações. Note que o resultado da função acima é uma lista.
 
-As variações da função _map_ permite que o resultado seja outra classe de objeto que não uma lista. _map\_dbl_, por exemplo, retorna um vetor do tipo "double". Diferentemente de _map_, as funções da família que especificam a classe de output precisam que a função aplicada a cada elemento também retorne tal classe.
+As variações da função _map_ permite que o resultado seja outra classe de objeto do que uma lista. _map\_dbl_, por exemplo, retorna um vetor do tipo "double". Diferentemente de _map_, as funções da família que especificam a classe de output precisam que a função aplicada a cada elemento também retorne tal classe.
 
 ```{r}
 map_dbl(df, mean)
 ```
 
-A variável "x" contém, propositalmenete, NAs. Vamos removê-los do cálculo da média. Para adicionar parâmatros à função _mean_, que aplicamos com _map\_dbl_, basta separá-los com vírgula, em ordem, após a função aplicada. Para removermos os NAs do cálculo da média fazemos:
+A variável "x" contém, propositalmenete, NAs. Vamos removê-los do cálculo da média. Para adicionar parâmatros à função _mean_, que aplicamos com _map\_dbl_, basta separá-los com vírgula, em ordem, após a função aplicada. Eles seriam 'passados' para a função _mean_. Para removermos os NAs do cálculo da média fazemos:
 
 ```{r}
 map_dbl(df, mean, na.rm = T)
@@ -85,7 +87,7 @@ map_dbl(df, quantile, probs = 0.1, na.rm = T)
 ou o primeiro e último decil:
 
 ```{r}
-#map_dbl(df, quantile, probs = c(0.1, 0.9), na.rm = T)
+map_dbl(df, quantile, probs = c(0.1, 0.9), na.rm = T)
 ```
 
 Ops! Aqui deu errado. O que aconteceu?
@@ -98,7 +100,7 @@ map(df, quantile, probs = c(0.1, 0.9), na.rm = T)
 
 A função _map_ sempre servirá onde alguma outra da família servir. Na dúvida, use-a.
 
-Vamos a outro exemplo. Peguemos o data frame "starwas", disponível no pacote dataset.
+Vamos a outro exemplo. Peguemos o data frame "starwas", disponível no pacote datasets que venha com R.
 
 ```{r}
 data("starwars")
@@ -129,11 +131,10 @@ As funções aplicadas à uma lista (ou data frame ou vetor) não precisam, como
 map(df, summary)
 ```
 
-Podemos, inclusive, criar funções e aplicá-las com _map_. Vamos resgatar o data frame "mtcars", bastante utilizado para fins didáticos em R e que vimos no início do curso:
+Podemos, inclusive, criar funções e aplicá-las com _map_. Vamos resgatar o data frame "mtcars":
 
 ```{r}
 data(mtcars)
-?mtcars
 
 amplitude <- function(x) {
   max(x) - min(x) 
@@ -142,7 +143,7 @@ amplitude <- function(x) {
 map(mtcars, amplitude)
 ```
 
-Note que, não precisamos criar a função para aplicá-la com _map_. Se quisermos, podemos utilizar funções anônimas, ou seja, que não são geradas como objeto, mas sim criadas no contexto de sua aplicação, o que poupa bastante cógido.
+Se quisermos, podemos utilizar funções anônimas, ou seja, que não são geradas como objeto, mas sim criadas no contexto de sua aplicação, o que poupa bastante cógido.
 
 ```{r}
 map(mtcars, function(x) max(x)- min(x))
@@ -160,15 +161,31 @@ Para encerrarmos o exemplo, poderíamos utilizar a função _map\_dbl_ e obter d
 map_dbl(mtcars, ~ max(.)- min(.))
 ```
 
+Finalmente, gostamos de trabalhar com data.frames - eles são bastante intuitivos e podem ser reusados para vários fins subsequentes - tabelas, gráficos, etc. Podemos pedir para o _map_ devolve um data.frame pronto para usar? Sim! Usamos, naturalmente, _map\_df_:
+
+```{r}
+map_df(mtcars, ~ max(.)- min(.))
+
+map_df(mtcars, summary) 
+
+map_df(mtcars, summary) %>% 
+  mutate(Statistic=c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.")) %>%
+  select(Statistic, everything())
+```
+
+### Exercicio
+
+Usando o banco de dados _starwars_ e a função _map_, idenitificar a pessoa mais alto, mais pesado, e mais jovem. Também identifique a pessoa mais baixo, mais leve, e mais velho. Finalmente, escreva uma função para calcular ambos o máximo e o mínimo ao mesmo tempo, e aplicá-lo com _map_. 
+
 ## Modelos com purrr
 
-Vamos a um exemplo mais interessante, ainda com "mtcars". Nosso objetivo será produzir modelos com pequenas variações a partir de um modelo de regressão linear bastante simples (função _lm_, "linear model") entre o consumo de combustível de um caso (mpg, "miles per gallon") e seu peso (wt, "weight"), abaixo apresentado:
+Vamos a um exemplo mais interessante, ainda com "mtcars". Nosso objetivo será produzir modelos com pequenas variações a partir de um modelo de regressão linear bastante simples (função _lm_, "linear model") entre o consumo de combustível de um carro (mpg, "miles per gallon") e seu peso (wt, "weight"), abaixo apresentado:
 
 ```{r}
 reg <- lm(mpg ~ wt , data = mtcars)
 ```
 
-O resultado da função _lm_ é um objeto bastante complexo da classe _lm_:
+O resultado _reg_ da função _lm_ é um objeto bastante complexo da classe _lm_:
 
 ```{r}
 class(reg)
@@ -192,7 +209,7 @@ ou mesmo utilizando a posição dos coeficientes na estrutura do objeto:
 reg[[1]]
 ```
 
-Vamos supor que nos interessa agora produzir um modelo para cada categoria de carro em relação ao número de cilindros, que podem ser 4, 6 ou 8. Com a função _split_, geraremos uma lista de data frames em que cada posição da lista contém um data frame com as observações de uma categoria de número de cilindros.
+Vamos supor que nos interessa agora produzir um modelo seperado para cada categoria de carro em relação ao número de cilindros, que podem ser 4, 6 ou 8. Com a função _split_, geraremos uma lista de data frames em que cada posição da lista contém um data frame com as observações de uma categoria de número de cilindros.
 
 ```{r}
 lista_df <- split(mtcars, mtcars$cyl)
@@ -222,7 +239,7 @@ resultados
 
 Note que, para cada categoria de número de cilindros, temos agora um objeto da classe "lm". Antes, tinhamos uma lista de data frames. Agora, temos uma lista de resultados da aplicação da função _lm_ a data frames.
 
-Mas o que nos interessa não é observar todo o resultado, mas apenas os coeficientes gerados nos modelos. Podemos, assim aplicar novamente a função _map_:
+Mas o que nos interessa não é observar todo o resultado, mas apenas os coeficientes gerados nos modelos. Podemos, assim aplicar novamente a função _map_ ao _resultados_:
 
 ```{r}
 map(resultados, function(x) x[["coefficients"]])
@@ -240,7 +257,7 @@ Vamos guardar os coeficientes em um objeto.
 coeficientes <- map(resultados, "coefficients")
 ```
 
-Cada modelo tem 2 coeficientes, o intercepto e o coeficiente angular para a variável "wt". Procedendo exatamente como acabamos de fazer, podemos extrair apenas os coeficientes de "wt" de nossa lista:
+Cada modelo tem 2 coeficientes, o intercepto e o coeficiente para a variável "wt". Procedendo exatamente como acabamos de fazer, podemos extrair apenas os coeficientes de "wt" de nossa lista:
 
 ```{r}
 map(coeficientes, "wt")
@@ -255,7 +272,7 @@ Finalmente, as funções _map_ pode ser utilizadas com "pipe". O código que pro
 
 ```{r}
 mtcars %>% 
-  split(mtcars$cyl) %>%
+  split(.$cyl) %>%
   map(~ lm(mpg ~ wt, data = .)) %>%
   map("coefficients") %>%
   map_dbl("wt")
@@ -267,7 +284,7 @@ Aproveite agora para examinar a documentação da função _map_. O exemplo que 
 ?map
 ```
 
-Vamos criar algo novo agora. Vamos supor que queremos produzir o mesmo modelo não para cada categoria de cilindrada, mas incluindo a cada vez apenas um quintil da variável "qsec (tempo que o carro leva para percorrer o primeiro quarto de milha). Ou seja, em primeiro lugar incluiremos apenas 20% carros mais lentos, a seguir os 40% mais lentos, até gerarmos um modelo com todos os carros:
+Vamos criar algo novo agora. Vamos supor que queremos produzir o mesmo modelo não para cada categoria de cilindrada, mas incluindo a cada vez apenas um quintil da variável _qsec_ (tempo que o carro leva para percorrer o primeiro quarto de milha). Ou seja, em primeiro lugar incluiremos apenas 20% carros mais lentos, a seguir os 40% mais lentos, até gerarmos um modelo com todos os carros:
 
 Para gerar os quintis podemos fazer:
 
@@ -286,7 +303,75 @@ quintis %>%
 
 ```
 
-Pare e pense: quantas linhas de código precisaríamos para fazer o mesmo procedimento com for loop?
+Note bem que começamos aqui com os quintis e não com o data.frame _mtcars_ como anteriormente. Assim, podemos iterar sobre a variação nos dados que nos interesse.
+
+Mais um exemplo: como aplicamos a mesma regressão para duas variáveis dependentes diferentes? Agora não queremos filtrar o banco de dados mas alterar uma variável no fórmula de regressão cada vez e deixar o banco de dados fixo.
+
+```{r}
+dependentes <- c("mpg","qsec")
+
+dependentes %>%
+  map(~lm(as.formula(paste(.x," ~ wt")), data=mtcars)) %>%
+  map("coefficients") %>%
+  map_dbl("wt")
+```
+
+E se quisemos os "Standard Errors" de cada modelo? Podemos usar a função _summary_ para acessar mais detalhes:
+
+```{r}
+dependentes %>%
+  map(~lm(as.formula(paste(.x," ~ wt")), data=mtcars)) %>%
+  map(summary) %>%
+  set_names(dependentes) %>%
+  map("coefficients")
+```
+
+Uma função muito útil aqui para 'limpar' os modelos complexos se chama _tidy_ do pacote _broom_
+
+```{r}
+library(broom)
+
+dependentes %>%
+  map(~lm(as.formula(paste(.x," ~ wt")), data=mtcars)) %>%
+  map(tidy)
+```
+
+Note que cada um dos nossos modelos venha como um data.frame separado. Mas podemos pedir para um único data.frame com _map\_df_:
+
+```{r}
+models_df <- dependentes %>%
+  map(~lm(as.formula(paste(.x," ~ wt")), data=mtcars)) %>%
+  set_names(dependentes) %>%
+  map_df(tidy, .id="model")
+```
+
+Agora, com um data.frame flexível, temos possibilidades diversas. Por exemplo, podemos reorganizar a tabela para gerar um gráfico das linhas de regressão:
+
+```{r}
+models_df %>%
+  select(model, term, estimate) %>%
+  spread(key="term", value="estimate") %>%
+  rename("Intercept"=`(Intercept)`) %>%
+  select(-model) %>%
+  ggplot() +
+  geom_abline(aes(intercept=Intercept, slope=wt)) +
+  xlim(0,10) +
+  ylim(0,50) +
+  theme_classic()
+```
+
+### Exercicio
+
+Usando as funções de _map_, execute regressões com o banco de dados _mtcars_ para a relação entre 'hp' (horsepower) e 'qsec' (a variável dependente) separadamente para carros com 3, 4 e 5 'gears'. Compare o coeficiente para a variável 'hp' para os três tipos de carros. 
+
+```{r}
+mtcars %>% 
+  split(.$gear) %>%
+  map(~lm(qsec~hp, data=.)) %>%
+  map("coefficients") %>%
+  map_dbl("hp")
+```
+
 
 ## Combinando data frames em uma lista
 
@@ -310,14 +395,14 @@ lista_munic <- list(munic_v_externa, munic_r_humanos, munic_p_urbano)
 
 Nosso objetivo agora é combiná-las em um único data frame sem precisar fazer múltiplos "joins". Se estívessemos, por exemplo, trabalhando com dados do TSE, teríamos que combinar 27 data frames em um único e escrever o código das combinações par a par seria pouco inteligente.
 
-Vamos fazer um _full\_join_ das 3 planilhas da MUNIC que abrimos pelo id do município (variável A1, comum a todas as planilhas):
+Em vez disso, vamos fazer um _full\_join_ das 3 planilhas da MUNIC que abrimos pelo id do município (variável A1, comum a todas as planilhas):
 
 ```{r}
 munic <- lista_munic %>%
   reduce(full_join, by = "A1")
 ```
 
-Bastante simples, não? A função _reduce_ serve para reduzirmos uma lista a um único objeto. Um exemplo mais simples de aplicação da função seriam:
+Bastante simples, não? A função _reduce_ serve para reduzirmos uma lista a um único objeto. Um exemplo mais simples de aplicação da função seria:
 
 ```{r}
 lista <- list(c(1, 1, 2, 3), c(5, 8), 13, c(21, 34))
@@ -329,69 +414,3 @@ lista %>%
 
 _reduce_ também pode ser utilizado para vetores, e não apenas para listas, como veremos adiante.
 
-## Raspagem de dados com purrr
-
-Vamos a mais uma aplicação interessante das funções do _purrr_: webscraping. Antes de avançar, precisaremos do pacote _rvest_.
-
-```{r}
-library(rvest)
-```
-
-Nosso objetivo será refazer o exemplo da raspagem do DataFolha utilizando a função _map_ em vez de loops. Pegaremos apenas as últimas 25 notícias e, em cada notícia, apenas o texto principal.
-
-Vamos, em primeiro lugar, armazenar o url da página de busca que contém os links para cada notícia:
-
-```{r}
-url_base <- "http://search.folha.uol.com.br/search?q=elei%E7%F5es&site=datafolha%2Feleicoes&skin=datafolha"
-```
-
-A seguir, vamos raspar os links das 25 notícias. Nada de novo até aqui e você pode fazer essa parte com calma se quiser treinar um pouco mais de webscraping.
-
-```{r}
-url_noticia <- url_base %>%
-  read_html() %>%
-  html_nodes(xpath = "//h2/a") %>%
-  html_attr(name = "href")
-```
-
-A novidade começa quando queremos repetir um procedimento a um conjunto de páginas. No nosso exemplo, temos 25 links e queremos, em cada um, localizar e extrair o texto da notícia.
-
-Com for loop, fazemos o processo sequencialmente. Agora, porém, podemos aplicar a função _read\_html_ a todos os links com a função _map_ e obter como resultado uma lista que contém o código html de todas as páginas:
-
-```{r}
-paginas <- url_noticia %>% 
-  map(read_html)
-```
-
-Na sequência, podemos obter os nodes do corpo das notícias combinando _map_ com _html\_nodes_
-
-```{r}
-nodes <- paginas %>% 
-  map(~ html_nodes(., xpath = "//article/p"))
-```
-
-E, finalmente, podemos extrair os textos dos nodes com _map_ e _html\_text_:
-
-```{r}
-textos <- nodes %>%
-  map(html_text)
-```
-
-Com um pequeno ajuste final, deixamos o texto mais amigável jutandos o vetor de parágrafos de cada texto e um vetor atômico com _reduce_.
-
-```{r}
-textos <- textos %>% 
-  reduce(paste)
-```
-
-O código completo da raspagem fica:
-
-```{r}
-textos <- url_noticia %>% 
-  map(read_html) %>%
-  map(~ html_nodes(., xpath = "//article/p")) %>%
-  map(html_text) %>%
-  reduce(paste)
-```
-
-Em sala de aula será difícil notar, mas o uso de _map_ é muito mais veloz do que o do for loop.

@@ -378,15 +378,15 @@ $(document).ready(function () {
 </div>
 
 
-<div id="introducao-ao-purrr" class="section level1">
-<h1>Introdução ao purrr</h1>
+<div id="revisao-de-purrr" class="section level1">
+<h1>Revisão de purrr</h1>
 <div id="funcoes-map" class="section level2">
 <h2>Funções map</h2>
-<p>Vamos começar, como sempre, carregando as bibliotecas que precisaremos para o tutorial. Além de <em>dplyr</em>, utilizaremos também o pacote <em>purrr</em>, sobre o qual aprenderemos um pouco mais neste tutorial. Instale-o se ainda não tiver feito.</p>
-<pre class="r"><code>library(dplyr)
+<p>Vamos começar, como sempre, carregando as bibliotecas que precisaremos para o tutorial. Além de <em>tidyverse</em>, utilizaremos também o pacote <em>purrr</em>, sobre o qual aprenderemos um pouco mais neste tutorial. Instale-o se ainda não tiver feito.</p>
+<pre class="r"><code>library(tidyverse)
 library(purrr)</code></pre>
 <p>Geraremos um data frame simples, com três variáveis numéricas, para utilizarmos no início do tutorial. Note no código abaixo que variável “x” terá aproximadamente 5% de missing values:</p>
-<pre class="r"><code>df &lt;- data_frame(x = sample(c(rnorm(95), rep(NA, 5)), 
+<pre class="r"><code>df &lt;- tibble(x = sample(c(rnorm(95), rep(NA, 5)), 
                             1000, 
                             replace = T),
                  y = rnorm(1000, 42, 3),
@@ -394,11 +394,13 @@ library(purrr)</code></pre>
 <p>Há várias funções para calcularmos a média de todas as colunas de um data frame e em diversos pacotes. Neste tutorial estamos interessados em entender como podemos fazer esse calculo utilizando, em primeiro lugar, for loops, e, a seguir, as funções do pacote <em>purrr</em> que, basicamente, substituem o for loops em R.</p>
 <p>Uma possível solução com for loops é:</p>
 <pre class="r"><code>media_col &lt;- c()
+
 for (i in 1:ncol(df)){
   media_col &lt;- c(media_col, mean(df[[i]], na.rm = T))
 }</code></pre>
 <p>No exemplo acima, criamos um objeto vazio e a cada iteração do loop “anexamos” a média da i-ésima variável. Uma alternativa ligeiramente mais eficiente é determinar antes do loop o tamanho do objeto que conterá o resultado e a cada i-ésima itearação adicionar a média calculada à i-ésima posição deste objeto:</p>
 <pre class="r"><code>media_col &lt;- vector(&quot;double&quot;, ncol(df))
+
 for (i in 1:ncol(df)){
   media_col[[i]] &lt;- mean(df[[i]], na.rm = T)
 }</code></pre>
@@ -406,21 +408,21 @@ for (i in 1:ncol(df)){
 <p>O uso básico do pacote <em>purrr</em>, para resolver o problema acima é:</p>
 <pre class="r"><code>map(df, mean)</code></pre>
 <p>A função <em>map</em> pode ser aplicada a uma lista, a um data frame (que é uma lista de vetores na vertical e pareados) ou a um vetor e, para cada posição da lista/data frame/vetor aplica uma função. O resultado é uma lista de tais aplicações. Note que o resultado da função acima é uma lista.</p>
-<p>As variações da função <em>map</em> permite que o resultado seja outra classe de objeto que não uma lista. <em>map_dbl</em>, por exemplo, retorna um vetor do tipo “double”. Diferentemente de <em>map</em>, as funções da família que especificam a classe de output precisam que a função aplicada a cada elemento também retorne tal classe.</p>
+<p>As variações da função <em>map</em> permite que o resultado seja outra classe de objeto do que uma lista. <em>map_dbl</em>, por exemplo, retorna um vetor do tipo “double”. Diferentemente de <em>map</em>, as funções da família que especificam a classe de output precisam que a função aplicada a cada elemento também retorne tal classe.</p>
 <pre class="r"><code>map_dbl(df, mean)</code></pre>
-<p>A variável “x” contém, propositalmenete, NAs. Vamos removê-los do cálculo da média. Para adicionar parâmatros à função <em>mean</em>, que aplicamos com <em>map_dbl</em>, basta separá-los com vírgula, em ordem, após a função aplicada. Para removermos os NAs do cálculo da média fazemos:</p>
+<p>A variável “x” contém, propositalmenete, NAs. Vamos removê-los do cálculo da média. Para adicionar parâmatros à função <em>mean</em>, que aplicamos com <em>map_dbl</em>, basta separá-los com vírgula, em ordem, após a função aplicada. Eles seriam ‘passados’ para a função <em>mean</em>. Para removermos os NAs do cálculo da média fazemos:</p>
 <pre class="r"><code>map_dbl(df, mean, na.rm = T)</code></pre>
 <p>Para calcularmos o desvio padrão:</p>
 <pre class="r"><code>map_dbl(df, sd, na.rm = T)</code></pre>
 <p>Ou o primeiro decil:</p>
 <pre class="r"><code>map_dbl(df, quantile, probs = 0.1, na.rm = T)</code></pre>
 <p>ou o primeiro e último decil:</p>
-<pre class="r"><code>#map_dbl(df, quantile, probs = c(0.1, 0.9), na.rm = T)</code></pre>
+<pre class="r"><code>map_dbl(df, quantile, probs = c(0.1, 0.9), na.rm = T)</code></pre>
 <p>Ops! Aqui deu errado. O que aconteceu?</p>
 <p>A função <em>map_dbl</em> requer que o output seja um vetor atômico do tipo double. Nesse caso, ao aplicarmos a função <em>quantile</em> e escolhermos 2 decis, temos como resultado um vetor de tamanho 2. O resultado da iteração não pode, por essa razão, ser um vetor. Pode ser, porém, uma lista:</p>
 <pre class="r"><code>map(df, quantile, probs = c(0.1, 0.9), na.rm = T)</code></pre>
 <p>A função <em>map</em> sempre servirá onde alguma outra da família servir. Na dúvida, use-a.</p>
-<p>Vamos a outro exemplo. Peguemos o data frame “starwas”, disponível no pacote dataset.</p>
+<p>Vamos a outro exemplo. Peguemos o data frame “starwas”, disponível no pacote datasets que venha com R.</p>
 <pre class="r"><code>data(&quot;starwars&quot;)</code></pre>
 <p>O data frame contém informações sobre cada um dos personagens da série de filmes. Como é de se esperar, algumas variáveis deste dataset não devem ser numéricas. Como investigamos quais variáveis são numéricas?</p>
 <pre class="r"><code>map_lgl(starwars, is.numeric)</code></pre>
@@ -431,27 +433,38 @@ map_dbl(starwars[, numerica], mean, na.rm = T)</code></pre>
 <pre class="r"><code>map_chr(starwars, typeof)</code></pre>
 <p>As funções aplicadas à uma lista (ou data frame ou vetor) não precisam, como vimos no exemplo da função <em>quantiles</em> ter outputs “simples”:</p>
 <pre class="r"><code>map(df, summary)</code></pre>
-<p>Podemos, inclusive, criar funções e aplicá-las com <em>map</em>. Vamos resgatar o data frame “mtcars”, bastante utilizado para fins didáticos em R e que vimos no início do curso:</p>
+<p>Podemos, inclusive, criar funções e aplicá-las com <em>map</em>. Vamos resgatar o data frame “mtcars”:</p>
 <pre class="r"><code>data(mtcars)
-?mtcars
 
 amplitude &lt;- function(x) {
   max(x) - min(x) 
 }
 
 map(mtcars, amplitude)</code></pre>
-<p>Note que, não precisamos criar a função para aplicá-la com <em>map</em>. Se quisermos, podemos utilizar funções anônimas, ou seja, que não são geradas como objeto, mas sim criadas no contexto de sua aplicação, o que poupa bastante cógido.</p>
+<p>Se quisermos, podemos utilizar funções anônimas, ou seja, que não são geradas como objeto, mas sim criadas no contexto de sua aplicação, o que poupa bastante cógido.</p>
 <pre class="r"><code>map(mtcars, function(x) max(x)- min(x))</code></pre>
 <p>Para tornar o código ainda mais curto e eliminar obviedades, podemos utilizar o símbolo “~” para indicar que haverá na sequência uma função, e “.” em substituição à variável correspondente ao parâmetro da função</p>
 <pre class="r"><code>map(mtcars, ~ max(.)- min(.))</code></pre>
 <p>Para encerrarmos o exemplo, poderíamos utilizar a função <em>map_dbl</em> e obter diretamente um vetor numérico em vez de uma lista:</p>
 <pre class="r"><code>map_dbl(mtcars, ~ max(.)- min(.))</code></pre>
+<p>Finalmente, gostamos de trabalhar com data.frames - eles são bastante intuitivos e podem ser reusados para vários fins subsequentes - tabelas, gráficos, etc. Podemos pedir para o <em>map</em> devolve um data.frame pronto para usar? Sim! Usamos, naturalmente, <em>map_df</em>:</p>
+<pre class="r"><code>map_df(mtcars, ~ max(.)- min(.))
+
+map_df(mtcars, summary) 
+
+map_df(mtcars, summary) %&gt;% 
+  mutate(Statistic=c(&quot;Min.&quot;, &quot;1st Qu.&quot;, &quot;Median&quot;, &quot;Mean&quot;, &quot;3rd Qu.&quot;, &quot;Max.&quot;)) %&gt;%
+  select(Statistic, everything())</code></pre>
+<div id="exercicio" class="section level3">
+<h3>Exercicio</h3>
+<p>Usando o banco de dados <em>starwars</em> e a função <em>map</em>, idenitificar a pessoa mais alto, mais pesado, e mais jovem. Também identifique a pessoa mais baixo, mais leve, e mais velho. Finalmente, escreva uma função para calcular ambos o máximo e o mínimo ao mesmo tempo, e aplicá-lo com <em>map</em>.</p>
+</div>
 </div>
 <div id="modelos-com-purrr" class="section level2">
 <h2>Modelos com purrr</h2>
-<p>Vamos a um exemplo mais interessante, ainda com “mtcars”. Nosso objetivo será produzir modelos com pequenas variações a partir de um modelo de regressão linear bastante simples (função <em>lm</em>, “linear model”) entre o consumo de combustível de um caso (mpg, “miles per gallon”) e seu peso (wt, “weight”), abaixo apresentado:</p>
+<p>Vamos a um exemplo mais interessante, ainda com “mtcars”. Nosso objetivo será produzir modelos com pequenas variações a partir de um modelo de regressão linear bastante simples (função <em>lm</em>, “linear model”) entre o consumo de combustível de um carro (mpg, “miles per gallon”) e seu peso (wt, “weight”), abaixo apresentado:</p>
 <pre class="r"><code>reg &lt;- lm(mpg ~ wt , data = mtcars)</code></pre>
-<p>O resultado da função <em>lm</em> é um objeto bastante complexo da classe <em>lm</em>:</p>
+<p>O resultado <em>reg</em> da função <em>lm</em> é um objeto bastante complexo da classe <em>lm</em>:</p>
 <pre class="r"><code>class(reg)
 str(reg)</code></pre>
 <p>No entanto, trata-se basicamente de uma lista. Podemos extrair seus componentes “navegando” a lista. Por exemplo, para extrairmos os coeficientes gerados no modelo podemos fazer:</p>
@@ -460,7 +473,7 @@ str(reg)</code></pre>
 <pre class="r"><code>reg[[&#39;coefficients&#39;]]</code></pre>
 <p>ou mesmo utilizando a posição dos coeficientes na estrutura do objeto:</p>
 <pre class="r"><code>reg[[1]]</code></pre>
-<p>Vamos supor que nos interessa agora produzir um modelo para cada categoria de carro em relação ao número de cilindros, que podem ser 4, 6 ou 8. Com a função <em>split</em>, geraremos uma lista de data frames em que cada posição da lista contém um data frame com as observações de uma categoria de número de cilindros.</p>
+<p>Vamos supor que nos interessa agora produzir um modelo seperado para cada categoria de carro em relação ao número de cilindros, que podem ser 4, 6 ou 8. Com a função <em>split</em>, geraremos uma lista de data frames em que cada posição da lista contém um data frame com as observações de uma categoria de número de cilindros.</p>
 <pre class="r"><code>lista_df &lt;- split(mtcars, mtcars$cyl)
 
 lista_df</code></pre>
@@ -472,25 +485,25 @@ lista_df</code></pre>
 <p>Examine o objeto “resultados”</p>
 <pre class="r"><code>resultados</code></pre>
 <p>Note que, para cada categoria de número de cilindros, temos agora um objeto da classe “lm”. Antes, tinhamos uma lista de data frames. Agora, temos uma lista de resultados da aplicação da função <em>lm</em> a data frames.</p>
-<p>Mas o que nos interessa não é observar todo o resultado, mas apenas os coeficientes gerados nos modelos. Podemos, assim aplicar novamente a função <em>map</em>:</p>
+<p>Mas o que nos interessa não é observar todo o resultado, mas apenas os coeficientes gerados nos modelos. Podemos, assim aplicar novamente a função <em>map</em> ao <em>resultados</em>:</p>
 <pre class="r"><code>map(resultados, function(x) x[[&quot;coefficients&quot;]])</code></pre>
 <p>Por termos em cada posição da lista um objeto <em>lm</em>, que é uma lista, podemos simplificar o código acima:</p>
 <pre class="r"><code>map(resultados, &quot;coefficients&quot;)</code></pre>
 <p>Vamos guardar os coeficientes em um objeto.</p>
 <pre class="r"><code>coeficientes &lt;- map(resultados, &quot;coefficients&quot;)</code></pre>
-<p>Cada modelo tem 2 coeficientes, o intercepto e o coeficiente angular para a variável “wt”. Procedendo exatamente como acabamos de fazer, podemos extrair apenas os coeficientes de “wt” de nossa lista:</p>
+<p>Cada modelo tem 2 coeficientes, o intercepto e o coeficiente para a variável “wt”. Procedendo exatamente como acabamos de fazer, podemos extrair apenas os coeficientes de “wt” de nossa lista:</p>
 <pre class="r"><code>map(coeficientes, &quot;wt&quot;)</code></pre>
 <p>Por termos apenas vetores atômicos em cada posição da lista, poderíamos ter optado por <em>map_dbl</em> em vez de <em>map</em>:</p>
 <pre class="r"><code>map_dbl(coeficientes, &quot;wt&quot;)</code></pre>
 <p>Finalmente, as funções <em>map</em> pode ser utilizadas com “pipe”. O código que produzimos acima pode ser condensado da seguinte maneira:</p>
 <pre class="r"><code>mtcars %&gt;% 
-  split(mtcars$cyl) %&gt;%
+  split(.$cyl) %&gt;%
   map(~ lm(mpg ~ wt, data = .)) %&gt;%
   map(&quot;coefficients&quot;) %&gt;%
   map_dbl(&quot;wt&quot;)</code></pre>
 <p>Aproveite agora para examinar a documentação da função <em>map</em>. O exemplo que acabamos de fazer vem de lá:</p>
 <pre class="r"><code>?map</code></pre>
-<p>Vamos criar algo novo agora. Vamos supor que queremos produzir o mesmo modelo não para cada categoria de cilindrada, mas incluindo a cada vez apenas um quintil da variável &quot;qsec (tempo que o carro leva para percorrer o primeiro quarto de milha). Ou seja, em primeiro lugar incluiremos apenas 20% carros mais lentos, a seguir os 40% mais lentos, até gerarmos um modelo com todos os carros:</p>
+<p>Vamos criar algo novo agora. Vamos supor que queremos produzir o mesmo modelo não para cada categoria de cilindrada, mas incluindo a cada vez apenas um quintil da variável <em>qsec</em> (tempo que o carro leva para percorrer o primeiro quarto de milha). Ou seja, em primeiro lugar incluiremos apenas 20% carros mais lentos, a seguir os 40% mais lentos, até gerarmos um modelo com todos os carros:</p>
 <p>Para gerar os quintis podemos fazer:</p>
 <pre class="r"><code>quintis &lt;- quantile(mtcars$qsec, probs = c(.2, .4, .6, .8, 1))</code></pre>
 <p>Vamos aplicar a função <em>map</em> ao vetor de quintis (e não ao uma lista de data frames, como anteriormente) para gerar o resultado que nos interessa. Exceto pelas duas primeiras linhas de código, as demais são idênticas à anterior:</p>
@@ -499,7 +512,51 @@ lista_df</code></pre>
   map(~ lm(mpg ~ wt, data = .)) %&gt;%
   map(&quot;coefficients&quot;) %&gt;%
   map_dbl(&quot;wt&quot;)</code></pre>
-<p>Pare e pense: quantas linhas de código precisaríamos para fazer o mesmo procedimento com for loop?</p>
+<p>Note bem que começamos aqui com os quintis e não com o data.frame <em>mtcars</em> como anteriormente. Assim, podemos iterar sobre a variação nos dados que nos interesse.</p>
+<p>Mais um exemplo: como aplicamos a mesma regressão para duas variáveis dependentes diferentes? Agora não queremos filtrar o banco de dados mas alterar uma variável no fórmula de regressão cada vez e deixar o banco de dados fixo.</p>
+<pre class="r"><code>dependentes &lt;- c(&quot;mpg&quot;,&quot;qsec&quot;)
+
+dependentes %&gt;%
+  map(~lm(as.formula(paste(.x,&quot; ~ wt&quot;)), data=mtcars)) %&gt;%
+  map(&quot;coefficients&quot;) %&gt;%
+  map_dbl(&quot;wt&quot;)</code></pre>
+<p>E se quisemos os “Standard Errors” de cada modelo? Podemos usar a função <em>summary</em> para acessar mais detalhes:</p>
+<pre class="r"><code>dependentes %&gt;%
+  map(~lm(as.formula(paste(.x,&quot; ~ wt&quot;)), data=mtcars)) %&gt;%
+  map(summary) %&gt;%
+  set_names(dependentes) %&gt;%
+  map(&quot;coefficients&quot;)</code></pre>
+<p>Uma função muito útil aqui para ‘limpar’ os modelos complexos se chama <em>tidy</em> do pacote <em>broom</em></p>
+<pre class="r"><code>library(broom)
+
+dependentes %&gt;%
+  map(~lm(as.formula(paste(.x,&quot; ~ wt&quot;)), data=mtcars)) %&gt;%
+  map(tidy)</code></pre>
+<p>Note que cada um dos nossos modelos venha como um data.frame separado. Mas podemos pedir para um único data.frame com <em>map_df</em>:</p>
+<pre class="r"><code>models_df &lt;- dependentes %&gt;%
+  map(~lm(as.formula(paste(.x,&quot; ~ wt&quot;)), data=mtcars)) %&gt;%
+  set_names(dependentes) %&gt;%
+  map_df(tidy, .id=&quot;model&quot;)</code></pre>
+<p>Agora, com um data.frame flexível, temos possibilidades diversas. Por exemplo, podemos reorganizar a tabela para gerar um gráfico das linhas de regressão:</p>
+<pre class="r"><code>models_df %&gt;%
+  select(model, term, estimate) %&gt;%
+  spread(key=&quot;term&quot;, value=&quot;estimate&quot;) %&gt;%
+  rename(&quot;Intercept&quot;=`(Intercept)`) %&gt;%
+  select(-model) %&gt;%
+  ggplot() +
+  geom_abline(aes(intercept=Intercept, slope=wt)) +
+  xlim(0,10) +
+  ylim(0,50) +
+  theme_classic()</code></pre>
+<div id="exercicio-1" class="section level3">
+<h3>Exercicio</h3>
+<p>Usando as funções de <em>map</em>, execute regressões com o banco de dados <em>mtcars</em> para a relação entre ‘hp’ (horsepower) e ‘qsec’ (a variável dependente) separadamente para carros com 3, 4 e 5 ‘gears’. Compare o coeficiente para a variável ‘hp’ para os três tipos de carros.</p>
+<pre class="r"><code>mtcars %&gt;% 
+  split(.$gear) %&gt;%
+  map(~lm(qsec~hp, data=.)) %&gt;%
+  map(&quot;coefficients&quot;) %&gt;%
+  map_dbl(&quot;hp&quot;)</code></pre>
+</div>
 </div>
 <div id="combinando-data-frames-em-uma-lista" class="section level2">
 <h2>Combinando data frames em uma lista</h2>
@@ -512,49 +569,16 @@ munic_p_urbano &lt;- read.csv2(&quot;https://raw.githubusercontent.com/leobarone
 <p>e juntá-las em uma lista.</p>
 <pre class="r"><code>lista_munic &lt;- list(munic_v_externa, munic_r_humanos, munic_p_urbano)</code></pre>
 <p>Nosso objetivo agora é combiná-las em um único data frame sem precisar fazer múltiplos “joins”. Se estívessemos, por exemplo, trabalhando com dados do TSE, teríamos que combinar 27 data frames em um único e escrever o código das combinações par a par seria pouco inteligente.</p>
-<p>Vamos fazer um <em>full_join</em> das 3 planilhas da MUNIC que abrimos pelo id do município (variável A1, comum a todas as planilhas):</p>
+<p>Em vez disso, vamos fazer um <em>full_join</em> das 3 planilhas da MUNIC que abrimos pelo id do município (variável A1, comum a todas as planilhas):</p>
 <pre class="r"><code>munic &lt;- lista_munic %&gt;%
   reduce(full_join, by = &quot;A1&quot;)</code></pre>
-<p>Bastante simples, não? A função <em>reduce</em> serve para reduzirmos uma lista a um único objeto. Um exemplo mais simples de aplicação da função seriam:</p>
+<p>Bastante simples, não? A função <em>reduce</em> serve para reduzirmos uma lista a um único objeto. Um exemplo mais simples de aplicação da função seria:</p>
 <pre class="r"><code>lista &lt;- list(c(1, 1, 2, 3), c(5, 8), 13, c(21, 34))
 
 lista %&gt;% 
   map(sum) %&gt;%
   reduce(`+`)</code></pre>
 <p><em>reduce</em> também pode ser utilizado para vetores, e não apenas para listas, como veremos adiante.</p>
-</div>
-<div id="raspagem-de-dados-com-purrr" class="section level2">
-<h2>Raspagem de dados com purrr</h2>
-<p>Vamos a mais uma aplicação interessante das funções do <em>purrr</em>: webscraping. Antes de avançar, precisaremos do pacote <em>rvest</em>.</p>
-<pre class="r"><code>library(rvest)</code></pre>
-<p>Nosso objetivo será refazer o exemplo da raspagem do DataFolha utilizando a função <em>map</em> em vez de loops. Pegaremos apenas as últimas 25 notícias e, em cada notícia, apenas o texto principal.</p>
-<p>Vamos, em primeiro lugar, armazenar o url da página de busca que contém os links para cada notícia:</p>
-<pre class="r"><code>url_base &lt;- &quot;http://search.folha.uol.com.br/search?q=elei%E7%F5es&amp;site=datafolha%2Feleicoes&amp;skin=datafolha&quot;</code></pre>
-<p>A seguir, vamos raspar os links das 25 notícias. Nada de novo até aqui e você pode fazer essa parte com calma se quiser treinar um pouco mais de webscraping.</p>
-<pre class="r"><code>url_noticia &lt;- url_base %&gt;%
-  read_html() %&gt;%
-  html_nodes(xpath = &quot;//h2/a&quot;) %&gt;%
-  html_attr(name = &quot;href&quot;)</code></pre>
-<p>A novidade começa quando queremos repetir um procedimento a um conjunto de páginas. No nosso exemplo, temos 25 links e queremos, em cada um, localizar e extrair o texto da notícia.</p>
-<p>Com for loop, fazemos o processo sequencialmente. Agora, porém, podemos aplicar a função <em>read_html</em> a todos os links com a função <em>map</em> e obter como resultado uma lista que contém o código html de todas as páginas:</p>
-<pre class="r"><code>paginas &lt;- url_noticia %&gt;% 
-  map(read_html)</code></pre>
-<p>Na sequência, podemos obter os nodes do corpo das notícias combinando <em>map</em> com <em>html_nodes</em></p>
-<pre class="r"><code>nodes &lt;- paginas %&gt;% 
-  map(~ html_nodes(., xpath = &quot;//article/p&quot;))</code></pre>
-<p>E, finalmente, podemos extrair os textos dos nodes com <em>map</em> e <em>html_text</em>:</p>
-<pre class="r"><code>textos &lt;- nodes %&gt;%
-  map(html_text)</code></pre>
-<p>Com um pequeno ajuste final, deixamos o texto mais amigável jutandos o vetor de parágrafos de cada texto e um vetor atômico com <em>reduce</em>.</p>
-<pre class="r"><code>textos &lt;- textos %&gt;% 
-  reduce(paste)</code></pre>
-<p>O código completo da raspagem fica:</p>
-<pre class="r"><code>textos &lt;- url_noticia %&gt;% 
-  map(read_html) %&gt;%
-  map(~ html_nodes(., xpath = &quot;//article/p&quot;)) %&gt;%
-  map(html_text) %&gt;%
-  reduce(paste)</code></pre>
-<p>Em sala de aula será difícil notar, mas o uso de <em>map</em> é muito mais veloz do que o do for loop.</p>
 </div>
 </div>
 
